@@ -2,6 +2,8 @@
 
 import type { IncomingMessage, ServerResponse } from "node:http"
 
+import { JsonValue } from "type-fest"
+
 import { _getRoutes } from "./route-registration"
 
 /**
@@ -13,27 +15,39 @@ export function _createHttpServerHandler() {
 
   /* eslint-disable functional/no-expression-statements */
   /* eslint-disable functional/no-return-void */
-  // eslint-disable-next-line functional/prefer-immutable-types
-  const server = function (request: IncomingMessage, response: ServerResponse) {
+  const server = function (
+    // eslint-disable-next-line functional/prefer-immutable-types
+    request: IncomingMessage,
+    // eslint-disable-next-line functional/prefer-immutable-types
+    response: ServerResponse,
+    next?: () => void,
+  ) {
+    const throwStatus = function (status: number) {
+      if (next === undefined || status.toString().startsWith("5")) {
+        response.writeHead(status)
+        response.end()
+        return
+      }
+
+      next()
+    }
+
     if (request.method !== "POST") {
-      response.writeHead(405)
-      response.end()
+      throwStatus(405)
       return
     }
 
     const route_name = request.url?.replace("/api/", "")
 
     if (route_name === undefined) {
-      response.writeHead(404)
-      response.end()
+      throwStatus(404)
       return
     }
 
     const route = routes.get(route_name)
 
     if (route === undefined) {
-      response.writeHead(404)
-      response.end()
+      throwStatus(404)
       return
     }
 
@@ -43,12 +57,29 @@ export function _createHttpServerHandler() {
       chunks.push(chunk)
     })
 
-    request.on("end", function () {
+    request.on("end", async function () {
       const body = Buffer.concat(chunks)
+      const stringfied_body = body.toString()
 
-      const parameters = JSON.parse(body.toString())
+      // eslint-disable-next-line functional/no-let
+      let parameters: JsonValue
+      try {
+        parameters = stringfied_body === ''
+          ? {}
+          : JSON.parse(stringfied_body)
+      } catch (error) {
+        throwStatus(400)
+        return
+      }
 
-      const result = route(parameters)
+      // eslint-disable-next-line functional/no-let
+      let result: JsonValue
+      try {
+        result = await route(parameters, globalThis)
+      } catch (error) {
+        throwStatus(500)
+        return
+      }
 
       response.writeHead(200, {
         "Content-Type": "application/json",
