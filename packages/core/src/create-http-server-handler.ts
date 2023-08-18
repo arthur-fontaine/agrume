@@ -1,18 +1,20 @@
 /// <reference types="@types/node" />
 
-import { createServer } from "node:http"
+import type { IncomingMessage, ServerResponse } from "node:http"
 
-import { Route } from "./types/route"
+import { _getRoutes } from "./route-registration"
 
 /**
- * @param routes The routes to create the HTTP server for.
  * @returns The HTTP server.
  */
 // eslint-disable-next-line functional/prefer-immutable-types
-export function _createHttpServer(routes: Map<string, Route>) {
+export function _createHttpServerHandler() {
+  const routes = _getRoutes()
+
   /* eslint-disable functional/no-expression-statements */
   /* eslint-disable functional/no-return-void */
-  const server = createServer(function (request, response) {
+  // eslint-disable-next-line functional/prefer-immutable-types
+  const server = function (request: IncomingMessage, response: ServerResponse) {
     if (request.method !== "POST") {
       response.writeHead(405)
       response.end()
@@ -54,7 +56,7 @@ export function _createHttpServer(routes: Map<string, Route>) {
 
       response.end(JSON.stringify(result))
     })
-  })
+  }
 
   return server
 }
