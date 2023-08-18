@@ -1,0 +1,25 @@
+{
+  "name": "vite-plugin-agrume",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@agrume/core": "workspace:*",
+    "esbuild": "^0.19.2",
+    "vite": "^4.4.9"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "unbuild": "^1.2.1"
+  }
+}
