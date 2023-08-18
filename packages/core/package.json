@@ -1,7 +1,7 @@
 {
-  "name": "@whitebird/my-package",
-  "private": true,
+  "name": "@agrume/core",
   "version": "0.0.0",
+  "private": true,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
-  "dependencies": {},
+  "dependencies": {
+    "type-fest": "^4.2.0"
+  },
   "devDependencies": {
     "@types/node": "^18.11.9"
   }
