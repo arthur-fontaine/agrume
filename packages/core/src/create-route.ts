@@ -17,9 +17,9 @@ export function createRoute<
 >(route: R): ReturnedRoute<R> {
   const route_name = getRouteName(route)
 
+  // eslint-disable-next-line functional/no-conditional-statements
   if (_isRouteRegistrationActive()) {
     void _registerRoute(route_name, route)
-    return null as never
   }
 
   return async function (parameters) {
