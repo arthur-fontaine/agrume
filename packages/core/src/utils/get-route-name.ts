@@ -6,7 +6,11 @@ import { Route } from "../types/route"
  * @returns The route handler.
  */
 export function getRouteName(route: Route): string {
-  const stringified_route = route.toString()
+  if (route.name) {
+    return route.name
+  }
+
+  const stringified_route = route.toString().replaceAll(/\s/g, "")
   const route_checksum = checksum(stringified_route)
 
   return route_checksum
