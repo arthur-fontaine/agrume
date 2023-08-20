@@ -2,6 +2,12 @@ import {
   _startRouteRegistration, _stopRouteRegistration, _createHttpServerHandler,
 } from "@agrume/core"
 import babel from '@babel/core'
+// eslint-disable-next-line lines-around-comment
+// @ts-expect-error No types available for this package.
+import babelPluginSyntaxJsx from '@babel/plugin-syntax-jsx'
+// eslint-disable-next-line lines-around-comment
+// @ts-expect-error No types available for this package.
+import babelPluginTransformTypescript from '@babel/plugin-transform-typescript'
 import { agrume as agrumeBabelPlugin } from 'babel-plugin-agrume'
 import { PluginOption } from "vite"
 
@@ -14,7 +20,7 @@ export function agrumePlugin(): PluginOption {
   return {
     name: package_json.name,
 
-    enforce: "post",
+    enforce: "pre",
 
     apply: "serve",
 
@@ -25,6 +31,11 @@ export function agrumePlugin(): PluginOption {
         const result = babel.transformSync(code, {
           filename: id,
           plugins: [
+            babelPluginSyntaxJsx,
+            [babelPluginTransformTypescript, {
+              isTSX: true,
+              allExtensions: true,
+            }],
             agrumeBabelPlugin,
           ],
         })

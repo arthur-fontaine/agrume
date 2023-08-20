@@ -16,9 +16,12 @@
   "dependencies": {
     "@agrume/core": "workspace:*",
     "@babel/core": "^7.22.10",
-    "@types/babel__core": "^7.20.1"
+    "@babel/generator": "^7.22.10",
+    "@types/babel__core": "^7.20.1",
+    "babel-plugin-putout": "^6.0.0"
   },
   "devDependencies": {
+    "@types/babel__generator": "^7.6.4",
     "@types/node": "^18.11.9",
     "unbuild": "^1.2.1"
   }
