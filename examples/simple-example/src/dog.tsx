@@ -1,7 +1,7 @@
 import { createRoute } from '@agrume/core'
 import React from 'react'
 
-const dog_api_url = 'https://dog.ceo/api/breeds/image/random'
+import { dog_api_url } from './dog-api-url'
 
 const getDogImage = createRoute(async function () {
   return (fetch(dog_api_url)
@@ -9,7 +9,7 @@ const getDogImage = createRoute(async function () {
       return response.json()
     })
     .then(function (json) {
-      return json.message
+      return json.message as string
     })
     .then(function (url) {
       return { url }

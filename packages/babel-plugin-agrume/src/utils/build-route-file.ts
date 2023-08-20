@@ -1,10 +1,14 @@
 /* eslint-disable functional/prefer-immutable-types */
+
+import path from 'node:path'
+
 import core_package_json from '@agrume/core/package.json'
 import babel, { type NodePath, types as babelTypes } from '@babel/core'
 import generate from '@babel/generator'
 // eslint-disable-next-line lines-around-comment
 // @ts-expect-error No types available for this package.
 import babelPluginPutout from 'babel-plugin-putout'
+import esbuild from 'esbuild'
 
 import { areSameNodePath } from './are-same-node-path'
 import { getProgram } from './get-program'
@@ -31,15 +35,36 @@ export function buildRouteFunction(
 
   const file_contents = generate(program.node).code
 
-  // TODO: bundle (only relative imports) using esbuild
+  const bundled_file_contents = getBundledFileContents(file_contents, file_path)
 
   const route_function_source = getRouteFunctionSource(
-    file_contents,
+    bundled_file_contents ?? file_contents,
     file_path,
     route_ast,
   )
 
   return route_function_source
+}
+
+function getBundledFileContents(
+  file_contents: string,
+  file_path: string,
+) {
+  const bundled_file_contents = (esbuild.buildSync({
+    stdin: {
+      contents: file_contents,
+      resolveDir: path.dirname(file_path),
+      sourcefile: file_path,
+      loader: 'tsx',
+    },
+    bundle: true,
+    write: false,
+    format: 'esm',
+    platform: 'node',
+    packages: 'external',
+  }).outputFiles[0]?.text)
+
+  return bundled_file_contents
 }
 
 function getRouteFunctionSource(
@@ -169,7 +194,7 @@ function removeUnusedVariablesPlugin() {
 
 function assembleRoute(path: NodePath<babelTypes.Program>) {
   const statements = path.get('body')
-  
+
   const route_statement = statements.find(function (statement) {
     return statement.isExportNamedDeclaration()
   })

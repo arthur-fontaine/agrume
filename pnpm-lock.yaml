@@ -82,6 +82,9 @@ importers:
       babel-plugin-putout:
         specifier: ^6.0.0
         version: 6.0.0(putout@31.2.1)
+      esbuild:
+        specifier: ^0.19.2
+        version: 0.19.2
     devDependencies:
       '@types/babel__generator':
         specifier: ^7.6.4

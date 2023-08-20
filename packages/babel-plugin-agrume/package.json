@@ -18,7 +18,8 @@
     "@babel/core": "^7.22.10",
     "@babel/generator": "^7.22.10",
     "@types/babel__core": "^7.20.1",
-    "babel-plugin-putout": "^6.0.0"
+    "babel-plugin-putout": "^6.0.0",
+    "esbuild": "^0.19.2"
   },
   "devDependencies": {
     "@types/babel__generator": "^7.6.4",
