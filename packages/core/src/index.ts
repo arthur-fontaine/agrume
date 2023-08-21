@@ -1,3 +1,4 @@
+export { getRouteName } from './utils/get-route-name'
 export { createRoute } from './create-route'
 export { _createHttpServerHandler } from './create-http-server-handler'
 export {
