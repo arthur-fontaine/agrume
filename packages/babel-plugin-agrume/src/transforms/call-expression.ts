@@ -1,4 +1,4 @@
-import { createRoute, getRouteName } from '@agrume/core'
+import { createRoute, getOptions, getRouteName } from '@agrume/core'
 import core_package_json from '@agrume/core/package.json'
 import { type NodePath, types as babelTypes, PluginPass } from '@babel/core'
 
@@ -61,10 +61,12 @@ function transformCreateRoute(
   const route = new Function(`return ${built_route_function}`)()
 
   const route_name = getRouteName(route)
+  const prefix = getOptions().prefix
 
   const requestClient = createRoute(route)
   void callPath.replaceWithSourceString(`(...args) => {
     const route_name = ${JSON.stringify(route_name)}
+    const prefix = ${JSON.stringify(prefix)}
     return (${requestClient.toString()})(...args)
   }`)
 

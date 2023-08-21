@@ -12,7 +12,17 @@ const getDogImage = createRoute(async function () {
       return json.message as string
     })
     .then(function (url) {
-      return { url }
+      return url
+    })
+    .then(function (url) {
+      return fetch(url)
+    })
+    .then(function (response) {
+      return response.blob()
+    })
+    .then(async function (blob) {
+      return `data:${blob.type};base64,${
+        Buffer.from(await blob.arrayBuffer()).toString('base64')}`
     }))
 })
 
@@ -25,13 +35,11 @@ export const Dog = function () {
   void React.useEffect(function () {
     void (getDogImage()
       .then(function (dog_image) {
-        return dog_image.url
+        return dog_image
       })
       .then(setDogImage))
 
-    return function () {
-      return void 0
-    }
+    return undefined
   }, [])
 
   return (

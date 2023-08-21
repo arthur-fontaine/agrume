@@ -11,11 +11,15 @@
   },
   "dependencies": {
     "@agrume/core": "workspace:*",
-    "vite-plugin-agrume": "workspace:*",
+    "connect": "^3.7.0",
+    "cors": "^2.8.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "vite-plugin-agrume": "workspace:*"
   },
   "devDependencies": {
+    "@types/connect": "^3.4.35",
+    "@types/cors": "^2.8.13",
     "@types/node": "^18.11.9",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

@@ -1,10 +1,21 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { agrume } from 'vite-plugin-agrume'
+import { closeServer, server } from './server'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [agrume(), react({
-    jsxRuntime: 'classic',
-  })],
+  plugins: [
+    agrume({
+      prefix: '/api/',
+      server,
+    }),
+    react({
+      jsxRuntime: 'classic',
+    }),
+    {
+      name: 'stop-server',
+      closeBundle: closeServer,
+    },
+  ],
 })
