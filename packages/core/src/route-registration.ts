@@ -1,12 +1,8 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 
+import { state } from "./state"
 import { Route } from "./types/route"
-
-const state = {
-  isRegistering: false,
-  routes: new Map<string, Route>(),
-}
 
 /**
  * Starts the route registration process.

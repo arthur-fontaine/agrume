@@ -1,5 +1,6 @@
 import {
-  _startRouteRegistration, _stopRouteRegistration, _createHttpServerHandler,
+  _startRouteRegistration, _stopRouteRegistration, _createConnectMiddleware,
+  AgrumeOptions, setOptions, getOptions,
 } from "@agrume/core"
 import babel from '@babel/core'
 // eslint-disable-next-line lines-around-comment
@@ -13,10 +14,16 @@ import { PluginOption } from "vite"
 
 import package_json from "../package.json"
 
+type AgrumePluginOptions = AgrumeOptions
+
 /**
+ * @param options The Agrume plugin options.
  * @returns The Agrume plugin.
  */
-export function agrumePlugin(): PluginOption {
+// eslint-disable-next-line functional/prefer-immutable-types
+export function agrumePlugin(options: AgrumePluginOptions = {}): PluginOption {
+  void setOptions(options)
+
   return {
     name: package_json.name,
 
@@ -55,15 +62,14 @@ export function agrumePlugin(): PluginOption {
       return null
     },
 
-    // eslint-disable-next-line functional/no-return-void
-    configureServer(server) {
+    configureServer(server_by_vite) {
       void _stopRouteRegistration()
-      const agrumeServerHandler = _createHttpServerHandler()
+      const agrumeServerHandler = _createConnectMiddleware()
+      const server = getOptions().server ?? server_by_vite.middlewares
 
-      // eslint-disable-next-line functional/no-return-void
-      void server.middlewares.use(function (request, response, next) {
-        void agrumeServerHandler(request, response, next)
-      })
+      void server.use(agrumeServerHandler)
+
+      return undefined
     },
   }
 }

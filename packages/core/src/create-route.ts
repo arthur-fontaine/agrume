@@ -1,5 +1,6 @@
 import { JsonValue } from "type-fest"
 
+import { getOptions } from "./options"
 import {
   _isRouteRegistrationActive, _registerRoute,
 } from "./route-registration"
@@ -16,6 +17,7 @@ export function createRoute<
   _ extends Promise<JsonValue>,
 >(route: R): ReturnedRoute<R> {
   const route_name = getRouteName(route)
+  const prefix = getOptions().prefix
 
   // eslint-disable-next-line functional/no-conditional-statements
   if (_isRouteRegistrationActive()) {
@@ -23,7 +25,7 @@ export function createRoute<
   }
 
   return async function (parameters) {
-    return (fetch(`/api/${route_name}`, {
+    return (fetch(`${prefix}${route_name}`, {
       body: JSON.stringify(parameters),
       headers: {
         "Content-Type": "application/json",
