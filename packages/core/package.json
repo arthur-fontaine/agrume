@@ -14,6 +14,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@babel/parser": "^7.22.10",
     "@types/connect": "^3.4.35",
     "connect": "^3.7.0",
     "type-fest": "^4.2.0"

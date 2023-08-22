@@ -1,10 +1,14 @@
-import type { JsonValue, ReadonlyDeep } from "type-fest"
+import type { JsonValue } from "type-fest"
 
-export type Route<RT extends Promise<JsonValue> = Promise<JsonValue>> = (
+export type RouteParameters = Readonly<JsonValue>
+export type RouteReturnValue = Promise<JsonValue>
+
+export type Route<
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  _RouteParameters extends RouteParameters = null,
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  _RouteReturnValue extends RouteReturnValue = Promise<JsonValue>,
+> = (
   // eslint-disable-next-line functional/prefer-immutable-types
-  (parameters: ReadonlyDeep<JsonValue>, node: typeof globalThis) => RT
-)
-
-export type ReturnedRoute<R extends Route> = (
-  (parameters?: Parameters<R>[0]) => Promise<Awaited<ReturnType<R>>>
+  (parameters: _RouteParameters) => _RouteReturnValue
 )

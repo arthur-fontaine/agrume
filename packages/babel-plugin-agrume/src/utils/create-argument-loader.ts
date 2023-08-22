@@ -3,7 +3,7 @@
 import path from 'node:path'
 
 import core_package_json from '@agrume/core/package.json'
-import babel, { type NodePath, types as babelTypes } from '@babel/core'
+import babel, { NodePath, types as babelTypes } from '@babel/core'
 import generate from '@babel/generator'
 // eslint-disable-next-line lines-around-comment
 // @ts-expect-error No types available for this package.
@@ -13,21 +13,18 @@ import esbuild from 'esbuild'
 import { areSameNodePath } from './are-same-node-path'
 import { getProgram } from './get-program'
 
-type RouteAst = (
-  | NodePath<babelTypes.FunctionExpression>
-  | NodePath<babelTypes.ArrowFunctionExpression>
-)
+type RouteArgument = NodePath<babelTypes.CallExpression['arguments'][number]>
 
 /**
- * @param route_ast The AST of the route function.
+ * @param route_argument The AST of the route function.
  * @param file_path The path of the file.
- * @returns The route file.
+ * @returns A loader function for the argument.
  */
-export function buildRouteFunction(
-  route_ast: RouteAst,
+export function createArgumentLoader(
+  route_argument: RouteArgument,
   file_path: string,
 ) {
-  const program = getProgram(route_ast)
+  const program = getProgram(route_argument)
 
   if (program === undefined) {
     throw new Error('Could not find program.')
@@ -37,10 +34,10 @@ export function buildRouteFunction(
 
   const bundled_file_contents = getBundledFileContents(file_contents, file_path)
 
-  const route_function_source = getRouteFunctionSource(
+  const route_function_source = getArgumentFunctionSource(
     bundled_file_contents ?? file_contents,
     file_path,
-    route_ast,
+    route_argument,
   )
 
   return route_function_source
@@ -67,10 +64,10 @@ function getBundledFileContents(
   return bundled_file_contents
 }
 
-function getRouteFunctionSource(
+function getArgumentFunctionSource(
   file_contents: string,
   file_path: string,
-  route_ast: RouteAst,
+  route_argument: RouteArgument,
 ) {
   // eslint-disable-next-line functional/no-let
   let route_function_source: string | undefined
@@ -78,7 +75,7 @@ function getRouteFunctionSource(
   void babel.transformSync(file_contents, {
     filename: file_path,
     plugins: [
-      exportOnlyRouteFunctionPlugin(route_ast),
+      exportOnlyRouteArgumentPlugin(route_argument),
       removeUnusedVariablesPlugin(),
 
       // Process the file to isolate the route function.
@@ -88,15 +85,16 @@ function getRouteFunctionSource(
             enter(path: NodePath<babelTypes.Program>) {
               // Every statement outside of the route function is moved inside
               // the route function.
-              void assembleRoute(path)
+              void assembleRouteArgument(path)
 
               // Because we moved the statements inside the route function, we
               // can't use imports anymore. We transform them to dynamic
               // imports.
               void transformImportsToDynamicImports(path)
+              void removeExports(path, true)
 
               // eslint-disable-next-line functional/no-expression-statements
-              route_function_source = isolateRouteFunction(path, route_ast)
+              route_function_source = generate(path.node).code
 
               return undefined
             },
@@ -109,8 +107,8 @@ function getRouteFunctionSource(
   return route_function_source
 }
 
-function exportOnlyRouteFunctionPlugin(
-  route_ast: RouteAst,
+function exportOnlyRouteArgumentPlugin(
+  route_argument: RouteArgument,
 ) {
   return {
     visitor: {
@@ -120,7 +118,7 @@ function exportOnlyRouteFunctionPlugin(
           void removeExports(path)
 
           // We export the route function to consider it as used.
-          void exportRoute(path, route_ast)
+          void wrapAndExportRouteArgument(path, route_argument)
 
           return undefined
         },
@@ -129,23 +127,36 @@ function exportOnlyRouteFunctionPlugin(
   }
 }
 
-function removeExports(path: NodePath) {
+function removeExports(path: NodePath, allowDefault = false) {
+  function unwrapExport(path: NodePath<
+      | babelTypes.ExportDefaultDeclaration
+      | babelTypes.ExportNamedDeclaration
+    >) {
+    if (
+      path.node.declaration === null ||
+      path.node.declaration === undefined
+    ) {
+      path.remove()
+      return
+    }
+
+    void path.replaceWith(path.node.declaration)
+
+    return undefined
+  }
+
   void path.traverse({
     ExportDefaultDeclaration(path) {
+      if (allowDefault) {
+        void unwrapExport(path)
+        return undefined
+      }
+
       path.remove()
       return undefined
     },
     ExportNamedDeclaration(path) {
-      if (
-        path.node.declaration === null ||
-        path.node.declaration === undefined
-      ) {
-        path.remove()
-        return
-      }
-
-      void path.replaceWith(path.node.declaration)
-
+      void unwrapExport(path)
       return undefined
     },
   })
@@ -153,13 +164,13 @@ function removeExports(path: NodePath) {
   return undefined
 }
 
-function exportRoute(
+function wrapAndExportRouteArgument(
   path: NodePath<babelTypes.Program>,
-  route_ast: RouteAst,
+  route_argument: RouteArgument,
 ) {
   void path.traverse({
-    [route_ast.node.type](path: NodePath) {
-      if (areSameNodePath(path, route_ast)) {
+    [route_argument.node.type](path: NodePath) {
+      if (areSameNodePath(path, route_argument)) {
         const root_level_path = path.getAncestry().at(-2)
 
         if (root_level_path === undefined) {
@@ -170,8 +181,14 @@ function exportRoute(
           throw new Error('Root level path is not a declaration.')
         }
 
-        const exported_route = babelTypes.exportNamedDeclaration(
-          root_level_path.node,
+        if (!path.isExpression()) {
+          throw new Error('createRoute argument needs to be an expression.')
+        }
+
+        const exported_route = babelTypes.exportDefaultDeclaration(
+          babelTypes.functionDeclaration(null, [], babelTypes.blockStatement([
+            babelTypes.returnStatement(path.node),
+          ])),
         )
 
         void root_level_path.replaceWith(exported_route)
@@ -192,26 +209,32 @@ function removeUnusedVariablesPlugin() {
   }]
 }
 
-function assembleRoute(path: NodePath<babelTypes.Program>) {
+function assembleRouteArgument(path: NodePath<babelTypes.Program>) {
   const statements = path.get('body')
 
-  const route_statement = statements.find(function (statement) {
-    return statement.isExportNamedDeclaration()
-  })
-  if (!route_statement?.isExportNamedDeclaration()) {
-    return
+  const exported_route_argument = statements.find(function (statement) {
+    return statement.isExportDeclaration()
+  }) as NodePath<babelTypes.ExportDeclaration> | undefined
+
+  if (exported_route_argument === undefined) {
+    throw new Error('Unable to find the exported declaration.')
   }
 
-  const route_function = findRouteFunction(route_statement)
-  if (route_function === undefined) {
-    return
+  const route_argument_function = exported_route_argument.get('declaration')
+
+  if (Array.isArray(route_argument_function)) {
+    throw new TypeError('The exported declaration is an array.')
+  }
+
+  if (!route_argument_function.isFunctionDeclaration()) {
+    throw new Error('The exported declaration is not a function.')
   }
 
   // eslint-disable-next-line functional/no-let
   let inserted_count = 0
   statements.forEach(function (statement) {
     // If the statement is the route statement, we don't move it.
-    if (statement === route_statement) {
+    if (statement === exported_route_argument) {
       return
     }
 
@@ -223,9 +246,17 @@ function assembleRoute(path: NodePath<babelTypes.Program>) {
       }
     }
 
+    const block_statements = route_argument_function.get('body')
+    const block_statement = Array.isArray(block_statements)
+      ? block_statements[0]
+      : block_statements
+
+    if (block_statement === undefined || !block_statement.isBlockStatement()) {
+      return
+    }
+
     // We move the statement inside the route function.
-    void (route_function
-      .get('body')
+    void (block_statement
       .get('body')[inserted_count]
       ?.insertBefore(statement.node))
     void statement.remove()
@@ -237,25 +268,6 @@ function assembleRoute(path: NodePath<babelTypes.Program>) {
   })
 
   return undefined
-}
-
-function findRouteFunction(
-  route_statement: NodePath<babelTypes.ExportNamedDeclaration>,
-) {
-  // eslint-disable-next-line functional/no-let
-  let route_function: NodePath<babelTypes.FunctionExpression> | undefined
-  void route_statement?.traverse({
-    FunctionExpression(path) {
-      if (route_function !== undefined) {
-        return
-      }
-      // eslint-disable-next-line functional/no-expression-statements
-      route_function = path
-      return undefined
-    },
-  })
-
-  return route_function
 }
 
 function transformImportsToDynamicImports(path: NodePath) {
@@ -334,64 +346,4 @@ function transformImportToDynamicImport(
       ),
     ),
   ])
-}
-
-function isolateRouteFunction(
-  path: NodePath<babelTypes.Program>,
-  route_ast: RouteAst,
-) {
-  // We remove all statements outside of the route function.
-  path.get('body').forEach(function (statement) {
-    if (statement.isExportNamedDeclaration()) {
-      return
-    }
-
-    void statement.remove()
-
-    return undefined
-  })
-
-  // eslint-disable-next-line functional/no-let
-  let route_function_string: string | undefined
-
-  void path.traverse({
-    ExportNamedDeclaration(path) {
-      if (
-        path.node.declaration === null ||
-        path.node.declaration === undefined
-      ) {
-        path.remove()
-        return
-      }
-
-      const declarations = path.get('declaration').get('declarations')
-      const declaration = Array.isArray(declarations)
-        ? declarations[0]?.get('init')
-        : declarations.get('init')
-
-      if (declaration === undefined) {
-        return
-      }
-
-      if (Array.isArray(declaration)) {
-        return
-      }
-
-      void declaration.traverse({
-        [route_ast.node.type as any](path: RouteAst) {
-          // eslint-disable-next-line functional/no-conditional-statements
-          if (route_function_string === undefined) {
-            // eslint-disable-next-line functional/no-expression-statements
-            route_function_string = generate(path.node).code
-          }
-
-          return undefined
-        },
-      })
-
-      return undefined
-    },
-  })
-
-  return route_function_string
 }

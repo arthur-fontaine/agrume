@@ -18,7 +18,7 @@ const default_options: Required<AgrumeOptions> = {
 /**
  * @returns The options.
  */
-export function getOptions(): Required<AgrumeOptions> {
+export function getAgrumeOptions(): Required<AgrumeOptions> {
   return { ...default_options, ...state.options }
 }
 
@@ -27,7 +27,7 @@ export function getOptions(): Required<AgrumeOptions> {
  * @returns The new options.
  */
 // eslint-disable-next-line functional/prefer-immutable-types
-export function setOptions(options: AgrumeOptions): AgrumeOptions {
+export function setAgrumeOptions(options: AgrumeOptions): AgrumeOptions {
   state.options = options
   return state.options
 }

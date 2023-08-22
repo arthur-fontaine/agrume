@@ -1,6 +1,6 @@
 import {
   _startRouteRegistration, _stopRouteRegistration, _createConnectMiddleware,
-  AgrumeOptions, setOptions, getOptions,
+  AgrumeOptions, setAgrumeOptions, getAgrumeOptions,
 } from "@agrume/core"
 import babel from '@babel/core'
 // eslint-disable-next-line lines-around-comment
@@ -22,7 +22,7 @@ type AgrumePluginOptions = AgrumeOptions
  */
 // eslint-disable-next-line functional/prefer-immutable-types
 export function agrumePlugin(options: AgrumePluginOptions = {}): PluginOption {
-  void setOptions(options)
+  void setAgrumeOptions(options)
 
   return {
     name: package_json.name,
@@ -65,7 +65,7 @@ export function agrumePlugin(options: AgrumePluginOptions = {}): PluginOption {
     configureServer(server_by_vite) {
       void _stopRouteRegistration()
       const agrumeServerHandler = _createConnectMiddleware()
-      const server = getOptions().server ?? server_by_vite.middlewares
+      const server = getAgrumeOptions().server ?? server_by_vite.middlewares
 
       void server.use(agrumeServerHandler)
 
