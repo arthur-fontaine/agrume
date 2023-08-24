@@ -27,6 +27,7 @@ const getDogImage = createRoute(
       }))
   },
   {
+    path: '/dogs/random',
     getClient(requestOptions) {
       return async function() {
         return (fetch(

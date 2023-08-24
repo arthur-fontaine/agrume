@@ -21,13 +21,14 @@ type GetClient<
 // eslint-disable-next-line functional/prefer-immutable-types
 > = (requestOptions: RequestOptions) => _Client
 
-interface CreateRouteOptions<
+export interface CreateRouteOptions<
   // eslint-disable-next-line @typescript-eslint/naming-convention
   _Route extends Route<any, any>,
   // eslint-disable-next-line @typescript-eslint/naming-convention
   _Client = unknown,
 > {
   getClient?: GetClient<_Route, _Client> | undefined
+  path?: `/${string}` | undefined
 }
 
 type CreateRouteOptionsWithUndefinedClient<
@@ -101,7 +102,7 @@ export function createRoute<
   // eslint-disable-next-line @typescript-eslint/naming-convention
   _Options extends CreateRouteOptions<_Route, unknown> | undefined,
 >(route: _Route, options: _Options) {
-  const route_name = getRouteName(route)
+  const route_name = getRouteName(route, options)
   const prefix = getAgrumeOptions().prefix
 
   // eslint-disable-next-line functional/no-conditional-statements
