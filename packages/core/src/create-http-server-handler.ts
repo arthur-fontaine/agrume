@@ -3,7 +3,7 @@
 import type Connect from "connect"
 import { JsonValue } from "type-fest"
 
-import { getOptions } from "./options"
+import { getAgrumeOptions } from "./options"
 import { _getRoutes } from "./route-registration"
 
 /**
@@ -32,7 +32,7 @@ export function _createConnectMiddleware() {
         return
       }
 
-      const prefix = getOptions().prefix
+      const prefix = getAgrumeOptions().prefix
       const route_name = request.url?.replace(new RegExp(`^${prefix}`), "")
 
       if (route_name === undefined) {
@@ -71,7 +71,8 @@ export function _createConnectMiddleware() {
         // eslint-disable-next-line functional/no-let
         let result: JsonValue
         try {
-          result = await route(parameters, globalThis)
+          // TODO: remove `any`
+          result = await route(parameters as any)
         } catch (error) {
           throwStatus(500)
           return

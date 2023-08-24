@@ -1,8 +1,8 @@
-import { createRoute, getOptions, getRouteName } from '@agrume/core'
+import { createRoute } from '@agrume/core'
 import core_package_json from '@agrume/core/package.json'
 import { type NodePath, types as babelTypes, PluginPass } from '@babel/core'
 
-import { buildRouteFunction } from '../utils/build-route-file'
+import { createArgumentLoader } from '../utils/create-argument-loader'
 
 /**
  * @param callPath The call expression path.
@@ -47,6 +47,7 @@ function transformCreateRoute(
 
   // Now we are sure that the first argument should be a function.
   const first_argument = callPath.get('arguments')[0]
+  const second_argument = callPath.get('arguments')[1]
 
   if (first_argument === undefined ||
     (!first_argument.isFunctionExpression() &&
@@ -55,20 +56,35 @@ function transformCreateRoute(
     return
   }
 
-  const route_function = first_argument
-  const built_route_function = buildRouteFunction(route_function, file_path)
+  if (second_argument !== undefined && !second_argument.isObjectExpression()) {
+    return
+  }
 
-  const route = new Function(`return ${built_route_function}`)()
+  const route_function_path = first_argument
+  const route_function_loader = createArgumentLoader(
+    route_function_path,
+    file_path,
+  )
 
-  const route_name = getRouteName(route)
-  const prefix = getOptions().prefix
+  if (route_function_loader === undefined) {
+    throw new TypeError('Unexpected route_function_loader undefined.')
+  }
 
-  const requestClient = createRoute(route)
-  void callPath.replaceWithSourceString(`(...args) => {
-    const route_name = ${JSON.stringify(route_name)}
-    const prefix = ${JSON.stringify(prefix)}
-    return (${requestClient.toString()})(...args)
-  }`)
+  const route_options_path = second_argument
+  const route_options_loader = route_options_path === undefined
+    ? undefined
+    : createArgumentLoader(
+      route_options_path,
+      file_path,
+    )
+
+  const route = new Function(`return (${route_function_loader})()`)()
+  const route_options = route_options_loader === undefined
+    ? undefined
+    : new Function(`return (${route_options_loader})()`)()
+
+  const requestClient = createRoute(route, route_options)
+  void callPath.replaceWithSourceString(requestClient.toString())
 
   return undefined
 }
