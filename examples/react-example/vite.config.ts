@@ -10,9 +10,7 @@ export default defineConfig({
       prefix: '/api/',
       server,
     }),
-    react({
-      jsxRuntime: 'classic',
-    }),
+    react(),
     {
       name: 'stop-server',
       closeBundle: closeServer,
