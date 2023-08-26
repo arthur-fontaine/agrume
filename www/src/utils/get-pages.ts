@@ -1,6 +1,7 @@
 import { IElement, Window } from 'happy-dom'
 
-import { escapeHTML } from './escape-html'
+import { escapeHTML } from './escape-html.js'
+import agrume_workspace_package_json from '../../../package.json'
 import { compiledContent } from '../../../README.md'
 
 const content = compiledContent()
@@ -32,6 +33,16 @@ export function getPages() {
   })
 
   document.querySelectorAll('a').forEach(function (element) {
+    // eslint-disable-next-line functional/no-conditional-statements
+    if (element.getAttribute('href')?.startsWith('./')) {
+      element.setAttribute(
+        'href',
+        `${
+          agrume_workspace_package_json.repository.url}/blob/main/${
+          element.getAttribute('href')?.slice(2)}`,
+      )
+    }
+
     // eslint-disable-next-line functional/no-conditional-statements
     if (element.getAttribute('href')?.startsWith('http')) {
       // eslint-disable-next-line max-len
@@ -93,7 +104,7 @@ export function getPages() {
     return pages
   }, [] as Page[])
 
-  const pages_to_not_include = new Set(['license', 'examples'])
+  const pages_to_not_include = new Set(['license'])
   const filtered_pages = pages.filter(function (page) {
     return !pages_to_not_include.has(page.id)
   })

@@ -74,7 +74,7 @@ export default defineConfig({
 ```
 
 > [!WARNING]
-> You must add the plugin at the top of the list so that it will be able to transform your code correctly.
+> In some cases, you need to add the plugin to the top of the list of plugins. For example, if you use [Vite React](https://www.npmjs.com/package/@vitejs/plugin-react), the Vite React plugin will add side-effect statements to your code, which will break Agrume. To work around this problem, you can also use the `createRoute` function in separate files.
 
 > [!NOTE]
 > If you want to make Agrume work with another stack, you may want to use the [babel plugin](https://github.com/arthur-fontaine/agrume/tree/main/packages/babel-plugin-agrume). Feel free to open a PR to add support for your stack!
@@ -167,6 +167,9 @@ You can then use the `sayHello` function to do a request to the route:
 ```ts
 sayHello().then(console.log) // Hello world!
 ```
+
+> [!WARNING]
+> At the moment you can only use the `createRoute` function in `.js`, `.jsx`, `.ts` and `.tsx` files. To use Agrume in other files, you need to export the `createRoute` function from one of the valid files and import it into the other files. (See [Vue example](./examples/vue-example))
 
 ### Parameters
 
@@ -289,7 +292,7 @@ const authenticatedRoute = createRoute(
 )
 ```
 
-## Examples
+### Other examples
 
 You can find examples in the [examples](./examples) directory.
 
