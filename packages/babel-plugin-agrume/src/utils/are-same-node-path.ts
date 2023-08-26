@@ -15,7 +15,11 @@ export function areSameNodePath(
   const ancestor_path2 = path2.getAncestry()
 
   function getAncestorTypes(ancestor_path: NodePath[]) {
-    return ancestor_path.map(function (path) {
+    return ancestor_path.flatMap(function (path) {
+      if (path.isProgram() || path.isExportDeclaration()) {
+        return []
+      }
+
       return path.node.type
     })
   }
