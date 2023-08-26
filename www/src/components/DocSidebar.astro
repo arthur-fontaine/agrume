@@ -86,6 +86,10 @@ const pages = getPages().map((page) => {
 <style lang="scss">
   @import "../styles/variables.scss";
 
+  :global(html:has(#nav-toggle:checked)) {
+    overflow: hidden;
+  }
+
   .nav-toggle-wrapper {
     display: none;
 
