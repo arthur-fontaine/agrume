@@ -32,6 +32,14 @@ export function agrumePlugin(options: AgrumePluginOptions = {}): PluginOption {
     apply: "serve",
 
     async transform(code, id) {
+      const extensions = ['.ts', '.tsx', '.js', '.jsx']
+
+      if (!extensions.some(function (extension) {
+        return id.endsWith(extension)
+      })) {
+        return null
+      }
+
       void _startRouteRegistration()
 
       try {
