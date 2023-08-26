@@ -14,7 +14,7 @@ export function getPages() {
   // eslint-disable-next-line max-len
   // eslint-disable-next-line functional/no-expression-statements, functional/immutable-data
   document.body.innerHTML = content
-  
+
   document.querySelectorAll('*').forEach(function (element) {
     element.childNodes.forEach(function (child) {
       // If it is a text, encode it.
@@ -42,7 +42,7 @@ export function getPages() {
     if (
       element.getAttribute('href')?.startsWith('#') &&
       document.querySelector(`h2#${element.getAttribute('href')?.slice(1)}`)
-    // eslint-disable-next-line functional/no-conditional-statements
+      // eslint-disable-next-line functional/no-conditional-statements
     ) {
       // eslint-disable-next-line max-len
       // eslint-disable-next-line functional/no-expression-statements, functional/immutable-data
@@ -62,7 +62,7 @@ export function getPages() {
       const title = child.textContent
       const id = child.id
 
-      return [...pages, { title, id, content: [] }]
+      return [...pages, { title, id, description: '', content: [] }]
     }
 
     const page = pages.at(-1)
@@ -81,6 +81,11 @@ export function getPages() {
         {
           ...page,
           content: [...page.content, child],
+          description: page.description || (
+            child.textContent.length > 100
+              ? `${child.textContent.slice(0, 100)}...`
+              : child.textContent
+          ),
         },
       ]
     }
@@ -99,5 +104,6 @@ export function getPages() {
 interface Page {
   title: string
   id: string
+  description: string
   content: IElement[]
 }

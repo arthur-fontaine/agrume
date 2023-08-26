@@ -14,9 +14,10 @@ import SimpleIconsGithub from "~icons/simple-icons/github";
 
 interface Props {
   title: string;
+  description: string;
 }
 
-const { title } = Astro.props;
+const { title, description } = Astro.props;
 ---
 
 <script>
@@ -53,7 +54,7 @@ const { title } = Astro.props;
   });
 </script>
 
-<BaseLayout title={`${title} – Agrume`}>
+<BaseLayout title={`${title} – Agrume`} description={description}>
   <header>
     <div class="logo">
       <a href="/">

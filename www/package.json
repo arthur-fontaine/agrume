@@ -20,6 +20,7 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "astro": "^2.10.13",
+    "astro-seo-meta": "^2.2.0",
     "cmdk": "^0.2.0",
     "happy-dom": "^10.11.0",
     "normalize.css": "^8.0.1",

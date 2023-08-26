@@ -3,21 +3,42 @@ import 'normalize.css';
 import '@fontsource-variable/gluten';
 import '@fontsource-variable/manrope';
 
+import { Seo } from "astro-seo-meta";
+
 interface Props {
 	title: string;
+	description?: string;
+	keywords?: string[];
 }
 
-const { title } = Astro.props;
+const { title, description, keywords } = Astro.props;
+
+// const ogImagePath = "/assets/banner.png";
+// const url = "https://agrume.js.org";
+// const ogImage = `${url}${ogImagePath}`;
+
+const ogImage = "https://raw.githubusercontent.com/arthur-fontaine/agrume/9aa42e2474d4a36bfc62e43708d93399d6106f06/.github/assets/banner.png";
 ---
 
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description">
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/png" href="/assets/logo.png" />
 		<meta name="generator" content={Astro.generator} />
+		<Seo
+			title={title}
+			description={description}
+			keywords={keywords}
+			facebook={{
+				image: ogImage,
+			}}
+			twitter={{
+				image: ogImage,
+				site: "@voithure",
+			}}
+		/>
 		<title>{title}</title>
 	</head>
   <body>
