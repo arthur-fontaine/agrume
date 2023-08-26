@@ -12,9 +12,9 @@
 
 ## Getting started
 
-Front-end developers are often afraid of the backend. They don't know how to start, what to do, and how to do it. They are afraid of the unknown. They are afraid of the backend.
+Front-end developers are often afraid of the backend. They don't know how to start, what to do, and how to do it. Agrume is a tool that makes developing API endpoints as easy as writing a function. Best of all, it's type-safe!
 
-Agrume is a tool that makes developing API endpoints as easy as writing a function. Let's see an example:
+Let's see an example:
 
 ```tsx
 import { createRoute } from '@agrume/core'
@@ -46,7 +46,7 @@ export const Dog = function () {
 
 ### Motivation
 
-As a student, I frequently have to build projects in teams and in a short amount of time. These projects require a backend, but many of my teammates prefer to work on the frontend because they are not comfortable with the backend. I wanted to create a tool that would make backend development as easy as frontend development, so that it would be easier to organise the work between my teammates.
+As a student, I frequently have to build projects in teams and in a short amount of time. These projects require a backend, but many of my teammates prefer to work on the frontend because they are not comfortable with the backend. I wanted to create a tool that would make backend development as easy as frontend development, so that it would be easier to organise the work in teams.
 
 I think that Agrume is great to build prototypes and small projects. However, I don't know if it's a good idea to use it in production. I would love to hear your feedback on this!
 
