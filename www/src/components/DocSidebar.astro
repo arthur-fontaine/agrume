@@ -2,8 +2,8 @@
 import { getPages } from "../utils/get-pages.js";
 import DocSearchbar from "./searchbar/DocSearchbar.astro";
 
-import LucideMenu from '~icons/lucide/menu';
-import LucideX from '~icons/lucide/x';
+import LucideMenu from "~icons/lucide/menu";
+import LucideX from "~icons/lucide/x";
 
 const pages = getPages().map((page) => {
   return {
@@ -40,20 +40,46 @@ const pages = getPages().map((page) => {
         return (
           <div
             class="page"
-            data-active={new RegExp(`^/docs/${page.id}/?`).test(Astro.url.pathname)}
+            data-active={new RegExp(`^/docs/${page.id}/?`).test(
+              Astro.url.pathname
+            )}
           >
             <a href={`/docs/${page.id}`}>{page.title}</a>
-            {page.subpages.length > 0 && <div class="subpages">
-              {page.subpages.map((subpage) => {
-                return <a href={`/docs/${page.id}#${subpage.id}`}>{subpage.title}</a>;
-              })}
-            </div>}
+            {page.subpages.length > 0 && (
+              <div class="subpages">
+                {page.subpages.map((subpage) => {
+                  return (
+                    <a href={`/docs/${page.id}#${subpage.id}`}>
+                      {subpage.title}
+                    </a>
+                  );
+                })}
+              </div>
+            )}
           </div>
         );
       })
     }
   </div>
 </nav>
+
+<script>
+  const nav = document.querySelector("nav") as HTMLElement | null;
+  const navToggle = document.querySelector("#nav-toggle") as HTMLInputElement | null;
+
+  window.addEventListener("click", (event) => {
+    if (nav === null) return;
+    if (navToggle === null) return;
+    if (event.target === null) return;
+
+    if (getComputedStyle(nav).position !== "fixed") return;
+
+    // If clicking outside the nav, close it
+    if (!nav.contains(event.target as Node)) {
+      navToggle.checked = false;
+    }
+  });
+</script>
 
 <style lang="scss">
   @import "../styles/variables.scss";
@@ -69,13 +95,15 @@ const pages = getPages().map((page) => {
         }
       }
 
-      position: static;
-      width: fit-content;
+      @media screen and (max-width: 375px) {
+        position: static;
+        width: fit-content;
 
-      margin-bottom: 2rem;
-      margin-left: auto;
+        margin-bottom: 2rem;
+        margin-left: auto;
 
-      transform: none;
+        transform: none;
+      }
     }
 
     // When the nav is closed
@@ -117,7 +145,7 @@ const pages = getPages().map((page) => {
       cursor: pointer;
       z-index: 1000;
       position: absolute;
-      
+
       // Put the toggle below the header
       top: calc(5rem + 1px + 1rem);
       right: -1rem;
@@ -126,7 +154,7 @@ const pages = getPages().map((page) => {
 
       border: 1px solid darken($green, 1%);
       border-radius: 0.5rem;
-      padding: 0.25rem;
+      padding: 0.5rem;
 
       background-color: lighten($green, 12%);
     }
