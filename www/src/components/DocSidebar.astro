@@ -40,9 +40,11 @@ const pages = getPages().map((page) => {
         return (
           <div
             class="page"
-            data-active={new RegExp(`^/docs/${page.id}/?`).test(
-              Astro.url.pathname
-            )}
+            data-active={
+              new RegExp(`^/docs/${page.id}/?`).test(
+                Astro.url.pathname
+              ) || Astro.url.pathname === `/` && page.id === `getting-started`
+            }
           >
             <a href={`/docs/${page.id}`}>{page.title}</a>
             {page.subpages.length > 0 && (
