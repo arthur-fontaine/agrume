@@ -1,7 +1,17 @@
 ---
+import DocLayout from "../layouts/DocLayout.astro";
+
+import { getPages } from "../utils/get-pages.js";
+
+const page = getPages().find((page) => page.id === 'getting-started');
 ---
 
+{page !== undefined && (
+  <DocLayout title={page.title} description={page.description}>
+    {page.content}
+  </DocLayout>
+)}
+
 <script is:inline>
-	console.log("Redirecting to getting started page");
-	location.href = "/docs/getting-started/"
+	history.replaceState(null, null, "/docs/getting-started/");
 </script>
