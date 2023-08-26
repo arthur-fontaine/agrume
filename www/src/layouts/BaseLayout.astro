@@ -1,0 +1,32 @@
+---
+import 'normalize.css';
+import '@fontsource-variable/gluten';
+import '@fontsource-variable/manrope';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description">
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/png" href="/assets/logo.png" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+  <body>
+    <slot />
+	</body>
+</html>
+
+<style>
+  body {
+    font-family: 'Manrope Variable', sans-serif;
+  }
+</style>
