@@ -201,6 +201,9 @@ importers:
       astro:
         specifier: ^2.10.13
         version: 2.10.13(@types/node@20.4.7)(sass@1.66.1)
+      astro-seo-meta:
+        specifier: ^2.2.0
+        version: 2.2.0(astro@2.10.13)
       cmdk:
         specifier: ^0.2.0
         version: 0.2.0(@types/react@18.2.15)(react-dom@18.2.0)(react@18.2.0)
@@ -4118,6 +4121,14 @@ packages:
   /astral-regex@2.0.0:
     resolution: {integrity: sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==}
     engines: {node: '>=8'}
+    dev: false
+
+  /astro-seo-meta@2.2.0(astro@2.10.13):
+    resolution: {integrity: sha512-8iCoABYHn6cKEoAXyTnB9VfAB31dLu5yxIpnwbnIQeBgamhUgFypB4U9v6D/0RSBUTEBPZBvhMTtynhU1Rj/dQ==}
+    peerDependencies:
+      astro: ^2.0.0
+    dependencies:
+      astro: 2.10.13(@types/node@20.4.7)(sass@1.66.1)
     dev: false
 
   /astro@2.10.13(@types/node@20.4.7)(sass@1.66.1):
