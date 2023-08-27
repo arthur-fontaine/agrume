@@ -145,6 +145,44 @@ export { app as server }
 
 *But please, don't use Express. See ["Why you should drop ExpressJS" by Romain Lanz](https://web.archive.org/web/20220206190522/https://dev.to/romainlanz/why-you-should-drop-expressjs-in-2021-711)*.
 
+#### `logger`
+
+By default, Agrume does not log anything. However, you can pass a logger to the plugin to log the requests:
+
+```ts
+// ...
+
+export default defineConfig({
+  plugins: [
+    agrume({
+      logger: {
+        info: console.info,
+        error: console.error,
+      }
+    })
+    // ...
+  ]
+})
+```
+
+You can use `fs.writeFileSync` instead of `console.log` to log the requests to a file.
+
+```ts
+// ...
+
+export default defineConfig({
+  plugins: [
+    agrume({
+      logger: {
+        info: (...args) => fs.writeFileSync('info.log', args.join(' ') + '\n', { flag: 'a' }),
+        error: (...args) => fs.writeFileSync('error.log', args.join(' ') + '\n', { flag: 'a' }),
+      }
+    })
+    // ...
+  ]
+})
+```
+
 ## Creating routes
 
 The only thing you need to create a route is the `createRoute` function. It takes a function as an argument and returns a function that can be called to do a request to the route.
