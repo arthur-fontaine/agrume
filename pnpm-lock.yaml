@@ -41,9 +41,9 @@ importers:
 
   examples/react-example:
     dependencies:
-      '@agrume/core':
+      agrume:
         specifier: workspace:*
-        version: link:../../packages/core
+        version: link:../../packages/agrume
       connect:
         specifier: ^3.7.0
         version: 3.7.0
@@ -88,12 +88,12 @@ importers:
         specifier: ^3.3.4
         version: 3.3.4
     devDependencies:
-      '@agrume/core':
-        specifier: workspace:*
-        version: link:../../packages/core
       '@vitejs/plugin-vue':
         specifier: ^4.2.3
         version: 4.2.3(vite@4.4.9)(vue@3.3.4)
+      agrume:
+        specifier: workspace:*
+        version: link:../../packages/agrume
       typescript:
         specifier: ^5.0.2
         version: 5.1.6
@@ -106,6 +106,19 @@ importers:
       vue-tsc:
         specifier: ^1.8.5
         version: 1.8.5(typescript@5.1.6)
+
+  packages/agrume:
+    dependencies:
+      '@agrume/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@types/node':
+        specifier: ^18.11.9
+        version: 18.11.9
+      unbuild:
+        specifier: ^1.2.1
+        version: 1.2.1
 
   packages/babel-plugin-agrume:
     dependencies:
@@ -121,6 +134,9 @@ importers:
       '@types/babel__core':
         specifier: ^7.20.1
         version: 7.20.1
+      agrume:
+        specifier: workspace:*
+        version: link:../agrume
       babel-plugin-putout:
         specifier: ^6.0.0
         version: 6.0.0(putout@31.5.0)
@@ -9935,7 +9951,7 @@ packages:
     dependencies:
       '@babel/core': 7.22.10
       '@babel/standalone': 7.22.10
-      '@babel/types': 7.22.10
+      '@babel/types': 7.22.11
       defu: 6.1.2
       jiti: 1.19.3
       mri: 1.2.0

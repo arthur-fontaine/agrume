@@ -2,9 +2,9 @@
 
 import path from 'node:path'
 
-import core_package_json from '@agrume/core/package.json'
 import babel, { NodePath, types as babelTypes } from '@babel/core'
 import generate from '@babel/generator'
+import agrume_package_json from 'agrume/package.json'
 // eslint-disable-next-line lines-around-comment
 // @ts-expect-error No types available for this package.
 import babelPluginPutout from 'babel-plugin-putout'
@@ -129,9 +129,9 @@ function exportOnlyRouteArgumentPlugin(
 
 function removeExports(path: NodePath, allowDefault = false) {
   function unwrapExport(path: NodePath<
-      | babelTypes.ExportDefaultDeclaration
-      | babelTypes.ExportNamedDeclaration
-    >) {
+    | babelTypes.ExportDefaultDeclaration
+    | babelTypes.ExportNamedDeclaration
+  >) {
     if (
       path.node.declaration === null ||
       path.node.declaration === undefined
@@ -241,7 +241,7 @@ function assembleRouteArgument(path: NodePath<babelTypes.Program>) {
     // If the statement is the import of the agrume core package, we don't move
     // it.
     if (statement.isImportDeclaration()) {
-      if (statement.node.source.value === core_package_json.name) {
+      if (statement.node.source.value === agrume_package_json.name) {
         return
       }
     }

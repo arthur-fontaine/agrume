@@ -17,7 +17,7 @@ Front-end developers are often afraid of the backend. They don't know how to sta
 Let's see an example:
 
 ```tsx
-import { createRoute } from '@agrume/core'
+import { createRoute } from 'agrume'
 
 const getDogImage = createRoute(
   async () => {
@@ -53,7 +53,7 @@ I think that Agrume is great to build prototypes and small projects. However, I 
 ### Installation
 
 ```bash
-pnpm add @agrume/core vite-plugin-agrume
+pnpm add agrume vite-plugin-agrume
 ```
 
 > [!NOTE]
@@ -188,7 +188,7 @@ export default defineConfig({
 The only thing you need to create a route is the `createRoute` function. It takes a function as an argument and returns a function that can be called to do a request to the route.
 
 ```ts
-import { createRoute } from '@agrume/core'
+import { createRoute } from 'agrume'
 
 const sayHello = createRoute(
   async () => {
@@ -214,7 +214,7 @@ sayHello().then(console.log) // Hello world!
 You can request parameters from the client just like you would do with a normal function:
 
 ```ts
-import { createRoute } from '@agrume/core'
+import { createRoute } from 'agrume'
 
 const sayHello = createRoute(
   async (name: string) => {
@@ -244,7 +244,7 @@ You can configure each route individually by passing an object to the `createRou
 You can specify the path of the route by passing a string starting with `/` to the `path` option:
 
 ```ts
-import { createRoute } from '@agrume/core'
+import { createRoute } from 'agrume'
 
 const getDogImage = createRoute(
   async () => {}, {
@@ -260,7 +260,7 @@ By default, Agrume will transform the `createRoute` function into a function tha
 For example, if you want use a custom server that listen on port `3000`, you can do:
 
 ```ts
-import { createRoute } from '@agrume/core'
+import { createRoute } from 'agrume'
 
 const getDogImage = createRoute(
   async () => {},
@@ -296,7 +296,7 @@ Have a look at the [Recipes](#recipes) section to see what you can do with the `
 You can use the `getClient` option to add authentication to your routes. For example, if you want to add a JWT authentication to your routes, you can do:
 
 ```ts
-import { createRoute } from '@agrume/core'
+import { createRoute } from 'agrume'
 
 const getUser = ({ token }) => {
   // ...
