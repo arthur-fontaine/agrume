@@ -1,4 +1,4 @@
-import { createRoute } from '@agrume/core'
+import { createRoute } from 'agrume'
 import React from 'react'
 
 import { dog_api_url } from './dog-api-url'

@@ -1,6 +1,6 @@
 import { createRoute } from '@agrume/core'
-import core_package_json from '@agrume/core/package.json'
 import { type NodePath, types as babelTypes, PluginPass } from '@babel/core'
+import agrume_package_json from 'agrume/package.json'
 
 import { createArgumentLoader } from '../utils/create-argument-loader'
 
@@ -17,7 +17,7 @@ export function transformCallExpression(
 ) {
   const callee = callPath.get('callee')
 
-  if (!callee.referencesImport(core_package_json.name, createRoute.name)) {
+  if (!callee.referencesImport(agrume_package_json.name, createRoute.name)) {
     return
   }
 
