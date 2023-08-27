@@ -27,12 +27,16 @@ export function _createConnectMiddleware() {
         next()
       }
 
+      const options = getAgrumeOptions()
+
+      options.logger?.info?.(request.method, request.url)
+
       if (request.method !== "POST") {
         throwStatus(405)
         return
       }
 
-      const prefix = getAgrumeOptions().prefix
+      const prefix = options.prefix
       const route_name = request.url?.replace(new RegExp(`^${prefix}`), "")
 
       if (route_name === undefined) {
@@ -74,6 +78,7 @@ export function _createConnectMiddleware() {
           // TODO: remove `any`
           result = await route(parameters as any)
         } catch (error) {
+          options.logger?.error?.(error)
           throwStatus(500)
           return
         }

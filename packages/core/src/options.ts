@@ -8,11 +8,16 @@ import { state } from "./state"
 export interface AgrumeOptions {
   server?: Connect.Server | undefined
   prefix?: `/${string}/`
+  logger?: {
+    info?: typeof console.info
+    error?: typeof console.error
+  } | undefined
 }
 
 const default_options: Required<AgrumeOptions> = {
   server: undefined,
   prefix: "/api/",
+  logger: undefined,
 }
 
 /**
