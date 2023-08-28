@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^2.3.2",
+    "@astrojs/vercel": "^3.8.2",
     "@fontsource-variable/gluten": "^5.0.8",
     "@fontsource-variable/manrope": "^5.0.8",
     "@fontsource/ibm-plex-mono": "^5.0.8",
