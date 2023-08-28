@@ -7,10 +7,10 @@
     "dev": "vite"
   },
   "dependencies": {
-    "vue": "^3.3.4"
+    "vue": "^3.3.4",
+    "agrume": "workspace:*"
   },
   "devDependencies": {
-    "agrume": "workspace:*",
     "@vitejs/plugin-vue": "^4.2.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
