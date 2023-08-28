@@ -110,7 +110,7 @@ import { server } from './server'
 export default defineConfig({
   plugins: [
     agrume({
-      useMiddleware: server.use
+      useMiddleware: server.use.bind(server),
     })
     // ...
   ]
