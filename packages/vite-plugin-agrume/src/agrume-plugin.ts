@@ -1,6 +1,6 @@
 import {
   _startRouteRegistration, _stopRouteRegistration, _createConnectMiddleware,
-  AgrumeOptions, setAgrumeOptions, getAgrumeOptions,
+  AgrumeOptions, setAgrumeOptions,
 } from "@agrume/core"
 import babel from '@babel/core'
 // eslint-disable-next-line lines-around-comment
@@ -10,11 +10,15 @@ import babelPluginSyntaxJsx from '@babel/plugin-syntax-jsx'
 // @ts-expect-error No types available for this package.
 import babelPluginTransformTypescript from '@babel/plugin-transform-typescript'
 import { agrume as agrumeBabelPlugin } from 'babel-plugin-agrume'
+import type * as Connect from "connect"
 import { PluginOption } from "vite"
 
 import package_json from "../package.json"
 
-type AgrumePluginOptions = AgrumeOptions
+interface AgrumePluginOptions extends AgrumeOptions {
+  // eslint-disable-next-line functional/no-return-void
+  useMiddleware?: (middleware: Connect.NextHandleFunction) => void
+}
 
 /**
  * @param options The Agrume plugin options.
@@ -73,9 +77,12 @@ export function agrumePlugin(options: AgrumePluginOptions = {}): PluginOption {
     configureServer(server_by_vite) {
       void _stopRouteRegistration()
       const agrumeServerHandler = _createConnectMiddleware()
-      const server = getAgrumeOptions().server ?? server_by_vite.middlewares
 
-      void server.use(agrumeServerHandler)
+      const useMiddleware = (
+        options.useMiddleware ?? server_by_vite.middlewares.use
+      )
+
+      void useMiddleware(agrumeServerHandler)
 
       return undefined
     },

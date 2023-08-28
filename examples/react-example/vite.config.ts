@@ -10,7 +10,8 @@ export default defineConfig({
   plugins: [
     agrume({
       prefix: '/api/',
-      server,
+      useMiddleware: server.use.bind(server),
+      // or useMiddleware: (middleware) => server.use(middleware),
       logger: {
         info: (...args) => fs.writeFileSync('info.log', args.join(' ') + '\n', { flag: 'a' }),
         error: (...args) => fs.writeFileSync('error.log', args.join(' ') + '\n', { flag: 'a' }),

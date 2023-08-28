@@ -21,15 +21,14 @@ import { createRoute } from 'agrume'
 
 const getDogImage = createRoute(
   async () => {
-    const dogResponse = await fetch('https://dog.ceo/api/breeds/image/random')
-    const json = await dogResponse.json()
-    const url = json.message as string
+    // `database` is a fake database that should not be accessible from the client
 
-    const imageResponse = await fetch(url)
-    const blob = await imageResponse.blob()
-    
-    return `data:${blob.type};base64,${
-      Buffer.from(await blob.arrayBuffer()).toString('base64')}`
+    const dog = database.dogs.findFirst({
+      select: ['imageBase64'],
+      where: { isGoodBoy: true }
+    })
+
+    return dog.imageBase64
   }
 )
 
@@ -100,9 +99,9 @@ export default defineConfig({
 })
 ```
 
-#### `server`
+#### `useMiddleware`
 
-By default, Agrume will use the [Vite dev server](https://vitejs.dev/guide/api-javascript.html#devserver) to serve your API. However, you can use your own server by passing the `server` option to the plugin:
+By default, Agrume will use the [Vite dev server](https://vitejs.dev/guide/api-javascript.html#devserver) to serve your API. However, you can use your own server by passing the `useMiddleware` option to the plugin:
 
 ```ts
 // ...
@@ -111,14 +110,14 @@ import { server } from './server'
 export default defineConfig({
   plugins: [
     agrume({
-      server: server
+      useMiddleware: server.use
     })
     // ...
   ]
 })
 ```
 
-The server must be a Connect-like server. Here is an example of a simple server:
+The `useMiddleware` option takes a function that takes a Connect-like middleware as an argument. Here is an example of a Connect-like server:
 
 ```ts
 import { createServer } from "node:http"
@@ -132,7 +131,7 @@ server.listen(3000)
 export { app as server }
 ```
 
-Many backend frameworks are Connect-like. For example, [Express](https://expressjs.com) is Connect-like. You can use it as a server:
+Many backend frameworks can use Connect-like middleware. For example, [Express](https://expressjs.com) can use Connect-like middleware. You can use it as a server:
 
 ```ts
 import express from 'express'

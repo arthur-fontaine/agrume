@@ -18,7 +18,9 @@
     "@babel/core": "^7.22.10",
     "@babel/plugin-syntax-jsx": "^7.22.5",
     "@babel/plugin-transform-typescript": "^7.22.10",
+    "@types/connect": "^3.4.35",
     "babel-plugin-agrume": "workspace:*",
+    "connect": "^3.7.0",
     "esbuild": "^0.19.2",
     "vite": "^4.4.9"
   },

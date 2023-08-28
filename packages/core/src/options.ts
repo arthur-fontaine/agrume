@@ -1,12 +1,9 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 
-import type Connect from "connect"
-
 import { state } from "./state"
 
 export interface AgrumeOptions {
-  server?: Connect.Server | undefined
   prefix?: `/${string}/`
   logger?: {
     info?: typeof console.info
@@ -15,7 +12,6 @@ export interface AgrumeOptions {
 }
 
 const default_options: Required<AgrumeOptions> = {
-  server: undefined,
   prefix: "/api/",
   logger: undefined,
 }
