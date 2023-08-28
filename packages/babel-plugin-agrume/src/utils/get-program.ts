@@ -5,7 +5,9 @@ import { type NodePath, types as babelTypes } from '@babel/core'
  * @returns The program path.
  */
 // eslint-disable-next-line functional/prefer-immutable-types
-export function getProgram(path: NodePath<babelTypes.Node>) {
+export function getProgram(path: NodePath<babelTypes.Node>): (
+  NodePath<babelTypes.Program> | undefined
+ ) {
   const program_path = path.getAncestry().at(-1)
 
   if (program_path === undefined) {
