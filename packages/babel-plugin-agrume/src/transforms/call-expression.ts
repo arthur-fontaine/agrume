@@ -1,3 +1,5 @@
+import { createRequire } from 'node:module'
+
 import { createRoute } from '@agrume/core'
 import { type NodePath, types as babelTypes, PluginPass } from '@babel/core'
 import agrume_package_json from 'agrume/package.json'
@@ -78,15 +80,23 @@ function transformCreateRoute(
       file_path,
     )
 
-  const route = new Function(`return (${route_function_loader})()`)()
+  const route = runLoader(route_function_loader)
   const route_options = route_options_loader === undefined
     ? undefined
-    : new Function(`return (${route_options_loader})()`)()
+    : runLoader(route_options_loader)
 
   const requestClient = createRoute(route, route_options)
   void callPath.replaceWithSourceString(requestClient.toString())
 
   return undefined
+}
+
+function runLoader(loader: string) {
+  const _require = typeof require === 'undefined'
+    ? createRequire(import.meta.url)
+    : require
+
+  return new Function('require', `return (${loader})`)(_require)()
 }
 
 // eslint-disable-next-line max-len

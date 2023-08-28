@@ -79,7 +79,8 @@ export function agrumePlugin(options: AgrumePluginOptions = {}): PluginOption {
       const agrumeServerHandler = _createConnectMiddleware()
 
       const useMiddleware = (
-        options.useMiddleware ?? server_by_vite.middlewares.use
+        options.useMiddleware ??
+        server_by_vite.middlewares.use.bind(server_by_vite.middlewares)
       )
 
       void useMiddleware(agrumeServerHandler)

@@ -297,6 +297,8 @@ function transformImportToDynamicImport(
     return
   }
 
+  const require_identifier = babelTypes.identifier('require')
+
   const import_specifiers = path.get('specifiers')
 
   if (import_specifiers.length === 1) {
@@ -306,11 +308,9 @@ function transformImportToDynamicImport(
       return babelTypes.variableDeclaration('const', [
         babelTypes.variableDeclarator(
           specifier.node.local,
-          babelTypes.awaitExpression(
-            babelTypes.callExpression(
-              babelTypes.import(),
-              [source.node],
-            ),
+          babelTypes.callExpression(
+            require_identifier,
+            [source.node],
           ),
         ),
       ])
@@ -338,11 +338,9 @@ function transformImportToDynamicImport(
           return []
         }),
       ),
-      babelTypes.awaitExpression(
-        babelTypes.callExpression(
-          babelTypes.import(),
-          [source.node],
-        ),
+      babelTypes.callExpression(
+        require_identifier,
+        [source.node],
       ),
     ),
   ])

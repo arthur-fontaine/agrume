@@ -1,0 +1,6 @@
+-- CreateTable
+CREATE TABLE "Dog" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "isGoodBoy" BOOLEAN NOT NULL,
+    "imageUrl" TEXT NOT NULL
+);
