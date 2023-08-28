@@ -333,6 +333,10 @@ const authenticatedRoute = createRoute(
 
 You can find examples in the [examples](./examples) directory.
 
+- [Vue example](./examples/vue-example)
+- [React example](./examples/react-example)
+- [Prisma (with React) example](./examples/react-prisma-example)
+
 ## License
 
 [MIT © Arthur Fontaine](./LICENSE)
