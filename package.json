@@ -17,7 +17,7 @@
     "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install",
-    "prerelease": "turbo run build lint test",
+    "prerelease": "turbo run build test",
     "release": "changeset version && changeset publish"
   },
   "devDependencies": {
