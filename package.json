@@ -2,6 +2,7 @@
   "name": "whitebird",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/arthur-fontaine/agrume"
@@ -23,7 +24,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
-    "@whitebird/eslint-config": "^1.0.0-beta.3",
+    "eslint-config-agrume": "workspace:*",
     "@whitebird/tsconfig": "0.2.1-beta.0",
     "husky": "^8.0.0",
     "turbo": "latest",
