@@ -65,6 +65,37 @@ function getDefaultClient<R extends AnyRoute>(
       body: JSON.stringify(parameters),
     })
 
-    return response.json()
+    if (response.headers.get('content-type')?.includes('application/json')) {
+      return response.json()
+    }
+
+    if (response.headers.get('content-type')?.includes('text/event-stream')) {
+      const getAsyncGenerator = async function* () {
+        const reader = response
+          .body
+          ?.pipeThrough(new TextDecoderStream())
+          .getReader()
+
+        if (reader === undefined) {
+          return
+        }
+
+        while (true) {
+          const { done, value: unformattedValue } = await reader.read()
+
+          if (done) {
+            return
+          }
+
+          const value = unformattedValue.startsWith('data: ')
+            ? unformattedValue.slice(6)
+            : unformattedValue
+
+          yield JSON.parse(value)
+        }
+      }
+
+      return getAsyncGenerator()
+    }
   } as never
 }

@@ -46,4 +46,12 @@ type FlattenPromise<T> = T extends Promise<infer U>
   : Promise<T>
 
 export type Client<R extends AnyRoute>
-  = (...parameters: Parameters<R>) => FlattenPromise<ReturnType<R>>
+  = (...parameters: Parameters<R>) => ReturnType<R> extends Generator<
+    infer GeneratorT,
+    infer GeneratorReturn,
+    infer GeneratorNext
+  >
+    ? AsyncGenerator<GeneratorT, GeneratorReturn, GeneratorNext>
+    : ReturnType<R> extends AsyncGenerator
+      ? ReturnType<R>
+      : FlattenPromise<ReturnType<R>>

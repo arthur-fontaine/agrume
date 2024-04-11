@@ -3,16 +3,18 @@ import type { JsonValue } from 'type-fest'
 
 import { state } from '@agrume/internals'
 import { options } from '../create-route/options'
+import { handleGeneratorResponse } from './handle-generator-response'
+import { handleJsonValueResponse } from './handle-json-value-response'
 
 /**
  * Create the HTTP server handler with the routes.
  * @returns {Connect.NextHandleFunction} The HTTP server handler.
  */
 export function createHttpServerHandler() {
-  const routes = state.get()?.routes
-
   const middleware: Connect.NextHandleFunction
     = function (request, response, next?) {
+      const routes = state.get()?.routes
+
       const throwStatus = function (status: number) {
         if (next === undefined || status.toString().startsWith('5')) {
           response.writeHead(status)
@@ -67,24 +69,39 @@ export function createHttpServerHandler() {
           return
         }
 
-        let result: JsonValue
         try {
           // eslint-disable-next-line ts/no-explicit-any
-          result = await route(parameters as any)
+          const result = await route(parameters as any)
+
+          if (isGenerator(result)) {
+            handleGeneratorResponse(response, result)
+          }
+          else {
+            handleJsonValueResponse(response, result)
+          }
         }
         catch (error) {
           logger?.error?.(error)
           throwStatus(500)
-          return
         }
-
-        response.writeHead(200, {
-          'Content-Type': 'application/json',
-        })
-
-        response.end(JSON.stringify(result))
       })
     }
 
   return middleware
+}
+
+// eslint-disable-next-line ts/no-explicit-any
+function isGenerator(value: any): value is (
+  | AsyncGenerator<unknown>
+  | Generator<unknown>
+) {
+  const generatorConstructor
+    = function* () { yield undefined }.constructor
+  const asyncGeneratorConstructor
+    = async function* () { yield undefined }.constructor
+
+  return (
+    value.constructor.constructor === generatorConstructor
+    || value.constructor.constructor === asyncGeneratorConstructor
+  )
 }

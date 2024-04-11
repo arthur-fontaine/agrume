@@ -8,14 +8,17 @@ export type RouteParameters = Readonly<JsonValue>
 /**
  * @internal
  */
-export type RouteReturnValue = Promise<JsonValue>
+export type RouteReturnValue =
+  AsyncGenerator<JsonValue, JsonValue | void, JsonValue> |
+  Generator<JsonValue, JsonValue | void, JsonValue> |
+  Promise<JsonValue>
 
 /**
  * @internal
  */
 export type Route<
   RP extends RouteParameters = null,
-  RRV extends RouteReturnValue = Promise<JsonValue>,
+  RRV extends RouteReturnValue = RouteReturnValue,
 > = (parameters: RP) => RRV
 
 /**
