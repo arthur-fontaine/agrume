@@ -1,19 +1,16 @@
-export interface RequestOptions {
-  url: string
-  headers: Record<string, string>
-  method: "POST"
-}
+import type { RequestOptions } from '@agrume/types'
 
 /**
- * @param url The URL.
- * @returns The request options.
+ * Get the request options.
+ * @param {string} url The URL.
+ * @returns {RequestOptions} The request options.
  */
 export function getRequestOptions(url: string): RequestOptions {
   return {
-    url,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
+    url,
   }
 }

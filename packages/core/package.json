@@ -1,25 +1,28 @@
 {
   "name": "@agrume/core",
   "version": "1.0.0",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/core.js",
+  "module": "./dist/core.mjs",
+  "types": "./dist/core.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "unbuild",
+    "build": "tsup src/core.ts --dts --format esm,cjs --minify",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@agrume/internals": "workspace:*",
+    "@agrume/types": "workspace:*",
     "@babel/parser": "^7.22.10",
     "@types/connect": "^3.4.35",
     "connect": "^3.7.0",
+    "defu": "^6.1.4",
     "type-fest": "^4.2.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
-    "unbuild": "^1.2.1"
+    "tsup": "^8.0.1"
   }
 }

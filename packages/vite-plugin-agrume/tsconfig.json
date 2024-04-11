@@ -3,13 +3,13 @@
   "display": "Default",
   "extends": "@whitebird/tsconfig/node.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "module": "esnext",
     "lib": [
       "ESNext",
       "DOM",
       "DOM.Iterable"
-    ]
+    ],
+    "module": "esnext",
+    "outDir": "dist"
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

@@ -2,6 +2,7 @@
   "name": "whitebird",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/arthur-fontaine/agrume"
@@ -13,7 +14,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint",
+    "lint": "turbo run lint -- --no-error-on-unmatched-pattern",
     "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install",
@@ -23,11 +24,11 @@
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
-    "@whitebird/eslint-config": "^1.0.0-beta.3",
+    "eslint-config-agrume": "workspace:*",
     "@whitebird/tsconfig": "0.2.1-beta.0",
     "husky": "^8.0.0",
     "turbo": "latest",
-    "typescript": "^5.1.6"
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=18.0.0"

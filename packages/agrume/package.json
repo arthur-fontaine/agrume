@@ -1,9 +1,9 @@
 {
   "name": "agrume",
   "version": "1.0.0",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/agrume.cjs",
+  "module": "./dist/agrume.mjs",
+  "types": "./dist/agrume.d.ts",
   "files": [
     "dist"
   ],

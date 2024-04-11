@@ -1,0 +1,21 @@
+{
+  "name": "eslint-config-agrume",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsup src/agrume-eslint-config.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@antfu/eslint-config": "^1.1.3",
+    "eslint-plugin-filename-export": "^1.0.4",
+    "eslint-plugin-filename-rules": "^1.3.1",
+    "eslint-plugin-fp": "^2.3.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.1"
+  }
+}
