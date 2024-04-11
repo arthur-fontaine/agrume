@@ -7,8 +7,18 @@ export const agrumeEslintConfig = antfu(
   {
     rules: {
       ...pluginPerfectionist.configs['recommended-natural'].rules,
+      'perfectionist/sort-imports': 'off',
       'style/indent': ['error', 2, {
         flatTernaryExpressions: true,
+      }],
+      'style/max-len': ['error', {
+        code: 80,
+        comments: 120,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+        ignoreTrailingComments: true,
+        ignoreUrls: true,
+        tabWidth: 2,
       }],
       'style/multiline-ternary': 'off',
     },

@@ -1,0 +1,22 @@
+{
+  "name": "@agrume/internals",
+  "version": "1.0.0",
+  "main": "./dist/internals.js",
+  "module": "./dist/internals.mjs",
+  "types": "./dist/internals.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/internals.ts --dts --format esm,cjs --minify",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@agrume/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "tsup": "^8.0.1"
+  }
+}

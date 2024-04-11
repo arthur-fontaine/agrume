@@ -1,9 +1,9 @@
 {
   "name": "babel-plugin-agrume",
   "version": "1.0.0",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/agrume-plugin.cjs",
+  "module": "./dist/agrume-plugin.mjs",
+  "types": "./dist/agrume-plugin.d.ts",
   "files": [
     "dist"
   ],
@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@agrume/core": "workspace:*",
+    "@agrume/internals": "workspace:*",
     "@babel/core": "^7.22.10",
     "@babel/generator": "^7.22.10",
     "@types/babel__core": "^7.20.1",

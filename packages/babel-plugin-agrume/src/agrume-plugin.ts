@@ -1,28 +1,32 @@
-import { _startRouteRegistration, _stopRouteRegistration } from "@agrume/core"
-import type { PluginObj } from "@babel/core"
+import type { PluginObj } from '@babel/core'
 
-import { transformCallExpression } from "./transforms/call-expression"
-import package_json from "../package.json"
+import { state } from '@agrume/internals'
+import packageJson from '../package.json'
+import { transformCallExpression } from './transforms/transform-call-expression'
 
 /**
- * @returns The Agrume plugin.
+ * The Agrume Babel plugin.
+ * @returns {PluginObj} The Babel plugin.
  */
 export function agrumePlugin(): PluginObj {
   return {
-    name: package_json.name,
-
+    name: packageJson.name,
     visitor: {
+      CallExpression: transformCallExpression,
       Program: {
         enter() {
-          void _startRouteRegistration()
-          return undefined
+          state.set((state) => {
+            state.isRegistering = true
+            return state
+          })
         },
         exit() {
-          void _stopRouteRegistration()
-          return undefined
+          state.set((state) => {
+            state.isRegistering = false
+            return state
+          })
         },
       },
-      CallExpression: transformCallExpression,
     },
   }
 }
