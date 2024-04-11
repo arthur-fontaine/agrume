@@ -18,12 +18,12 @@ export function transformCallExpression(
 ): Error | undefined {
   const callee = callPath.get('callee')
 
+  // FIXME: We may not hardly code the function name here (createRoute).
   if (!callee.referencesImport(agrumePackageJson.name, 'createRoute')) {
     return
   }
 
-  // At this point, we know that the callee is a reference to the `createRoute`
-  // function.
+  // At this point, we know that the callee is a reference to the `createRoute` function.
 
   return transformCreateRoute(callPath, state)
 }
