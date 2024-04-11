@@ -57,6 +57,7 @@ function getBundledFileContents(
   const bundledFileContents = (esbuild.buildSync({
     bundle: true,
     format: 'esm',
+    minifyWhitespace: true,
     packages: 'external',
     platform: 'node',
     stdin: {
