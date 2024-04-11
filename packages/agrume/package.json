@@ -1,0 +1,22 @@
+{
+  "name": "agrume",
+  "version": "1.0.0",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@agrume/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "unbuild": "^1.2.1"
+  }
+}

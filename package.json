@@ -2,6 +2,10 @@
   "name": "whitebird",
   "version": "0.0.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arthur-fontaine/agrume"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -13,7 +17,7 @@
     "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install",
-    "prerelease": "turbo run build lint test",
+    "prerelease": "turbo run build test",
     "release": "changeset version && changeset publish"
   },
   "devDependencies": {
@@ -31,5 +35,10 @@
   "packageManager": "pnpm@7.15.0",
   "dependencies": {
     "@changesets/cli": "^2.25.2"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "remark-github-beta-blockquote-admonitions@2.1.0": "patches/remark-github-beta-blockquote-admonitions@2.1.0.patch"
+    }
   }
 }

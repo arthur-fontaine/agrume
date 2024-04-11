@@ -1,7 +1,6 @@
 {
   "name": "@agrume/core",
-  "version": "0.0.0",
-  "private": true,
+  "version": "1.0.0",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -14,6 +13,9 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@babel/parser": "^7.22.10",
+    "@types/connect": "^3.4.35",
+    "connect": "^3.7.0",
     "type-fest": "^4.2.0"
   },
   "devDependencies": {

@@ -1,0 +1,24 @@
+---
+import DocLayout from "../../layouts/DocLayout.astro";
+
+import { getPages } from "../../utils/get-pages.js";
+
+export function getStaticPaths() {
+  const pages = getPages();
+
+  return pages.map((page) => ({
+    params: {
+      id: page.id,
+    },
+  }));
+}
+
+const { id } = Astro.params;
+const page = getPages().find((page) => page.id === id);
+---
+
+{page !== undefined && (
+  <DocLayout title={page.title} description={page.description}>
+    {page.content}
+  </DocLayout>
+)}

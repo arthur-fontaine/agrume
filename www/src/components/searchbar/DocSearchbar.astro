@@ -1,0 +1,190 @@
+---
+import { DocSearchbar as ClientDocSearchBar } from "./DocSearchbar.jsx";
+import { defaultSchema } from '@orama/plugin-astro';
+---
+
+<ClientDocSearchBar client:only="react" dbSchema={defaultSchema}>
+  <kbd>/</kbd>
+</ClientDocSearchBar>
+
+<style lang="scss">
+  :global(header [cmdk-root]) {
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  :global(nav [cmdk-root]) {
+    @media screen and (min-width: 769px) {
+      display: none;
+    }
+
+    margin-bottom: 1rem;
+
+    :global([cmdk-list]) {
+      width: calc(100% - 1rem);
+      min-width: auto;
+    }
+
+    kbd {
+      display: none;
+    }
+  }
+</style>
+
+<style lang="scss">
+  @import "../../styles/_variables.scss";
+
+  $border-color: darken($green, 1%);
+
+  kbd {
+    position: absolute;
+    top: 50%;
+    right: 0.25rem;
+    transform: translate3d(0, -50%, 0);
+
+    color: $dark-green;
+    border-radius: 0.25rem;
+    padding: 0.125rem 0.25rem;
+    margin-inline-start: 0.5rem;
+    border: 1px solid $border-color;
+
+    pointer-events: none;
+  }
+
+  :global([cmdk-root]) {
+    position: relative;
+    z-index: 999;
+
+    :global(::-webkit-scrollbar) {
+      width: 0.25rem;
+    }
+
+    :global(::-webkit-scrollbar-track) {
+      background-color: transparent;
+      padding: 0.5rem;
+    }
+
+    :global(::-webkit-scrollbar-thumb) {
+      $scrollbar-color: darken($border-color, 20%);
+      background-color: $scrollbar-color;
+      border-radius: 0.5rem;
+
+      &:hover {
+        background-color: lighten($scrollbar-color, 10%);
+      }
+    }
+  }
+
+  :global([cmdk-dialog]) {
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    transform: translate3d(-50%, -50%, 0);
+  }
+  
+  :global([cmdk-input]) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    background-color: lighten($green, 12%);
+    outline: 1px solid $border-color;
+    border: none;
+
+    width: 200px;
+
+    padding-block: 0.5rem;
+    padding-inline: 1rem;
+
+    border-radius: 0.5rem;
+
+    font-size: 0.875rem;
+
+    cursor: pointer;
+
+    &:global(::placeholder) {
+      color: $dark-green;
+    }
+
+    &:hover {
+      outline-color: darken($border-color, 20%);
+
+      &:global(::placeholder) {
+        color: lighten($dark-green, 20%);
+      }
+    }
+
+    &:focus {
+      border: none;
+
+      outline: 2px solid darken($border-color, 20%);
+    }
+  }
+
+  :global([cmdk-list]) {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    
+    min-width: 100%;
+    width: 400px;
+    max-width: 100vw;
+    max-height: 300px;
+
+    overflow-y: auto;
+    
+    display: none;
+
+    background-color: lighten($green, 12%);
+    outline: 1px solid $border-color;
+
+    padding: 0.5rem;
+
+    border-radius: 0.5rem;
+
+    font-size: 0.875rem;
+
+    :global([cmdk-input]):focus ~ &,
+    &:active {
+      display: block;
+    }
+  }
+
+  :global([cmdk-empty]) {
+    color: $dark-green;
+    opacity: 0.7;
+
+    padding-block: 3rem;
+
+    text-align: center;
+  }
+
+  :global([cmdk-item]) {
+    padding: 1rem;
+
+    border-radius: 0.5rem;
+
+    color: $dark-green;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    &[data-selected="true"] {
+      background-color: darken($green, 1%);
+      color: lighten($dark-green, 20%);
+    }
+
+    :global(.content) {
+      font-weight: 400;
+      margin-top: 0.25rem;
+
+      color: grayscale(lighten($dark-green, 20%));
+
+      :global(.search-keyword) {
+        color: lighten($dark-green, 20%)!important;
+      }
+    }
+  }
+</style>

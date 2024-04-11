@@ -1,0 +1,29 @@
+{
+  "name": "babel-plugin-agrume",
+  "version": "1.0.0",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@agrume/core": "workspace:*",
+    "@babel/core": "^7.22.10",
+    "@babel/generator": "^7.22.10",
+    "@types/babel__core": "^7.20.1",
+    "agrume": "workspace:*",
+    "babel-plugin-putout": "^6.0.0",
+    "esbuild": "^0.19.2"
+  },
+  "devDependencies": {
+    "@types/babel__generator": "^7.6.4",
+    "@types/node": "^18.11.9",
+    "unbuild": "^1.2.1"
+  }
+}

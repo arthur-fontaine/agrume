@@ -1,0 +1,31 @@
+{
+  "name": "vite-plugin-agrume",
+  "version": "1.0.0",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@agrume/core": "workspace:*",
+    "@babel/core": "^7.22.10",
+    "@babel/plugin-syntax-jsx": "^7.22.5",
+    "@babel/plugin-transform-typescript": "^7.22.10",
+    "@types/connect": "^3.4.35",
+    "babel-plugin-agrume": "workspace:*",
+    "connect": "^3.7.0",
+    "esbuild": "^0.19.2",
+    "vite": "^4.4.9"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.20.1",
+    "@types/node": "^18.11.9",
+    "unbuild": "^1.2.1"
+  }
+}
