@@ -24,8 +24,7 @@ export const Files = function () {
 
   useEffect(() => {
     (async () => {
-      const it = await getFiles()
-      for await (const file of it) {
+      for await (const file of await getFiles()) {
         setFiles(files => new Set(files).add(file))
       }
     })()
