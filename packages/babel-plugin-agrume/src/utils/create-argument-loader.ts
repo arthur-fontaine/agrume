@@ -158,13 +158,41 @@ function removeExports(path: NodePath, allowDefault = false) {
 }
 
 function wrapAndExportBabelArgumentPath(
-  path: NodePath<babelTypes.Program>,
+  programPath: NodePath<babelTypes.Program>,
   argument: BabelArgumentPath,
 ) {
-  path.traverse({
+  programPath.traverse({
     [argument.node.type](path: NodePath) {
       if (areSameNodePath(path, argument)) {
-        const rootLevelPath = path.getAncestry().at(-2)
+        if (
+          path.isIdentifier()
+          && argument.isIdentifier()
+          && path.node.name !== argument.node.name
+        ) {
+          return
+        }
+
+        let pathToExport = path
+
+        if (path.isIdentifier()) {
+          const binding = path.scope.getBinding(path.node.name)
+
+          if (binding === undefined) {
+            throw new Error('Could not find binding.')
+          }
+
+          if (binding.path.isVariableDeclarator()) {
+            const init = binding.path.get('init')
+
+            if (init.node === undefined || init.node === null) {
+              throw new Error('Could not find init.')
+            }
+
+            pathToExport = init as NodePath<NonNullable<typeof init.node>>
+          }
+        }
+
+        const rootLevelPath = pathToExport.getAncestry().at(-2)
 
         if (rootLevelPath === undefined) {
           throw new Error('Could not find root level path.')
@@ -174,13 +202,13 @@ function wrapAndExportBabelArgumentPath(
           throw new Error('Root level path is not a declaration.')
         }
 
-        if (!path.isExpression()) {
+        if (!pathToExport.isExpression()) {
           throw new Error('Function argument needs to be an expression.')
         }
 
         const exportedFunction = babelTypes.exportDefaultDeclaration(
           babelTypes.functionDeclaration(null, [], babelTypes.blockStatement([
-            babelTypes.returnStatement(path.node),
+            babelTypes.returnStatement(pathToExport.node),
           ])),
         )
 

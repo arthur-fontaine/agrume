@@ -49,12 +49,16 @@ function transformCreateRoute(
 
   if (firstArgument === undefined
     || (!firstArgument.isFunctionExpression()
-    && !firstArgument.isArrowFunctionExpression())
+    && !firstArgument.isArrowFunctionExpression()
+    && !firstArgument.isIdentifier())
   ) {
     return
   }
 
-  if (secondArgument !== undefined && !secondArgument.isObjectExpression()) {
+  if (
+    secondArgument !== undefined
+    && !secondArgument.isObjectExpression()
+    && !secondArgument.isIdentifier()) {
     return
   }
 
