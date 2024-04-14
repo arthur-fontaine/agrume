@@ -36,10 +36,5 @@
   "packageManager": "pnpm@7.15.0",
   "dependencies": {
     "@changesets/cli": "^2.25.2"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "remark-github-beta-blockquote-admonitions@2.1.0": "patches/remark-github-beta-blockquote-admonitions@2.1.0.patch"
-    }
   }
 }
