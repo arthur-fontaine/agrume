@@ -51,7 +51,7 @@ export type Client<R extends AnyRoute>
     infer GeneratorReturn,
     infer GeneratorNext
   >
-    ? AsyncGenerator<GeneratorT, GeneratorReturn, GeneratorNext>
+    ? Promise<AsyncGenerator<GeneratorT, GeneratorReturn, GeneratorNext>>
     : ReturnType<R> extends AsyncGenerator
-      ? ReturnType<R>
+      ? Promise<ReturnType<R>>
       : FlattenPromise<ReturnType<R>>
