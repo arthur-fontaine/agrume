@@ -23,7 +23,7 @@
     "babel-plugin-agrume": "workspace:*",
     "connect": "^3.7.0",
     "esbuild": "^0.19.2",
-    "vite": "^4.4.9"
+    "vite": "^5.2.8"
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.1",
