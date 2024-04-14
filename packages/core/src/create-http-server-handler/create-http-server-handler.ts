@@ -34,16 +34,19 @@ export function createHttpServerHandler() {
         return
       }
 
-      // FIXME: `prefix` is not "forced". For example, if `prefix` is `/api`,
-      // and there is a route `/dog`, then, currently, the route `/dog` is
-      // accessible, but it should not be. The route must be `/api/dog`.
+      const url = request.url
 
-      const routeName = request.url?.replace(new RegExp(`^${prefix}`), '')
-
-      if (routeName === undefined) {
+      if (url === undefined) {
         throwStatus(404)
         return
       }
+
+      if (!url.startsWith(prefix)) {
+        throwStatus(404)
+        return
+      }
+
+      const routeName = url.replace(new RegExp(`^${prefix}`), '')
 
       const route = (
         routes?.get(routeName)
