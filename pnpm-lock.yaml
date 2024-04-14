@@ -424,14 +424,14 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       '@orama/orama':
-        specifier: ^1.2.1
-        version: 1.2.1
+        specifier: ^2.0.15
+        version: 2.0.15
       '@orama/plugin-astro':
-        specifier: ^1.2.1
-        version: 1.2.1(astro@2.10.13)
+        specifier: ^2.0.15
+        version: 2.0.15(astro@2.10.13)
       '@orama/plugin-match-highlight':
-        specifier: ^1.2.1
-        version: 1.2.1
+        specifier: ^2.0.15
+        version: 2.0.15
       '@types/react':
         specifier: ^18.2.15
         version: 18.2.15
@@ -2690,26 +2690,26 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
-  /@orama/orama@1.2.1:
-    resolution: {integrity: sha512-vq3ar9REofq7Q87riamQB5y1aJc068Qwbnd7uAboeSfRTDj2+KdNiwjTEk01SVjr8eAvCx8iRZl4rkEYo0ETYw==}
+  /@orama/orama@2.0.15:
+    resolution: {integrity: sha512-9C11pL4kE2wdfsngnOwaZ4Hh5x76EI8KUQEf0DoxU4E/ytE8u8utFeisJIbaSMyjVofRvmWUyXeDzxFNnkhvvw==}
     engines: {node: '>= 16.0.0'}
     dev: false
 
-  /@orama/plugin-astro@1.2.1(astro@2.10.13):
-    resolution: {integrity: sha512-mRatoaDilJkMxOyjhYpSlBYt7JO2//NvLIT8GFnjcy0C6txwxh2qSbubCfkKG2I/7v1TO1O/Bm/yHUfml3onAg==}
+  /@orama/plugin-astro@2.0.15(astro@2.10.13):
+    resolution: {integrity: sha512-dseVqMSEIZf/zxgw6+UNj6izjuLc8c6eAI24JO3Tpv8t3giUcT8Pp8mkr5jOiwbiWfwBcyWyCGSNlDwJqtYdQA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       astro: ^2.0.4
     dependencies:
-      '@orama/orama': 1.2.1
+      '@orama/orama': 2.0.15
       astro: 2.10.13(@types/node@20.4.7)(sass@1.66.1)
       html-to-text: 9.0.5
     dev: false
 
-  /@orama/plugin-match-highlight@1.2.1:
-    resolution: {integrity: sha512-LYB/Jcxqt48GgmXoAmrkqpBJgAlm5rvDOPjybVIPXP67sgVmBfJbBROV/+WHNo02E3VVDfJz0xA8U/JKddwERw==}
+  /@orama/plugin-match-highlight@2.0.15:
+    resolution: {integrity: sha512-nFyYEk0lq0GC3xim9E7JAPjIxoXFBqFPTTjMIkK5+RcVeiqdbkuK4HLRx2lzDgYJSxiPrtAXQGexztd27tQwMg==}
     dependencies:
-      '@orama/orama': 1.2.1
+      '@orama/orama': 2.0.15
     dev: false
 
   /@pkgjs/parseargs@0.11.0:
