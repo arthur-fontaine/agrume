@@ -142,7 +142,7 @@ const pages = getPages().map((page) => {
 
       &:has(#nav-toggle:checked) {
         transform: translateX(0);
-        outline: 99999px solid rgba(desaturate($dark-green, 80%), 0.5);
+        outline: 99999px solid rgba(desaturate($foreground, 80%), 0.5);
       }
     }
 
@@ -158,11 +158,11 @@ const pages = getPages().map((page) => {
 
       transform: translateX(100%);
 
-      border: 1px solid darken($green, 1%);
+      border: 1px solid darken($background, 1%);
       border-radius: 0.5rem;
       padding: 0.5rem;
 
-      background-color: lighten($green, 12%);
+      background-color: lighten($background, 12%);
     }
 
     [for="nav-toggle"] {
@@ -204,11 +204,11 @@ const pages = getPages().map((page) => {
       a {
         display: block;
 
-        color: $dark-green;
+        color: $foreground;
         text-decoration: none;
 
         &:hover {
-          color: lighten($dark-green, 20%);
+          color: lighten($foreground, 20%);
         }
       }
 
@@ -222,8 +222,8 @@ const pages = getPages().map((page) => {
       .page {
         &[data-active] {
           > a {
-            background-color: darken($green, 1%);
-            color: lighten($dark-green, 20%);
+            background-color: darken($background, 1%);
+            color: lighten($foreground, 20%);
 
             border-radius: 0.5rem 0.5rem 0 0;
 
@@ -232,14 +232,19 @@ const pages = getPages().map((page) => {
             width: 100%;
             display: block;
             padding: #{$padding};
+            margin-block: -#{calc($padding / 2)};
 
             &:not(:has(+ .subpages)) {
               border-radius: 0.5rem;
             }
+
+            &:has(+ .subpages) {
+              padding-bottom: calc(#{$padding} * 1.5);
+            }
           }
 
           .subpages {
-            background-color: lighten($green, 5%);
+            background-color: lighten($background, 5%);
             padding: $padding;
 
             border-radius: 0 0 0.5rem 0.5rem;
@@ -254,9 +259,9 @@ const pages = getPages().map((page) => {
         .subpages {
           display: flex;
           flex-direction: column;
-          gap: calc(#{$padding} / 2);
+          gap: $padding;
 
-          padding-top: calc(#{$padding} / 2);
+          padding-top: $padding;
 
           a {
             padding-left: 2ch;

@@ -95,15 +95,25 @@ const { title, description } = Astro.props;
       }
     }
   }
+
+  main {
+    article {
+      :global(.content) {
+        :global(h2) {
+          margin-top: 2rem;
+        }
+      }
+    }
+  }
 </style>
 
 <style lang="scss">
   @import "../styles/_variables.scss";
 
   body {
-    background-color: lighten($green, 10%);
+    background-color: lighten($background, 10%);
 
-    max-width: 100rem;
+    max-width: 80rem;
     margin: 0 auto;
   }
 
@@ -113,7 +123,7 @@ const { title, description } = Astro.props;
     justify-content: space-between;
     align-items: center;
 
-    border-bottom: 1px solid $green;
+    border-bottom: 1px solid $background;
     padding: 1rem 5rem;
 
     .logo {
@@ -125,10 +135,10 @@ const { title, description } = Astro.props;
 
         text-decoration: none;
 
-        color: $dark-green;
+        color: $foreground;
 
         &:hover {
-          color: lighten($dark-green, 20%);
+          color: lighten($foreground, 20%);
         }
       }
     }
@@ -159,12 +169,12 @@ const { title, description } = Astro.props;
 
             border-radius: 0.5rem;
 
-            background-color: rgba($dark-green, 0.1);
+            background-color: rgba($foreground, 0.1);
           }
         }
 
         svg {
-          color: $dark-green;
+          color: $foreground;
           position: relative;
         }
       }
@@ -188,6 +198,10 @@ const { title, description } = Astro.props;
 
       padding-inline: 5rem;
       padding-block: 2rem;
+
+      @media screen and (max-width: 450px) {
+        padding-inline: 2rem;
+      }
     }
   }
 </style>
@@ -196,8 +210,8 @@ const { title, description } = Astro.props;
   @import "../styles/_variables.scss";
 
   ::selection {
-    background-color: $green;
-    color: $dark-green;
+    background-color: $background;
+    color: $foreground;
   }
 
   p {
@@ -210,7 +224,7 @@ const { title, description } = Astro.props;
   }
 
   a {
-    color: darken($green, 55%);
+    color: darken($background, 55%);
   }
 
   pre,
@@ -222,7 +236,7 @@ const { title, description } = Astro.props;
 
   code {
     padding: 0.2em;
-    background: desaturate(lighten($green, 3%), 50%);
+    background: desaturate(lighten($background, 3%), calc(saturation($background) / 2));
     border-radius: 0.4em;
     white-space: nowrap;
     display: inline-block;
@@ -240,6 +254,54 @@ const { title, description } = Astro.props;
     position: relative;
   }
 
+  table {
+    $radius: 0.5rem;
+
+    width: 100%;
+    margin: 1rem 0;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-style: hidden;
+    box-shadow: 0 0 0 1px $background;
+    border-radius: $radius;
+
+    th,
+    td {
+      padding: 0.5rem;
+      border: 1px solid $background;
+    }
+
+    th {
+      background-color: rgba($background, 0.33);
+    }
+
+    tr:nth-child(2n) {
+      background-color: rgba($background, 0.1);
+    }
+
+    @media (hover: hover) {
+      tr:hover {
+        background-color: rgba($background, 0.2);
+      }
+    }
+
+    th:first-of-type {
+      border-top-left-radius: $radius;
+    }
+
+    th:last-of-type {
+      border-top-right-radius: $radius;
+    }
+
+    tr:last-of-type td:first-of-type {
+      border-bottom-left-radius: $radius;
+    }
+    
+    tr:last-of-type td:last-of-type {
+      border-bottom-right-radius: $radius;
+    }
+  }
+
   button.copy-button {
     position: absolute;
     top: 0.5rem;
@@ -252,6 +314,8 @@ const { title, description } = Astro.props;
     background-color: #00000080;
     color: #ffffff;
     border: 0;
+
+    cursor: pointer;
 
     &:hover,
     &.copied {

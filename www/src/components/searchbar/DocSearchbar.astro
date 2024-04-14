@@ -35,7 +35,7 @@ import { defaultSchema } from '@orama/plugin-astro';
 <style lang="scss">
   @import "../../styles/_variables.scss";
 
-  $border-color: darken($green, 1%);
+  $border-color: darken($background, 1%);
 
   kbd {
     position: absolute;
@@ -43,7 +43,7 @@ import { defaultSchema } from '@orama/plugin-astro';
     right: 0.25rem;
     transform: translate3d(0, -50%, 0);
 
-    color: $dark-green;
+    color: $foreground;
     border-radius: 0.25rem;
     padding: 0.125rem 0.25rem;
     margin-inline-start: 0.5rem;
@@ -88,7 +88,7 @@ import { defaultSchema } from '@orama/plugin-astro';
     align-items: center;
     justify-content: space-between;
     
-    background-color: lighten($green, 12%);
+    background-color: lighten($background, 12%);
     outline: 1px solid $border-color;
     border: none;
 
@@ -104,14 +104,14 @@ import { defaultSchema } from '@orama/plugin-astro';
     cursor: pointer;
 
     &:global(::placeholder) {
-      color: $dark-green;
+      color: $foreground;
     }
 
     &:hover {
       outline-color: darken($border-color, 20%);
 
       &:global(::placeholder) {
-        color: lighten($dark-green, 20%);
+        color: lighten($foreground, 20%);
       }
     }
 
@@ -136,7 +136,7 @@ import { defaultSchema } from '@orama/plugin-astro';
     
     display: none;
 
-    background-color: lighten($green, 12%);
+    background-color: lighten($background, 12%);
     outline: 1px solid $border-color;
 
     padding: 0.5rem;
@@ -152,7 +152,7 @@ import { defaultSchema } from '@orama/plugin-astro';
   }
 
   :global([cmdk-empty]) {
-    color: $dark-green;
+    color: $foreground;
     opacity: 0.7;
 
     padding-block: 3rem;
@@ -165,25 +165,25 @@ import { defaultSchema } from '@orama/plugin-astro';
 
     border-radius: 0.5rem;
 
-    color: $dark-green;
+    color: $foreground;
 
     font-weight: 600;
 
     cursor: pointer;
 
     &[data-selected="true"] {
-      background-color: darken($green, 1%);
-      color: lighten($dark-green, 20%);
+      background-color: darken($background, 1%);
+      color: lighten($foreground, 20%);
     }
 
     :global(.content) {
       font-weight: 400;
       margin-top: 0.25rem;
 
-      color: grayscale(lighten($dark-green, 20%));
+      color: grayscale(lighten($foreground, 20%));
 
       :global(.search-keyword) {
-        color: lighten($dark-green, 20%)!important;
+        color: lighten($foreground, 20%)!important;
       }
     }
   }
