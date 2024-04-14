@@ -1,4 +1,4 @@
-# @agrume/core
+# @agrume/internals
 
 ## 2.0.0-beta.0
 
@@ -11,11 +11,4 @@
 ### Patch Changes
 
 - Updated dependencies [5fb60e7]
-  - @agrume/internals@2.0.0-beta.0
   - @agrume/types@2.0.0-beta.0
-
-## 1.0.0
-
-### Major Changes
-
-- f85ee99: Initial release! 🎉
