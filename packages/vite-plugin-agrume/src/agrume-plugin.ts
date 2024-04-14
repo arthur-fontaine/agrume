@@ -23,13 +23,31 @@ export function agrumePlugin(
     return state
   })
 
-  return {
-    apply: 'serve',
-    configureServer: createConfigureServer(pluginOptions),
+  const basePlugin = {
     enforce: 'pre',
     name: packageJson.name,
     transform,
-  }
+  } as const
+
+  return [
+    {
+      ...basePlugin,
+      apply: 'serve',
+      configureServer: createConfigureServer(pluginOptions),
+    },
+    {
+      ...basePlugin,
+      apply: 'build',
+      buildEnd: createBuildEnd(pluginOptions),
+      options() {
+        if (pluginOptions.useMiddleware === undefined) {
+          console.warn(
+            'The "useMiddleware" option is not set. To access the Agrume routes, you either need to target the "serve" environment or set the "useMiddleware" option to get and use the middleware on your own.',
+          )
+        }
+      },
+    },
+  ]
 }
 
 function createConfigureServer(pluginOptions: PluginOptions) {
@@ -45,6 +63,19 @@ function createConfigureServer(pluginOptions: PluginOptions) {
     )
 
     useMiddleware(createHttpServerHandler())
+  }
+}
+
+function createBuildEnd(pluginOptions: PluginOptions) {
+  return function buildEnd() {
+    state.set((state) => {
+      state.isRegistering = false
+      return state
+    })
+
+    if (pluginOptions.useMiddleware) {
+      pluginOptions.useMiddleware(createHttpServerHandler())
+    }
   }
 }
 

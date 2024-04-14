@@ -34,14 +34,28 @@ export function createHttpServerHandler() {
         return
       }
 
-      const routeName = request.url?.replace(new RegExp(`^${prefix}`), '')
+      const url = request.url
 
-      if (routeName === undefined) {
+      if (url === undefined) {
         throwStatus(404)
         return
       }
 
-      const route = routes?.get(routeName)
+      if (!url.startsWith(prefix)) {
+        throwStatus(404)
+        return
+      }
+
+      const routeName = url.replace(new RegExp(`^${prefix}`), '')
+
+      const route = (
+        routes?.get(routeName)
+        ?? (
+          routeName.startsWith('/')
+            ? routes?.get(routeName.slice(1))
+            : undefined
+        )
+      )
 
       if (route === undefined) {
         throwStatus(404)
