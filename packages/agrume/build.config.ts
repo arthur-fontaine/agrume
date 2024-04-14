@@ -1,11 +1,12 @@
 import { defineBuildConfig } from 'unbuild'
 
+// eslint-disable-next-line import/no-default-export
 export default defineBuildConfig({
-  entries: [
-    'src/index',
-  ],
-  declaration: true,
   clean: true,
+  declaration: true,
+  entries: [
+    'src/agrume',
+  ],
   rollup: {
     emitCJS: true,
   },

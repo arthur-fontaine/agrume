@@ -1,0 +1,23 @@
+{
+  "name": "@agrume/types",
+  "version": "1.0.0",
+  "types": "./dist/types.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/types.ts --dts-only",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@types/connect": "^3.4.35",
+    "connect": "^3.7.0",
+    "type-fest": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "tsup": "^8.0.1",
+    "vitest": "^1.2.2"
+  }
+}

@@ -1,102 +1,106 @@
-/* eslint-disable functional/prefer-immutable-types */
+/* eslint-disable fp/no-throw */
 
 import path from 'node:path'
 
-import babel, { NodePath, types as babelTypes } from '@babel/core'
+import type { NodePath } from '@babel/core'
+import babel, { types as babelTypes } from '@babel/core'
 import generate from '@babel/generator'
-import agrume_package_json from 'agrume/package.json'
-// eslint-disable-next-line lines-around-comment
-// @ts-expect-error No types available for this package.
-import babelPluginPutout from 'babel-plugin-putout'
+import agrumePackageJson from 'agrume/package.json'
+
 import esbuild from 'esbuild'
+
+import type { BabelArgumentPath } from '../types/babel-argument-path'
+import treeShakePlugin from './tree-shake.babel'
 
 import { areSameNodePath } from './are-same-node-path'
 import { getProgram } from './get-program'
 
-type RouteArgument = NodePath<babelTypes.CallExpression['arguments'][number]>
-
 /**
- * @param route_argument The AST of the route function.
- * @param file_path The path of the file.
- * @returns A loader function for the argument.
+ * Create a new stringified function that removes all external variables from the given object.
+ * @param {NodePath<babelTypes.CallExpression['arguments'][number]>} argument The argument.
+ * @param {string} filePath The file path.
+ * @returns {Error | string | undefined} An error if any. Otherwise, a loader function for the argument.
  */
 export function createArgumentLoader(
-  route_argument: RouteArgument,
-  file_path: string,
-) {
-  const program = getProgram(route_argument)
+  argument: BabelArgumentPath,
+  filePath: string,
+): Error | string | undefined {
+  const program = getProgram(argument)
 
   if (program === undefined) {
-    throw new Error('Could not find program.')
+    return new Error('Could not find program.')
   }
 
-  const file_contents = generate(program.node).code
+  try {
+    const fileContents = generate(program.node).code
 
-  const bundled_file_contents = getBundledFileContents(file_contents, file_path)
+    const bundledFileContents = getBundledFileContents(fileContents, filePath)
 
-  const route_function_source = getArgumentFunctionSource(
-    bundled_file_contents ?? file_contents,
-    file_path,
-    route_argument,
-  )
+    const functionSource = getArgumentFunctionSource(
+      bundledFileContents ?? fileContents,
+      filePath,
+      argument,
+    )
 
-  return route_function_source
+    return functionSource
+  }
+  catch (error) {
+    console.error(error)
+    return error as Error
+  }
 }
 
 function getBundledFileContents(
   file_contents: string,
   file_path: string,
 ) {
-  const bundled_file_contents = (esbuild.buildSync({
+  const bundledFileContents = (esbuild.buildSync({
+    bundle: true,
+    format: 'esm',
+    minifyWhitespace: true,
+    packages: 'external',
+    platform: 'node',
     stdin: {
       contents: file_contents,
+      loader: 'tsx',
       resolveDir: path.dirname(file_path),
       sourcefile: file_path,
-      loader: 'tsx',
     },
-    bundle: true,
     write: false,
-    format: 'esm',
-    platform: 'node',
-    packages: 'external',
   }).outputFiles[0]?.text)
 
-  return bundled_file_contents
+  return bundledFileContents
 }
 
 function getArgumentFunctionSource(
-  file_contents: string,
-  file_path: string,
-  route_argument: RouteArgument,
+  fileContents: string,
+  filePath: string,
+  argument: BabelArgumentPath,
 ) {
-  // eslint-disable-next-line functional/no-let
-  let route_function_source: string | undefined
+  let functionSource: string | undefined
 
-  void babel.transformSync(file_contents, {
-    filename: file_path,
+  babel.transformSync(fileContents, {
+    filename: filePath,
     plugins: [
-      exportOnlyRouteArgumentPlugin(route_argument),
+      exportOnlyBabelArgumentPathPlugin(argument),
       removeUnusedVariablesPlugin(),
 
-      // Process the file to isolate the route function.
+      // Process the file to isolate the function.
       {
         visitor: {
           Program: {
             enter(path: NodePath<babelTypes.Program>) {
-              // Every statement outside of the route function is moved inside
-              // the route function.
-              void assembleRouteArgument(path)
+              // Every statement outside of the function is moved inside the function.
+              assembleBabelArgumentPath(path)
 
-              // Because we moved the statements inside the route function, we
-              // can't use imports anymore. We transform them to dynamic
-              // imports.
-              void transformImportsToDynamicImports(path)
-              void removeExports(path, true)
+              // Because we moved the statements inside the function, we can't use imports anymore. We transform them
+              // to dynamic imports.
+              transformImportsToDynamicImports(path)
+              removeExports(path, true)
 
-              // eslint-disable-next-line functional/no-expression-statements
-              route_function_source = generate(path.node).code
+              functionSource = generate(path.node).code
 
-              return undefined
+              return path.stop()
             },
           },
         },
@@ -104,23 +108,19 @@ function getArgumentFunctionSource(
     ],
   })
 
-  return route_function_source
+  return functionSource
 }
 
-function exportOnlyRouteArgumentPlugin(
-  route_argument: RouteArgument,
-) {
+function exportOnlyBabelArgumentPathPlugin(argument: BabelArgumentPath) {
   return {
     visitor: {
       Program: {
         enter(path: NodePath<babelTypes.Program>) {
           // We remove all exports to avoid considering them as used.
-          void removeExports(path)
+          removeExports(path)
 
-          // We export the route function to consider it as used.
-          void wrapAndExportRouteArgument(path, route_argument)
-
-          return undefined
+          // We export the function to consider it as used.
+          wrapAndExportBabelArgumentPath(path, argument)
         },
       },
     },
@@ -133,159 +133,161 @@ function removeExports(path: NodePath, allowDefault = false) {
     | babelTypes.ExportNamedDeclaration
   >) {
     if (
-      path.node.declaration === null ||
-      path.node.declaration === undefined
+      path.node.declaration === null
+      || path.node.declaration === undefined
     ) {
       path.remove()
       return
     }
 
-    void path.replaceWith(path.node.declaration)
-
-    return undefined
+    path.replaceWith(path.node.declaration)
   }
 
-  void path.traverse({
+  path.traverse({
     ExportDefaultDeclaration(path) {
       if (allowDefault) {
-        void unwrapExport(path)
-        return undefined
+        unwrapExport(path)
+        return
       }
 
       path.remove()
-      return undefined
     },
     ExportNamedDeclaration(path) {
-      void unwrapExport(path)
-      return undefined
+      unwrapExport(path)
     },
   })
-
-  return undefined
 }
 
-function wrapAndExportRouteArgument(
-  path: NodePath<babelTypes.Program>,
-  route_argument: RouteArgument,
+function wrapAndExportBabelArgumentPath(
+  programPath: NodePath<babelTypes.Program>,
+  argument: BabelArgumentPath,
 ) {
-  void path.traverse({
-    [route_argument.node.type](path: NodePath) {
-      if (areSameNodePath(path, route_argument)) {
-        const root_level_path = path.getAncestry().at(-2)
+  programPath.traverse({
+    [argument.node.type](path: NodePath) {
+      if (areSameNodePath(path, argument)) {
+        if (
+          path.isIdentifier()
+          && argument.isIdentifier()
+          && path.node.name !== argument.node.name
+        ) {
+          return
+        }
 
-        if (root_level_path === undefined) {
+        let pathToExport = path
+
+        if (path.isIdentifier()) {
+          const binding = path.scope.getBinding(path.node.name)
+
+          if (binding === undefined) {
+            throw new Error('Could not find binding.')
+          }
+
+          if (binding.path.isVariableDeclarator()) {
+            const init = binding.path.get('init')
+
+            if (init.node === undefined || init.node === null) {
+              throw new Error('Could not find init.')
+            }
+
+            pathToExport = init as NodePath<NonNullable<typeof init.node>>
+          }
+        }
+
+        const rootLevelPath = pathToExport.getAncestry().at(-2)
+
+        if (rootLevelPath === undefined) {
           throw new Error('Could not find root level path.')
         }
 
-        if (!root_level_path.isDeclaration()) {
+        if (!rootLevelPath.isDeclaration()) {
           throw new Error('Root level path is not a declaration.')
         }
 
-        if (!path.isExpression()) {
-          throw new Error('createRoute argument needs to be an expression.')
+        if (!pathToExport.isExpression()) {
+          throw new Error('Function argument needs to be an expression.')
         }
 
-        const exported_route = babelTypes.exportDefaultDeclaration(
+        const exportedFunction = babelTypes.exportDefaultDeclaration(
           babelTypes.functionDeclaration(null, [], babelTypes.blockStatement([
-            babelTypes.returnStatement(path.node),
+            babelTypes.returnStatement(pathToExport.node),
           ])),
         )
 
-        void root_level_path.replaceWith(exported_route)
-
-        return undefined
+        rootLevelPath.replaceWith(exportedFunction)
       }
     },
   })
-
-  return undefined
 }
 
 function removeUnusedVariablesPlugin() {
-  return [babelPluginPutout, {
-    rules: {
-      'remove-unused-variables': true,
-    },
-  }]
+  return treeShakePlugin({ types: babelTypes })
 }
 
-function assembleRouteArgument(path: NodePath<babelTypes.Program>) {
+function assembleBabelArgumentPath(path: NodePath<babelTypes.Program>) {
   const statements = path.get('body')
 
-  const exported_route_argument = statements.find(function (statement) {
+  const exportedBabelArgumentPath = statements.find((statement) => {
     return statement.isExportDeclaration()
   }) as NodePath<babelTypes.ExportDeclaration> | undefined
 
-  if (exported_route_argument === undefined) {
+  if (exportedBabelArgumentPath === undefined) {
     throw new Error('Unable to find the exported declaration.')
   }
 
-  const route_argument_function = exported_route_argument.get('declaration')
+  const argumentFunction = exportedBabelArgumentPath.get('declaration')
 
-  if (Array.isArray(route_argument_function)) {
+  if (Array.isArray(argumentFunction)) {
     throw new TypeError('The exported declaration is an array.')
   }
 
-  if (!route_argument_function.isFunctionDeclaration()) {
+  if (!argumentFunction.isFunctionDeclaration()) {
     throw new Error('The exported declaration is not a function.')
   }
 
-  // eslint-disable-next-line functional/no-let
-  let inserted_count = 0
-  statements.forEach(function (statement) {
-    // If the statement is the route statement, we don't move it.
-    if (statement === exported_route_argument) {
+  let insertedCount = 0
+  statements.forEach((statement) => {
+    // If the statement is the function statement, we don't move it.
+    if (statement === exportedBabelArgumentPath) {
       return
     }
 
-    // If the statement is the import of the agrume core package, we don't move
-    // it.
-    if (statement.isImportDeclaration()) {
-      if (statement.node.source.value === agrume_package_json.name) {
-        return
-      }
-    }
-
-    const block_statements = route_argument_function.get('body')
-    const block_statement = Array.isArray(block_statements)
-      ? block_statements[0]
-      : block_statements
-
-    if (block_statement === undefined || !block_statement.isBlockStatement()) {
+    // If the statement is the import of the agrume core package, we don't move it.
+    if (
+      statement.isImportDeclaration()
+      && statement.node.source.value === agrumePackageJson.name
+    ) {
       return
     }
 
-    // We move the statement inside the route function.
-    void (block_statement
-      .get('body')[inserted_count]
-      ?.insertBefore(statement.node))
-    void statement.remove()
+    const blockStatements = argumentFunction.get('body')
+    const blockStatement = Array.isArray(blockStatements)
+      ? blockStatements[0]
+      : blockStatements
 
-    // eslint-disable-next-line functional/no-expression-statements
-    inserted_count += 1
+    if (blockStatement === undefined || !blockStatement.isBlockStatement()) {
+      return
+    }
 
-    return undefined
+    // We move the statement inside the function.
+    blockStatement.get('body')[insertedCount]?.insertBefore(statement.node)
+    statement.remove()
+
+    insertedCount += 1
   })
-
-  return undefined
 }
 
 function transformImportsToDynamicImports(path: NodePath) {
-  void path.traverse({
+  path.traverse({
     ImportDeclaration(path) {
-      const dynamic_import = transformImportToDynamicImport(path)
+      const dynamicImport = transformImportToDynamicImport(path)
 
-      if (dynamic_import === undefined) {
+      if (dynamicImport === undefined) {
         return
       }
 
-      void path.replaceWith(dynamic_import)
-
-      return undefined
+      path.replaceWith(dynamicImport)
     },
   })
-
-  return undefined
 }
 
 function transformImportToDynamicImport(
@@ -297,19 +299,19 @@ function transformImportToDynamicImport(
     return
   }
 
-  const require_identifier = babelTypes.identifier('require')
+  const requireIdentifier = babelTypes.identifier('require')
 
-  const import_specifiers = path.get('specifiers')
+  const importSpecifiers = path.get('specifiers')
 
-  if (import_specifiers.length === 1) {
-    const specifier = import_specifiers[0]
+  if (importSpecifiers.length === 1) {
+    const specifier = importSpecifiers[0]
 
     if (specifier?.isImportNamespaceSpecifier()) {
       return babelTypes.variableDeclaration('const', [
         babelTypes.variableDeclarator(
           specifier.node.local,
           babelTypes.callExpression(
-            require_identifier,
+            requireIdentifier,
             [source.node],
           ),
         ),
@@ -320,7 +322,7 @@ function transformImportToDynamicImport(
   return babelTypes.variableDeclaration('const', [
     babelTypes.variableDeclarator(
       babelTypes.objectPattern(
-        import_specifiers.flatMap(function (specifier) {
+        importSpecifiers.flatMap((specifier) => {
           if (specifier.isImportDefaultSpecifier()) {
             return babelTypes.objectProperty(
               babelTypes.identifier('default'),
@@ -339,7 +341,7 @@ function transformImportToDynamicImport(
         }),
       ),
       babelTypes.callExpression(
-        require_identifier,
+        requireIdentifier,
         [source.node],
       ),
     ),
