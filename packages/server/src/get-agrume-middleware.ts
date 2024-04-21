@@ -1,5 +1,5 @@
 import * as vite from 'vite'
-import { agrumePlugin as agrumeVitePlugin } from 'vite-plugin-agrume'
+import agrumeVitePlugin from '@agrume/plugin/vite'
 import type Connect from 'connect'
 
 /**

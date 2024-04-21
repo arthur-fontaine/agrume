@@ -1,0 +1,64 @@
+{
+  "name": "@agrume/plugin",
+  "version": "2.0.0-beta.0",
+  "exports": {
+    "./unplugin": {
+      "types": "./dist/unplugin.d.ts",
+      "import": "./dist/unplugin.mjs",
+      "require": "./dist/unplugin.js"
+    },
+    "./rspack": {
+      "types": "./dist/rspack.d.ts",
+      "import": "./dist/rspack.mjs",
+      "require": "./dist/rspack.js"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "import": "./dist/vite.mjs",
+      "require": "./dist/vite.js"
+    },
+    "./webpack": {
+      "types": "./dist/webpack.d.ts",
+      "import": "./dist/webpack.mjs",
+      "require": "./dist/webpack.js"
+    },
+    "./rollup": {
+      "types": "./dist/rollup.d.ts",
+      "import": "./dist/rollup.mjs",
+      "require": "./dist/rollup.js"
+    },
+    "./esbuild": {
+      "types": "./dist/esbuild.d.ts",
+      "import": "./dist/esbuild.mjs",
+      "require": "./dist/esbuild.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/unplugin.js",
+  "module": "./dist/unplugin.mjs",
+  "types": "./dist/unplugin.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/*.ts --dts --format esm,cjs --minify",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@agrume/core": "workspace:*",
+    "@agrume/internals": "workspace:*",
+    "@agrume/types": "workspace:*",
+    "@babel/core": "^7.22.10",
+    "@babel/plugin-syntax-jsx": "^7.22.5",
+    "@babel/plugin-transform-typescript": "^7.22.10",
+    "babel-plugin-agrume": "workspace:*",
+    "unplugin": "1.10.1"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.20.1",
+    "@types/node": "^18.11.9",
+    "tsup": "^8.0.1",
+    "vite": "^5.2.10"
+  }
+}

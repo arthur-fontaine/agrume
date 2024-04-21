@@ -4,11 +4,12 @@
   "extends": "@whitebird/tsconfig/node.json",
   "compilerOptions": {
     "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable"
+      "ESNext"
     ],
-    "module": "esnext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "declaration": false,
+    "declarationMap": false,
     "outDir": "dist"
   },
   "include": ["src"],
