@@ -11,5 +11,7 @@
     "@agrume/types": "1.0.0",
     "vite-plugin-agrume": "1.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "stale-zebras-hide"
+  ]
 }

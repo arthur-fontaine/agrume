@@ -1,5 +1,3 @@
-import process from 'node:process'
-
 import { program } from 'commander'
 import { createServer } from './create-server'
 

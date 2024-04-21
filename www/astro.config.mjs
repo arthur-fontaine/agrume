@@ -52,6 +52,7 @@ export default defineConfig({
       theme: 'slack-dark',
     },
   },
+  output: 'static',
   vite: {
     plugins: [
       Icons({
