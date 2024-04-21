@@ -1,5 +1,16 @@
 # @agrume/server
 
+## 2.0.0-beta.1
+
+### Minor Changes
+
+- 5952d93: Introduce cross-framework plugin \`@agrume/plugin\`.
+
+### Patch Changes
+
+- Updated dependencies [5952d93]
+  - @agrume/plugin@2.0.0-beta.1
+
 ## 2.0.0-beta.0
 
 ### Major Changes
