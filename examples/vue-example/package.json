@@ -7,14 +7,14 @@
     "dev": "vite"
   },
   "dependencies": {
-    "vue": "^3.3.4",
-    "agrume": "workspace:*"
+    "agrume": "workspace:*",
+    "vue": "^3.3.4"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.2.3",
+    "@agrume/plugin": "workspace:*",
+    "@vitejs/plugin-vue": "^5.0.4",
     "typescript": "^5.0.2",
-    "vite": "^4.4.5",
-    "vite-plugin-agrume": "workspace:*",
+    "vite": "^5.2.10",
     "vue-tsc": "^1.8.5"
   }
 }

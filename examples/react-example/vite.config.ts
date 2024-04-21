@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { agrumePlugin } from 'vite-plugin-agrume'
+import agrumePlugin from '@agrume/plugin/vite'
 import { closeServer, server } from './server'
 
 // https://vitejs.dev/config/
