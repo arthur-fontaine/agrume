@@ -1,3 +1,5 @@
+import process from 'node:process'
+import path from 'node:path'
 import * as vite from 'vite'
 import agrumeVitePlugin from '@agrume/plugin/vite'
 import type Connect from 'connect'
@@ -30,7 +32,7 @@ export function getAgrumeMiddleware(
               return false
             }
 
-            return !source.includes('node_modules')
+            return path.relative(process.cwd(), source).startsWith('node_modules')
           },
         },
         write: false,
