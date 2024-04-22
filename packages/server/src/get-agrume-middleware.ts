@@ -5,22 +5,27 @@ import type Connect from 'connect'
 /**
  * Get the Agrume middleware.
  * @param {object} [options] The options.
- * @param {vite.InlineConfig} [options.viteConfig] The Vite config.
+ * @param {string} options.entry The entry file.
  * @returns {Promise<Connect.NextHandleFunction>} The Agrume middleware.
  * @internal
  */
-export function getAgrumeMiddleware({
-  viteConfig,
-}: { viteConfig?: vite.InlineConfig } = {}) {
+export function getAgrumeMiddleware({ entry }: { entry: string }) {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise<Connect.NextHandleFunction>(async (resolve) => {
-    await vite.build(vite.mergeConfig(viteConfig ?? {}, {
+    await vite.build({
+      build: {
+        lib: {
+          entry,
+          formats: ['es'],
+        },
+        write: false,
+      },
       logLevel: 'silent',
       plugins: [
         agrumeVitePlugin({
           useMiddleware: resolve,
         }),
       ],
-    }))
+    })
   })
 }

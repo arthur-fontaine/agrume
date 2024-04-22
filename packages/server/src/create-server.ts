@@ -6,7 +6,7 @@ import { getAgrumeMiddleware } from './get-agrume-middleware'
 import { logger } from './logger'
 
 interface CreateServerParams {
-  getAgrumeMiddlewareParams: Parameters<typeof getAgrumeMiddleware>[0]
+  entry: string
   host: string
   port: number
 }
@@ -17,12 +17,12 @@ interface CreateServerParams {
  * @returns {Promise<fastify.FastifyInstance>} The server.
  */
 export async function createServer({
-  getAgrumeMiddlewareParams,
+  entry,
   host,
   port,
 }: CreateServerParams) {
   const server = fastify()
-  const agrumeMiddleware = await getAgrumeMiddleware(getAgrumeMiddlewareParams)
+  const agrumeMiddleware = await getAgrumeMiddleware({ entry })
 
   await server.register(fastifyExpress)
   server.use(agrumeMiddleware)

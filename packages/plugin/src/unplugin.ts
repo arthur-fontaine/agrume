@@ -1,5 +1,5 @@
 import { state } from '@agrume/internals'
-import type { UnpluginFactory } from 'unplugin'
+import type { UnpluginFactory, UnpluginOptions } from 'unplugin'
 import { createUnplugin } from 'unplugin'
 
 import packageJson from '../package.json'
@@ -20,7 +20,7 @@ export const unpluginFactory: UnpluginFactory<PluginOptions | undefined>
       return state
     })
 
-    const basePlugin = {
+    const basePlugin: UnpluginOptions = {
       buildEnd: createBuildEnd(pluginOptions),
       buildStart() {
         if (pluginOptions.useMiddleware === undefined) {
@@ -32,7 +32,7 @@ export const unpluginFactory: UnpluginFactory<PluginOptions | undefined>
       enforce: 'pre',
       name: packageJson.name,
       transform,
-    } as const
+    }
 
     return [
       {
