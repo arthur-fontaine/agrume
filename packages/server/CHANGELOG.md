@@ -1,5 +1,11 @@
 # @agrume/server
 
+## 2.0.0-beta.7
+
+### Patch Changes
+
+- d210a9a: Fix bad identification of external dependencies in Agrume CLI.
+
 ## 2.0.0-beta.6
 
 ### Minor Changes
