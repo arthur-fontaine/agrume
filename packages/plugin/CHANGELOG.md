@@ -1,5 +1,16 @@
 # @agrume/plugin
 
+## 2.0.0-beta.5
+
+### Minor Changes
+
+- 9d503c1: Fix support for Flow with JSX syntax and .js extension
+
+### Patch Changes
+
+- Updated dependencies [9d503c1]
+  - babel-preset-agrume@2.0.0-beta.2
+
 ## 2.0.0-beta.4
 
 ### Minor Changes
