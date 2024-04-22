@@ -1,5 +1,11 @@
 # @agrume/server
 
+## 2.0.0-beta.6
+
+### Minor Changes
+
+- 9a4d21a: Add security option --allow-unsafe in Agrume CLI
+
 ## 2.0.0-beta.5
 
 ### Patch Changes
