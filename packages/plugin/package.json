@@ -42,6 +42,7 @@
   ],
   "scripts": {
     "build": "tsup src/*.ts --dts --format esm,cjs --minify",
+    "dev": "pnpm build --watch src",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
