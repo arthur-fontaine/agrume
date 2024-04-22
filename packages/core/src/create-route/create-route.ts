@@ -21,6 +21,7 @@ export function createRoute<
 > {
   const routeName = getRouteName(route, routeOptions)
   const prefix = options.get().prefix
+  const baseUrl = options.get().baseUrl.slice(0, -1) // .slice(0, -1) removes the trailing slash, because prefix already has it
 
   if (state.get()?.isRegistering) {
     state.set((state) => {
@@ -29,7 +30,7 @@ export function createRoute<
     })
   }
 
-  const requestOptions = getRequestOptions(`${prefix}${routeName}`)
+  const requestOptions = getRequestOptions(`${baseUrl}${prefix}${routeName}`)
 
   const getClient = routeOptions?.getClient ?? getDefaultClient
   let stringifiedGetClient = getClient.toString()
