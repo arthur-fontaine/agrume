@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "flow-types": ["flow-types.js"],
+      "polyfills": ["polyfills.js"],
+      "apis/": ["apis/"],
+      "App/": ["App/"],
+      "assets/": ["assets/"],
+      "constants/": ["constants/"],
+      "errors/": ["errors/"],
+      "hoc/": ["hoc/"],
+      "hooks/": ["hooks/"],
+      "redux/": ["redux/"],
+      "styles/": ["styles/"],
+      "utils/": ["utils/"],
+      "validators/": ["validators/"]
+    }
+  },
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    ".storybook",
+    "Auth0",
+    "flow-typed",
+    "dist",
+    ".idea"
+  ]
+}

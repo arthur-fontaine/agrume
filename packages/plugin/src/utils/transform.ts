@@ -3,6 +3,8 @@ import { state } from '@agrume/internals'
 import babel from '@babel/core'
 import babelPluginSyntaxJsx from '@babel/plugin-syntax-jsx'
 import babelPluginTransformTypescript from '@babel/plugin-transform-typescript'
+import babelPluginFlowStrip from '@babel/plugin-transform-flow-strip-types'
+import babelPluginSyntaxHermesParser from 'babel-plugin-syntax-hermes-parser'
 import { agrumePlugin as agrumeBabelPlugin } from 'babel-plugin-agrume'
 
 /**
@@ -27,6 +29,8 @@ export async function transform(code: string, id: string) {
     const result = babel.transformSync(code, {
       filename: id,
       plugins: [
+        babelPluginSyntaxHermesParser,
+        babelPluginFlowStrip,
         babelPluginSyntaxJsx,
         [babelPluginTransformTypescript, {
           allExtensions: true,
