@@ -6,6 +6,7 @@ import { getAgrumeMiddleware } from './get-agrume-middleware'
 import { logger } from './logger'
 
 interface CreateServerParams {
+  allowUnsafe?: boolean | undefined
   entry: string
   host: string
   port: number
@@ -17,12 +18,16 @@ interface CreateServerParams {
  * @returns {Promise<fastify.FastifyInstance>} The server.
  */
 export async function createServer({
+  allowUnsafe,
   entry,
   host,
   port,
 }: CreateServerParams) {
   const server = fastify()
-  const agrumeMiddleware = await getAgrumeMiddleware({ entry })
+  const agrumeMiddleware = await getAgrumeMiddleware({
+    entry,
+    ...(allowUnsafe !== undefined ? { allowUnsafe } : {}),
+  })
 
   await server.register(fastifyExpress)
   server.use(agrumeMiddleware)

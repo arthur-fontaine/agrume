@@ -6,10 +6,16 @@ import type Connect from 'connect'
  * Get the Agrume middleware.
  * @param {object} [options] The options.
  * @param {string} options.entry The entry file.
+ * @param {boolean} [options.allowUnsafe] Whether to allow loading routes from node_modules.
  * @returns {Promise<Connect.NextHandleFunction>} The Agrume middleware.
  * @internal
  */
-export function getAgrumeMiddleware({ entry }: { entry: string }) {
+export function getAgrumeMiddleware(
+  {
+    allowUnsafe = false,
+    entry,
+  }: { allowUnsafe?: boolean, entry: string },
+) {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise<Connect.NextHandleFunction>(async (resolve) => {
     await vite.build({
@@ -17,6 +23,15 @@ export function getAgrumeMiddleware({ entry }: { entry: string }) {
         lib: {
           entry,
           formats: ['es'],
+        },
+        rollupOptions: {
+          external(source) {
+            if (allowUnsafe) {
+              return false
+            }
+
+            return !source.includes('node_modules')
+          },
         },
         write: false,
       },
