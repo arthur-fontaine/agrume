@@ -1,6 +1,6 @@
 {
   "name": "@agrume/core",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0-beta.1",
   "main": "./dist/core.js",
   "module": "./dist/core.mjs",
   "types": "./dist/core.d.ts",
