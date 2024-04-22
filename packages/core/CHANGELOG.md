@@ -1,5 +1,17 @@
 # @agrume/core
 
+## 2.0.0-beta.1
+
+### Minor Changes
+
+- d144095: Add support for `baseUrl` command.
+
+### Patch Changes
+
+- Updated dependencies [d144095]
+  - @agrume/types@2.0.0-beta.1
+  - @agrume/internals@2.0.0-beta.1
+
 ## 2.0.0-beta.0
 
 ### Major Changes

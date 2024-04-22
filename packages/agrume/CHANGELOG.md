@@ -1,5 +1,12 @@
 # agrume
 
+## 2.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [d144095]
+  - @agrume/core@2.0.0-beta.1
+
 ## 2.0.0-beta.0
 
 ### Major Changes
