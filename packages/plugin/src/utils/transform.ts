@@ -23,6 +23,8 @@ export async function transform(code: string, id: string) {
 
   try {
     const result = babel.transformSync(code, {
+      babelrc: false,
+      configFile: false,
       filename: id,
       presets: [agrumePreset],
     })
