@@ -1,0 +1,28 @@
+{
+  "name": "babel-preset-agrume",
+  "version": "2.0.0-beta.0",
+  "main": "./dist/preset.js",
+  "module": "./dist/preset.mjs",
+  "types": "./dist/preset.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/preset.ts --dts --format esm,cjs --minify",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@babel/core": "^7.24.4",
+    "@babel/plugin-syntax-jsx": "^7.22.5",
+    "@babel/plugin-transform-flow-strip-types": "^7.24.1",
+    "@babel/plugin-transform-typescript": "^7.22.10",
+    "@types/babel__core": "^7.20.5",
+    "babel-plugin-agrume": "workspace:*",
+    "babel-plugin-syntax-hermes-parser": "^0.20.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "tsup": "^8.0.1"
+  }
+}

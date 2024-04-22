@@ -1,0 +1,14 @@
+{
+  "name": "agrume-cli-example",
+  "scripts": {
+    "serve": "agrume"
+  },
+  "dependencies": {
+    "@agrume/server": "workspace:*",
+    "agrume": "workspace:*",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.15"
+  }
+}
