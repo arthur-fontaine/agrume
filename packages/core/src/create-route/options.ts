@@ -3,6 +3,7 @@ import type { GlobalOptions } from '@agrume/types'
 import defu from 'defu'
 
 const defaultOptions: Required<GlobalOptions> = {
+  baseUrl: '/',
   logger: undefined,
   prefix: '/api/',
 }
