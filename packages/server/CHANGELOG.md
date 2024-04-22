@@ -1,5 +1,16 @@
 # @agrume/server
 
+## 2.0.0-beta.4
+
+### Minor Changes
+
+- a4a3630: Introduce babel-preset-agrume and automatically find entry file when using Agrume CLI.
+
+### Patch Changes
+
+- Updated dependencies [a4a3630]
+  - @agrume/plugin@2.0.0-beta.4
+
 ## 2.0.0-beta.3
 
 ### Patch Changes
