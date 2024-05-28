@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { program } from 'commander'
 import { createServer } from './create-server'
 import { findEntryFile } from './find-entry-file'
