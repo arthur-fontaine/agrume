@@ -32,7 +32,7 @@ export function getAgrumeMiddleware(
               return false
             }
 
-            return path.relative(process.cwd(), source).startsWith('node_modules')
+            return `/${path.relative(process.cwd(), source)}`.includes('/node_modules/')
           },
         },
         write: false,
