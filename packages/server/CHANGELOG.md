@@ -1,5 +1,11 @@
 # @agrume/server
 
+## 2.0.0-beta.9
+
+### Patch Changes
+
+- b660121: Add Node shebang to the CLI
+
 ## 2.0.0-beta.8
 
 ### Minor Changes
