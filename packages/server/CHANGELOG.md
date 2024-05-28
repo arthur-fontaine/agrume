@@ -1,5 +1,11 @@
 # @agrume/server
 
+## 2.0.0-beta.8
+
+### Minor Changes
+
+- 01e90f8: Make external source detection works in monorepo
+
 ## 2.0.0-beta.7
 
 ### Patch Changes
