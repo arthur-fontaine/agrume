@@ -1,5 +1,17 @@
 # @agrume/core
 
+## 2.0.0-beta.2
+
+### Minor Changes
+
+- 344d4a0: Add support for tunneling
+
+### Patch Changes
+
+- Updated dependencies [344d4a0]
+  - @agrume/internals@2.0.0-beta.2
+  - @agrume/types@2.0.0-beta.2
+
 ## 2.0.0-beta.1
 
 ### Minor Changes

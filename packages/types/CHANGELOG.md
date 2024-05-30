@@ -1,5 +1,11 @@
 # @agrume/types
 
+## 2.0.0-beta.2
+
+### Minor Changes
+
+- 344d4a0: Add support for tunneling
+
 ## 2.0.0-beta.1
 
 ### Minor Changes
