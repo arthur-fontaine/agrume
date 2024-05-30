@@ -1,5 +1,11 @@
 # @agrume/server
 
+## 2.0.0-beta.11
+
+### Minor Changes
+
+- a22a091: Add watch option
+
 ## 2.0.0-beta.10
 
 ### Minor Changes
