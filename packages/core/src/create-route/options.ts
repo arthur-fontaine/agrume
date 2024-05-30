@@ -6,6 +6,7 @@ const defaultOptions: Required<GlobalOptions> = {
   baseUrl: '/',
   logger: undefined,
   prefix: '/api/',
+  tunnel: undefined,
 }
 
 export const options = {
@@ -28,7 +29,7 @@ function getOptions() {
  */
 function setOptions(options: GlobalOptions) {
   state.set((state) => {
-    state.options = defu(options, state.options)
+    state.options = defu(options, state.options) as GlobalOptions
     return state
   })
 }

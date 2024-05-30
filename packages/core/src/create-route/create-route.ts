@@ -1,7 +1,7 @@
 import type { AnyRoute, Client, CreateRoute, RequestOptions, RouteOptions, RouteReturnValue } from '@agrume/types'
 import babelParser from '@babel/parser'
 
-import { state } from '@agrume/internals'
+import { state, utils } from '@agrume/internals'
 import { options } from './options'
 import { getRouteName } from './get-route-name'
 import { getRequestOptions } from './get-request-options'
@@ -21,7 +21,19 @@ export function createRoute<
 > {
   const routeName = getRouteName(route, routeOptions)
   const prefix = options.get().prefix
-  const baseUrl = options.get().baseUrl.slice(0, -1) // .slice(0, -1) removes the trailing slash, because prefix already has it
+
+  let host = ''
+
+  const baseUrl = options.get().baseUrl?.slice(0, -1) // .slice(0, -1) removes the trailing slash, because prefix already has it
+  if (baseUrl !== undefined) {
+    host = baseUrl
+  }
+
+  const tunnelType = options.get().tunnel?.type
+  if (tunnelType !== undefined) {
+    const { tunnelDomain, tunnelSubdomain } = utils.getTunnelInfos(tunnelType)
+    host = `https://${tunnelSubdomain}.${tunnelDomain}`
+  }
 
   if (state.get()?.isRegistering) {
     state.set((state) => {
@@ -30,7 +42,7 @@ export function createRoute<
     })
   }
 
-  const requestOptions = getRequestOptions(`${baseUrl}${prefix}${routeName}`)
+  const requestOptions = getRequestOptions(`${host}${prefix}${routeName}`)
 
   const getClient = routeOptions?.getClient ?? getDefaultClient
   let stringifiedGetClient = getClient.toString()
