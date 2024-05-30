@@ -1,5 +1,11 @@
 # @agrume/server
 
+## 2.0.0-beta.12
+
+### Patch Changes
+
+- 56ce19f: Improve watching and tunneling together with CLI
+
 ## 2.0.0-beta.11
 
 ### Minor Changes
