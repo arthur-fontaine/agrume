@@ -21,9 +21,13 @@ interface CreateServerParams {
 /**
  * Create the server.
  * @param {Parameters<typeof getAgrumeMiddleware>[0]} [params] The parameters for getting the Agrume middleware.
- * @returns {Promise<fastify.FastifyInstance>} The server.
+ * @param {boolean} [isRestarting] Whether the function was called because the server is restarting.
+ * @returns {Promise<() => Promise<void>>} The close function.
  */
-export async function createServer(params: CreateServerParams) {
+export async function createServer(
+  params: CreateServerParams,
+  isRestarting = false,
+) {
   if (params.watch !== undefined) {
     await watchAndCreateServer(params)
     return
@@ -42,10 +46,6 @@ export async function createServer(params: CreateServerParams) {
 
   await server.listen({ host: params.host, port: params.port })
 
-  process.on('SIGINT', () => {
-    server.close()
-  })
-
   const {
     url: tunnelUrl,
   } = await registerTunnel({
@@ -54,14 +54,26 @@ export async function createServer(params: CreateServerParams) {
     tunnel: params.tunnel,
   })
 
+  const closeServer = async () => {
+    server.server.closeAllConnections()
+    await server.close()
+  }
+
+  process.on('SIGINT', async () => {
+    await closeServer()
+    process.exit(0)
+  })
+
   logRoutes()
-  logAddresses({ server, tunnelUrl })
+  if (!isRestarting) {
+    logAddresses({ server, tunnelUrl })
+  }
 
   if (params.tunnel !== undefined && tunnelUrl === undefined) {
     logger.warn('Tunnel registration failed, possibly due to a bad `tunnel` option')
   }
 
-  return server
+  return () => closeServer()
 }
 
 async function watchAndCreateServer(params: CreateServerParams) {
@@ -77,25 +89,29 @@ async function watchAndCreateServer(params: CreateServerParams) {
   const watcher = new Watcher(watchTarget)
   logger.info(`Watching for changes in ${watchTarget}`)
 
-  let server = await createServer({ ...params, watch: undefined })
-  const watcherStartTime = Date.now()
+  let closeServer = await createServer({
+    ...params,
+    watch: undefined,
+  })
 
-  watcher.on('all', async (_0, _1, _2) => {
+  const watcherStartTime = Date.now()
+  watcher.on('all', async () => {
     if (Date.now() - watcherStartTime < 1000) {
       return // Ignore initial events (1s is arbitrary)
     }
 
-    if (server === undefined) {
-      return // Should never happen
-    }
-
-    await server.close()
     state.set((state) => {
       state.routes.clear()
       return state
     })
+
     logger.info('Detected changes, restarting server...')
-    server = await createServer({ ...params, watch: undefined })
+    await closeServer?.()
+    closeServer = await createServer({
+      ...params,
+      tunnel: undefined,
+      watch: undefined,
+    }, true)
   })
 }
 

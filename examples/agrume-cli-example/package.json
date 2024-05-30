@@ -3,7 +3,8 @@
   "scripts": {
     "serve": "agrume",
     "serve:tunnel": "agrume --tunnel",
-    "serve:watch": "agrume --watch"
+    "serve:watch": "agrume --watch",
+    "serve:watch:tunnel": "agrume --watch --tunnel"
   },
   "dependencies": {
     "@agrume/server": "workspace:*",
