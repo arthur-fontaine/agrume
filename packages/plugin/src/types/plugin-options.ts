@@ -1,6 +1,6 @@
 import type { GlobalOptions } from '@agrume/types'
 import type { Connect } from 'vite'
 
-export interface PluginOptions extends GlobalOptions {
+export type PluginOptions = GlobalOptions & {
   useMiddleware?: (middleware: Connect.NextHandleFunction) => void
 }

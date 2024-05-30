@@ -4,12 +4,14 @@ import fastify, { type FastifyInstance } from 'fastify'
 
 import { getAgrumeMiddleware } from './get-agrume-middleware'
 import { logger } from './logger'
+import { registerTunnel } from './register-tunnel'
 
 interface CreateServerParams {
   allowUnsafe?: boolean | undefined
   entry: string
   host: string
   port: number
+  tunnel?: string | undefined
 }
 
 /**
@@ -22,6 +24,7 @@ export async function createServer({
   entry,
   host,
   port,
+  tunnel,
 }: CreateServerParams) {
   const server = fastify()
   const agrumeMiddleware = await getAgrumeMiddleware({
@@ -34,8 +37,16 @@ export async function createServer({
 
   await server.listen({ host, port })
 
+  const {
+    url: tunnelUrl,
+  } = await registerTunnel({ host, port, tunnel })
+
   logRoutes()
-  logAddresses(server)
+  logAddresses({ server, tunnelUrl })
+
+  if (tunnel !== undefined && tunnelUrl === undefined) {
+    logger.warn('Tunnel registration failed, possibly due to a bad `tunnel` option')
+  }
 }
 
 function logRoutes() {
@@ -69,10 +80,19 @@ function logRoutes() {
   }
 }
 
-function logAddresses(server: FastifyInstance) {
+function logAddresses(
+  { server, tunnelUrl }:
+  { server: FastifyInstance, tunnelUrl?: string | undefined },
+) {
   const bestAddress = getBestAddress(server)
   if (bestAddress !== undefined) {
-    logger.box(`🍋 Server listening at: http://${bestAddress.address}:${bestAddress.port}`)
+    let text = `🍋 Server listening at: http://${bestAddress.address}:${bestAddress.port}`
+
+    if (tunnelUrl !== undefined) {
+      text += `\n🚇 Tunnel listening at: ${tunnelUrl}`
+    }
+
+    logger.box(text)
   }
 }
 

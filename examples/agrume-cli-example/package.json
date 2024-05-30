@@ -1,7 +1,8 @@
 {
   "name": "agrume-cli-example",
   "scripts": {
-    "serve": "agrume"
+    "serve": "agrume",
+    "serve:tunnel": "agrume --tunnel"
   },
   "dependencies": {
     "@agrume/server": "workspace:*",
