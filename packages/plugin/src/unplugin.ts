@@ -1,6 +1,7 @@
 import { state } from '@agrume/internals'
 import type { UnpluginFactory, UnpluginOptions } from 'unplugin'
 import { createUnplugin } from 'unplugin'
+import defu from 'defu'
 
 import packageJson from '../package.json'
 import { transform } from './utils/transform'
@@ -16,7 +17,7 @@ import { createBuildEnd } from './utils/vite/create-build-end'
 export const unpluginFactory: UnpluginFactory<PluginOptions | undefined>
   = (pluginOptions = {}) => {
     state.set((state) => {
-      state.options = pluginOptions
+      state.options = defu(pluginOptions, state.options) as PluginOptions
       return state
     })
 

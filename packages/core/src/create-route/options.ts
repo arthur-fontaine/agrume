@@ -9,6 +9,8 @@ const defaultOptions: Required<GlobalOptions> = {
   tunnel: undefined,
 }
 
+setOptions(defaultOptions)
+
 export const options = {
   get: getOptions,
   set: setOptions,
