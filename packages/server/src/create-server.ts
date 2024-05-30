@@ -1,6 +1,9 @@
+import process from 'node:process'
+import path from 'node:path'
 import { state } from '@agrume/internals'
 import fastifyExpress from '@fastify/express'
 import fastify, { type FastifyInstance } from 'fastify'
+import Watcher from 'watcher'
 
 import { getAgrumeMiddleware } from './get-agrume-middleware'
 import { logger } from './logger'
@@ -12,6 +15,7 @@ interface CreateServerParams {
   host: string
   port: number
   tunnel?: string | undefined
+  watch?: string | true | undefined
 }
 
 /**
@@ -19,34 +23,80 @@ interface CreateServerParams {
  * @param {Parameters<typeof getAgrumeMiddleware>[0]} [params] The parameters for getting the Agrume middleware.
  * @returns {Promise<fastify.FastifyInstance>} The server.
  */
-export async function createServer({
-  allowUnsafe,
-  entry,
-  host,
-  port,
-  tunnel,
-}: CreateServerParams) {
+export async function createServer(params: CreateServerParams) {
+  if (params.watch !== undefined) {
+    await watchAndCreateServer(params)
+    return
+  }
+
   const server = fastify()
   const agrumeMiddleware = await getAgrumeMiddleware({
-    entry,
-    ...(allowUnsafe !== undefined ? { allowUnsafe } : {}),
+    entry: params.entry,
+    ...(params.allowUnsafe !== undefined
+      ? { allowUnsafe: params.allowUnsafe }
+      : {}),
   })
 
   await server.register(fastifyExpress)
   server.use(agrumeMiddleware)
 
-  await server.listen({ host, port })
+  await server.listen({ host: params.host, port: params.port })
+
+  process.on('SIGINT', () => {
+    server.close()
+  })
 
   const {
     url: tunnelUrl,
-  } = await registerTunnel({ host, port, tunnel })
+  } = await registerTunnel({
+    host: params.host,
+    port: params.port,
+    tunnel: params.tunnel,
+  })
 
   logRoutes()
   logAddresses({ server, tunnelUrl })
 
-  if (tunnel !== undefined && tunnelUrl === undefined) {
+  if (params.tunnel !== undefined && tunnelUrl === undefined) {
     logger.warn('Tunnel registration failed, possibly due to a bad `tunnel` option')
   }
+
+  return server
+}
+
+async function watchAndCreateServer(params: CreateServerParams) {
+  if (params.watch === undefined) {
+    return
+  }
+
+  let watchTarget = params.watch
+  if (watchTarget === true) {
+    watchTarget = path.dirname(params.entry)
+  }
+
+  const watcher = new Watcher(watchTarget)
+  logger.info(`Watching for changes in ${watchTarget}`)
+
+  let server = await createServer({ ...params, watch: undefined })
+  const watcherStartTime = Date.now()
+
+  watcher.on('all', async (_0, _1, _2) => {
+    if (Date.now() - watcherStartTime < 1000) {
+      return // Ignore initial events (1s is arbitrary)
+    }
+
+    if (server === undefined) {
+      return // Should never happen
+    }
+
+    await server.close()
+    state.set((state) => {
+      state.routes.clear()
+      return state
+    })
+    logger.info('Detected changes, restarting server...')
+    server = await createServer({ ...params, watch: undefined })
+  })
 }
 
 function logRoutes() {

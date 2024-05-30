@@ -24,7 +24,8 @@
     "consola": "^3.2.3",
     "fastify": "^4.26.2",
     "localtunnel": "^2.0.2",
-    "vite": "^5.2.10"
+    "vite": "^5.2.10",
+    "watcher": "^2.3.1"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
