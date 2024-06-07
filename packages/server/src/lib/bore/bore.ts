@@ -19,7 +19,11 @@ export function bore({
   remoteHost,
   remotePort,
 }: BoreOptions) {
-  exec(`bore local ${localPort}\
+  const boreProcess = exec(`bore local ${localPort}\
     ${remoteHost ? ` --to ${remoteHost}` : ''}\
     ${remotePort ? ` --port ${remotePort}` : ''}`)
+
+  boreProcess.stderr?.on('data', (data) => {
+    console.error(data)
+  })
 }
