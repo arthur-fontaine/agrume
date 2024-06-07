@@ -37,7 +37,7 @@ export function createRoute<
       host = `https://${tunnelInfos.tunnelSubdomain}.${tunnelInfos.tunnelDomain}`
     }
     else if (tunnelInfos.type === 'bore') {
-      host = `https://${tunnelInfos.tunnelDomain}:${tunnelInfos.tunnelPort}`
+      host = `http://${tunnelInfos.tunnelDomain}:${tunnelInfos.tunnelPort}`
     }
   }
 
