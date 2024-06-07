@@ -31,8 +31,14 @@ export function createRoute<
 
   const tunnelType = options.get().tunnel?.type
   if (tunnelType !== undefined) {
-    const { tunnelDomain, tunnelSubdomain } = utils.getTunnelInfos(tunnelType)
-    host = `https://${tunnelSubdomain}.${tunnelDomain}`
+    const tunnelInfos = utils.getTunnelInfos(tunnelType)
+
+    if (tunnelInfos.type === 'localtunnel') {
+      host = `https://${tunnelInfos.tunnelSubdomain}.${tunnelInfos.tunnelDomain}`
+    }
+    else if (tunnelInfos.type === 'bore') {
+      host = `https://${tunnelInfos.tunnelDomain}:${tunnelInfos.tunnelPort}`
+    }
   }
 
   if (state.get()?.isRegistering) {
