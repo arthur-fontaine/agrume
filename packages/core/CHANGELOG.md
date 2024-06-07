@@ -1,5 +1,13 @@
 # @agrume/core
 
+## 2.0.0-beta.4
+
+### Patch Changes
+
+- 034c046: Use HTTP instead of HTTPS when using Bore
+- Updated dependencies [034c046]
+  - @agrume/internals@2.0.0-beta.4
+
 ## 2.0.0-beta.3
 
 ### Minor Changes
