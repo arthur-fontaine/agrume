@@ -1,5 +1,6 @@
 import { utils } from '@agrume/internals'
 import localtunnel from 'localtunnel'
+import { bore } from './lib/bore/bore'
 
 interface RegisterTunnelOptions {
   host: string
@@ -18,7 +19,7 @@ interface RegisterTunnelOptions {
 export async function registerTunnel(
   { host, port, tunnel }: RegisterTunnelOptions,
 ) {
-  if (!tunnel || tunnel !== 'localtunnel') {
+  if (!tunnel || (tunnel !== 'localtunnel' && tunnel !== 'bore')) {
     return {}
   }
 
@@ -34,6 +35,18 @@ export async function registerTunnel(
     })
 
     return { type: tunnelInfos.type, url: tunnel.url }
+  }
+  case 'bore': {
+    const _tunnel = bore({
+      localPort: port,
+      remoteHost: tunnelInfos.tunnelDomain,
+      remotePort: tunnelInfos.tunnelPort,
+    })
+
+    return {
+      type: tunnelInfos.type,
+      url: `http://${tunnelInfos.tunnelDomain}:${tunnelInfos.tunnelPort}`,
+    }
   }
   }
 }
