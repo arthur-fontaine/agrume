@@ -1,5 +1,13 @@
 # babel-preset-agrume
 
+## 2.0.0-beta.5
+
+### Patch Changes
+
+- 034c046: Use HTTP instead of HTTPS when using Bore
+- Updated dependencies [034c046]
+  - babel-plugin-agrume@2.0.0-beta.4
+
 ## 2.0.0-beta.4
 
 ### Patch Changes
