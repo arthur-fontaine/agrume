@@ -1,5 +1,15 @@
 # @agrume/server
 
+## 2.0.0-beta.15
+
+### Patch Changes
+
+- 4ddd7f6: Show errors of Bore tunnel
+- Updated dependencies [4ddd7f6]
+  - @agrume/core@2.0.0-beta.5
+  - @agrume/internals@2.0.0-beta.5
+  - @agrume/plugin@2.0.0-beta.9
+
 ## 2.0.0-beta.14
 
 ### Patch Changes

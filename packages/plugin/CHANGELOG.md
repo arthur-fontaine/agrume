@@ -1,5 +1,15 @@
 # @agrume/plugin
 
+## 2.0.0-beta.9
+
+### Patch Changes
+
+- 4ddd7f6: Show errors of Bore tunnel
+- Updated dependencies [4ddd7f6]
+  - babel-preset-agrume@2.0.0-beta.6
+  - @agrume/core@2.0.0-beta.5
+  - @agrume/internals@2.0.0-beta.5
+
 ## 2.0.0-beta.8
 
 ### Patch Changes
