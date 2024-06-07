@@ -1,5 +1,11 @@
 # @agrume/internals
 
+## 2.0.0-beta.3
+
+### Minor Changes
+
+- 843f053: Add support for tunneling with Bore
+
 ## 2.0.0-beta.2
 
 ### Minor Changes

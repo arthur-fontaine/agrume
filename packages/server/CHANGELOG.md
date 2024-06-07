@@ -1,5 +1,18 @@
 # @agrume/server
 
+## 2.0.0-beta.13
+
+### Minor Changes
+
+- 843f053: Add support for tunneling with Bore
+
+### Patch Changes
+
+- Updated dependencies [843f053]
+  - @agrume/core@2.0.0-beta.3
+  - @agrume/internals@2.0.0-beta.3
+  - @agrume/plugin@2.0.0-beta.7
+
 ## 2.0.0-beta.12
 
 ### Patch Changes
