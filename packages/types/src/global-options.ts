@@ -11,7 +11,9 @@ export type GlobalOptions = {
   }
   | {
     baseUrl?: never | undefined
-    tunnel?:
-    | { type: 'localtunnel' }
+    tunnel?: (
+      | { type: 'bore' }
+      | { type: 'localtunnel' }
+    )
   }
 )
