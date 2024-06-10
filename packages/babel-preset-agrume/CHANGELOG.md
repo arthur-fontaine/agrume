@@ -1,5 +1,26 @@
 # babel-preset-agrume
 
+## 2.0.0
+
+### Major Changes
+
+- a4a3630: Introduce babel-preset-agrume and automatically find entry file when using Agrume CLI.
+
+### Minor Changes
+
+- 9d503c1: Fix support for Flow with JSX syntax and .js extension
+- 344d4a0: Add support for tunneling
+
+### Patch Changes
+
+- 034c046: Use HTTP instead of HTTPS when using Bore
+- 4ddd7f6: Show errors of Bore tunnel
+- Updated dependencies [344d4a0]
+- Updated dependencies [034c046]
+- Updated dependencies [4ddd7f6]
+- Updated dependencies [5fb60e7]
+  - babel-plugin-agrume@2.0.0
+
 ## 2.0.0-beta.6
 
 ### Patch Changes
