@@ -1,3 +1,6 @@
+// eslint-disable-next-line ts/ban-ts-comment
+// @ts-nocheck
+
 import { defineConfig } from 'astro/config'
 import orama from '@orama/plugin-astro'
 import remarkGithubBetaBlockquoteAdmonitions from 'remark-github-beta-blockquote-admonitions'
@@ -35,10 +38,11 @@ export default defineConfig({
           const normalizedTitle = title
             .substring(2, title.length - 1)
             .toLowerCase()
-          const capitalizedTitle = normalizedTitle
-            .charAt(0)
-            .toUpperCase()
-            + normalizedTitle.slice(1)
+          const capitalizedTitle
+            = normalizedTitle
+              .charAt(0)
+              .toUpperCase()
+              + normalizedTitle.slice(1)
 
           return {
             checkedTitle: capitalizedTitle,
