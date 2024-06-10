@@ -1,17 +1,18 @@
 /**
- * @param string_ - The string to escape.
- * @returns The escaped HTML.
+ * Escapes HTML special characters in a string.
+ * @param {string} string_ The string to escape.
+ * @returns {string} The escaped string.
  */
 export function escapeHTML(string_: string) {
   return string_.replaceAll(
     /["&'<>]/g,
-    function (tag) {
+    (tag) => {
       return ({
+        '"': '&quot;',
         '&': '&amp;',
+        '\'': '&#39;',
         '<': '&lt;',
         '>': '&gt;',
-        "'": '&#39;',
-        '"': '&quot;',
       }[tag]) as string
     },
   )
