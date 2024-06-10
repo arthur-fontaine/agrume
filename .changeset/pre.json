@@ -9,7 +9,6 @@
     "@agrume/internals": "1.0.0",
     "@agrume/server": "1.0.0",
     "@agrume/types": "1.0.0",
-    "vite-plugin-agrume": "1.0.0",
     "@agrume/plugin": "2.0.0-beta.0",
     "babel-preset-agrume": "2.0.0-beta.0"
   },

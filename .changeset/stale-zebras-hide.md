@@ -5,7 +5,6 @@
 "@agrume/internals": major
 "@agrume/server": major
 "@agrume/types": major
-"vite-plugin-agrume": major
 ---
 
 - Support for stream/iterable route
