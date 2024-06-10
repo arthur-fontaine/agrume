@@ -456,7 +456,7 @@ It will find the routes in your project and start the server.
 | `-h`, `--host` | A string | Host to listen on | `localhost` |
 | `-e`, `--entry` | A list of strings separated by a comma | The entry files to search for routes | `"index.js,index.ts,index.jsx,index.tsx,main.js,main.ts,main.jsx,main.tsx,app.js,app.ts,app.jsx,app.tsx,src/index.js,src/index.ts,src/index.jsx,src/index.tsx,src/main.js,src/main.ts,src/main.jsx,src/main.tsx,src/app.js,src/app.ts,src/app.jsx,src/app.tsx"` |
 | `--watch` | *Optional* The directory to watch for changes | Watch for changes in the target directory | *not provided*. If the option is present, defaults to the entry file found |
-| `--tunnel` | *Optional* The tunnel type (see [Tunnel](#tunnel)) | Use a tunnel to access the server | *not provided*. If the option is present, defaults to the `localtunnel` tunnel |
+| `--tunnel` | *Optional* The tunnel type (see the `tunnel` option in the [configuration](#configuration)) | Use a tunnel to access the server | *not provided*. If the option is present, defaults to the `localtunnel` tunnel |
 | `--allow-unsafe` | | Allow loading routes from `node_modules` | `false` |
 
 ## Recipes
