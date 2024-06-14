@@ -20,7 +20,8 @@
     "@types/babel__core": "^7.20.1",
     "agrume": "workspace:*",
     "babel-plugin-putout": "^6.0.0",
-    "esbuild": "^0.20.2"
+    "esbuild": "^0.20.2",
+    "import-sync": "^2.2.2"
   },
   "devDependencies": {
     "@types/babel__generator": "^7.6.4",

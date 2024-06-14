@@ -299,7 +299,7 @@ function transformImportToDynamicImport(
     return
   }
 
-  const requireIdentifier = babelTypes.identifier('require')
+  const importIdentifier = babelTypes.identifier('_import')
 
   const importSpecifiers = path.get('specifiers')
 
@@ -311,7 +311,7 @@ function transformImportToDynamicImport(
         babelTypes.variableDeclarator(
           specifier.node.local,
           babelTypes.callExpression(
-            requireIdentifier,
+            importIdentifier,
             [source.node],
           ),
         ),
@@ -341,7 +341,7 @@ function transformImportToDynamicImport(
         }),
       ),
       babelTypes.callExpression(
-        requireIdentifier,
+        importIdentifier,
         [source.node],
       ),
     ),
