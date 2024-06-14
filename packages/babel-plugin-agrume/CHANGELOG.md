@@ -1,5 +1,11 @@
 # babel-plugin-agrume
 
+## 2.1.0
+
+### Minor Changes
+
+- f7ab7dc: Allow to import ESM-only modules.
+
 ## 2.0.0
 
 ### Major Changes
