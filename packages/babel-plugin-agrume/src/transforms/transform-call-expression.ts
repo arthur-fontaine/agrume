@@ -49,8 +49,7 @@ function transformCreateRoute(
   const secondArgument = callPath.get('arguments')[1]
 
   if (firstArgument === undefined
-    || (!firstArgument.isFunctionExpression()
-    && !firstArgument.isArrowFunctionExpression()
+    || (!firstArgument.isExpression()
     && !firstArgument.isIdentifier())
   ) {
     return
@@ -58,7 +57,7 @@ function transformCreateRoute(
 
   if (
     secondArgument !== undefined
-    && !secondArgument.isObjectExpression()
+    && !secondArgument.isExpression()
     && !secondArgument.isIdentifier()) {
     return
   }
