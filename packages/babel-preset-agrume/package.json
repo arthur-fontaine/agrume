@@ -1,6 +1,6 @@
 {
   "name": "babel-preset-agrume",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "./dist/preset.js",
   "module": "./dist/preset.mjs",
   "types": "./dist/preset.d.ts",
