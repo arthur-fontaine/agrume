@@ -1,5 +1,11 @@
 # @agrume/server
 
+## 2.0.2
+
+### Patch Changes
+
+- @agrume/plugin@2.0.2
+
 ## 2.0.1
 
 ### Patch Changes
