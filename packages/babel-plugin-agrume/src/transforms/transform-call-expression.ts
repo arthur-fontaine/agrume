@@ -104,9 +104,18 @@ function runLoader(loader: string) {
     ? createRequire(import.meta.url)
     : require
 
-  function _import(module: string) {
-    const modulePath = _require.resolve(module)
-    return importSync(modulePath)
+  function _import(moduleName: string) {
+    const modulePath = _require.resolve(moduleName)
+    const module = importSync(modulePath)
+
+    if (module && module.__esModule) {
+      return module
+    }
+
+    return {
+      default: module,
+      ...(typeof module === 'object' ? module : {}),
+    }
   }
 
   // eslint-disable-next-line no-new-func
