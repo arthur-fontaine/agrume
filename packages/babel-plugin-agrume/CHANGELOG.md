@@ -1,5 +1,11 @@
 # babel-plugin-agrume
 
+## 2.1.2
+
+### Patch Changes
+
+- cbd08ac: Fix undefined value for default imports on compiling
+
 ## 2.1.1
 
 ### Patch Changes
