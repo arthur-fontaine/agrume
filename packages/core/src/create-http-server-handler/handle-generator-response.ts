@@ -22,7 +22,7 @@ export async function handleGeneratorResponse(
     const { done, value } = await generator.next()
 
     if (done) {
-      response.write('data: DONE\n\n')
+      response.write('DONE\n\n')
       response.end()
       return
     }
