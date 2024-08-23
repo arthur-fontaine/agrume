@@ -114,15 +114,20 @@ function getDefaultClient<R extends AnyRoute>(
             }
 
             const DATA_PREFIX = 'data: '
-            const value = unformattedValue.startsWith(DATA_PREFIX)
+            const data = unformattedValue.startsWith(DATA_PREFIX)
               ? unformattedValue.slice(DATA_PREFIX.length)
               : unformattedValue
 
-            if (value === 'DONE') {
+            if (data === 'DONE') {
               return
             }
 
-            yield JSON.parse(value)
+            const RETURN_PREFIX = 'RETURN'
+            if (data.startsWith(RETURN_PREFIX)) {
+              return JSON.parse(data.slice(RETURN_PREFIX.length))
+            }
+
+            yield JSON.parse(data)
           }
         }
       }
