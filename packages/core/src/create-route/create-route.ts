@@ -1,7 +1,7 @@
+import { state, utils } from '@agrume/internals'
 import type { AnyRoute, Client, CreateRoute, RequestOptions, RouteOptions, RouteReturnValue } from '@agrume/types'
 import babelParser from '@babel/parser'
 
-import { state, utils } from '@agrume/internals'
 import { options } from './options'
 import { getRouteName } from './get-route-name'
 import { getRequestOptions } from './get-request-options'
@@ -106,11 +106,24 @@ function getDefaultClient<R extends AnyRoute>(
             return
           }
 
-          const value = unformattedValue.startsWith('data: ')
-            ? unformattedValue.slice(6)
-            : unformattedValue
+          const unformattedValues = unformattedValue.split('\n\n')
 
-          yield JSON.parse(value)
+          for (const unformattedValue of unformattedValues) {
+            if (unformattedValue === '') {
+              continue
+            }
+
+            const DATA_PREFIX = 'data: '
+            const value = unformattedValue.startsWith(DATA_PREFIX)
+              ? unformattedValue.slice(DATA_PREFIX.length)
+              : unformattedValue
+
+            if (value === 'DONE') {
+              return
+            }
+
+            yield JSON.parse(value)
+          }
         }
       }
 
