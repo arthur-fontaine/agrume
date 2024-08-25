@@ -17,8 +17,10 @@
     "@agrume/types": "workspace:*",
     "@babel/parser": "^7.22.10",
     "@types/connect": "^3.4.35",
+    "@types/http-errors": "^2.0.4",
     "connect": "^3.7.0",
     "defu": "^6.1.4",
+    "http-errors": "^2.0.0",
     "type-fest": "^4.2.0"
   },
   "devDependencies": {

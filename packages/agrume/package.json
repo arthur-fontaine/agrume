@@ -13,7 +13,9 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@agrume/core": "workspace:*"
+    "@agrume/core": "workspace:*",
+    "@types/http-errors": "^2.0.4",
+    "http-errors": "^2.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",

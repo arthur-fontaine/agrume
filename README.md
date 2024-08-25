@@ -367,6 +367,21 @@ for await (const date of realtime()) {
 }
 ```
 
+### Error throwing
+
+You can use the [`http-errors`](https://www.npmjs.com/package/http-errors) package to throw a custom HTTP error. Agrume re-exports `http-errors` in a `HTTPError` member. You don't need to install the package yourself.
+
+```ts
+import { HTTPError, createRoute } from 'agrume'
+
+const sayHello = createRoute(
+  async (name: string) => {
+    throw HTTPError.ImATeapot()
+    return `Hello ${name}!`
+  },
+)
+```
+
 ### Options
 
 You can configure each route individually by passing an object to the `createRoute` function.
