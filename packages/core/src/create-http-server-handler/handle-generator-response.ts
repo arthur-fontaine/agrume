@@ -9,8 +9,8 @@ import type { JsonValue } from 'type-fest'
 export async function handleGeneratorResponse(
   response: http.ServerResponse,
   generator:
-    | AsyncGenerator<JsonValue, JsonValue | void, JsonValue>
-    | Generator<JsonValue, JsonValue | void, JsonValue>,
+    | AsyncGenerator<JsonValue, JsonValue | void, undefined>
+    | Generator<JsonValue, JsonValue | void, undefined>,
 ): Promise<void> {
   response.setHeader('Cache-Control', 'no-cache')
   response.setHeader('Content-Type', 'text/event-stream')
@@ -22,6 +22,10 @@ export async function handleGeneratorResponse(
     const { done, value } = await generator.next()
 
     if (done) {
+      if (value !== undefined) {
+        response.write(`data: RETURN${JSON.stringify(value)}\n\n`)
+      }
+
       response.write('DONE\n\n')
       response.end()
       return
