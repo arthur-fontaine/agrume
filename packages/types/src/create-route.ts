@@ -35,11 +35,9 @@ export interface RouteOptions<R extends AnyRoute, C = undefined> {
 }
 
 type RouteReturnValue<R extends AnyRoute, O extends AnyRouteOptions | undefined>
-  = O extends undefined
-    ? Client<R>
-    : NonNullable<O>['getClient'] extends undefined
-      ? Client<R>
-      : ReturnType<NonNullable<NonNullable<O>['getClient']>>
+  = O extends undefined ? Client<R>
+  : NonNullable<O> extends { getClient: (...args: never[]) => void } ? ReturnType<NonNullable<O>['getClient']>
+  : Client<R>
 
 type FlattenPromise<T> = T extends Promise<infer U>
   ? FlattenPromise<U>

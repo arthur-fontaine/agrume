@@ -10,7 +10,8 @@
   "scripts": {
     "build": "unbuild",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run"
   },
   "dependencies": {
     "@agrume/core": "workspace:*",
@@ -18,7 +19,17 @@
     "http-errors": "^2.0.0"
   },
   "devDependencies": {
+    "@types/connect": "^3.4.35",
     "@types/node": "^18.11.9",
-    "unbuild": "^1.2.1"
+    "@types/react": "^18.2.15",
+    "@types/tmp": "^0.2.6",
+    "@vitejs/plugin-react": "^4.2.1",
+    "connect": "^3.7.0",
+    "light-my-request": "^5.13.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tmp-promise": "^3.0.3",
+    "unbuild": "^1.2.1",
+    "vite": "^5.2.10"
   }
 }
