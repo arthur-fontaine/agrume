@@ -14,17 +14,20 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@agrume/types": "workspace:*",
     "@babel/core": "^7.24.4",
+    "@babel/helper-plugin-utils": "^7.24.8",
     "@babel/plugin-syntax-jsx": "^7.22.5",
     "@babel/plugin-transform-flow-strip-types": "^7.24.1",
     "@babel/plugin-transform-react-jsx": "^7.23.4",
     "@babel/plugin-transform-typescript": "^7.22.10",
     "@types/babel__core": "^7.20.5",
+    "@types/babel__helper-plugin-utils": "^7.10.3",
     "babel-plugin-agrume": "workspace:*",
     "babel-plugin-syntax-hermes-parser": "^0.20.1"
   },
   "devDependencies": {
-    "@types/node": "^18.11.9",
+    "@types/node": "^20",
     "tsup": "^8.0.1"
   }
 }

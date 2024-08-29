@@ -24,11 +24,12 @@
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
-    "eslint-config-agrume": "workspace:*",
     "@whitebird/tsconfig": "0.2.1-beta.0",
+    "eslint-config-agrume": "workspace:*",
     "husky": "^8.0.0",
     "turbo": "latest",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.2"
   },
   "engines": {
     "node": ">=18.0.0"
