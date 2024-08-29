@@ -20,7 +20,7 @@
     "@babel/core": "^7.25.2",
     "@types/babel__core": "^7.20.5",
     "@types/connect": "^3.4.35",
-    "@types/node": "^18.11.9",
+    "@types/node": "^20",
     "@types/react": "^18.2.15",
     "@types/tmp": "^0.2.6",
     "@vitejs/plugin-react": "^4.2.1",

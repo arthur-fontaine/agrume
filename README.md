@@ -134,7 +134,7 @@ By default, Agrume will prefix all your routes with `/api`. You can change this 
 export default defineConfig({
   plugins: [
     agrume({
-      prefix: '/my-api'
+      prefix: '/my-api/'
     })
     // ...
   ]
