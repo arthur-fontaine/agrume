@@ -14,9 +14,10 @@ const dirname = path.dirname(filename)
 /**
  * Test util to load an Agrume project with Vite.
  * @param {string} appString The stringify code of the app.tsx file.
+ * @param {object} [agrumeOptions] The options for Agrume.
  * @returns {object} The server and maybe more according to what tests need.
  */
-export async function loadAgrumeProject(appString: string) {
+export async function loadAgrumeProject(appString: string, agrumeOptions?: Omit<NonNullable<Parameters<typeof agrume>[0]>, 'tunnel' | 'useMiddleware'>) {
   const closeSteps: (() => Promise<void>)[] = []
   let closeAlreadyRun = false
   const close = async () => {
@@ -51,6 +52,7 @@ export async function loadAgrumeProject(appString: string) {
       plugins: [
         agrume({
           useMiddleware: server.use.bind(server),
+          ...agrumeOptions,
         }),
         react(),
         {
