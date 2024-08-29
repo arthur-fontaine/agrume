@@ -1,4 +1,4 @@
-// https://stackoverflow.com/a/3276730/13123142
+import crypto from 'node:crypto'
 
 /**
  * Get the checksum of a string.
@@ -6,14 +6,15 @@
  * @returns {string} The checksum of the string.
  */
 export function checksum(string_: string): string {
-  const chk = (string_
-    .split('')
-    .reduce((previousValue, currentValue, currentIndex) => {
-      return (
-        previousValue
-        + ((currentValue.codePointAt(0) ?? 0) * (currentIndex + 1))
-      )
-    }, 0x12_34_56_78))
+  const hash = crypto.createHash('sha256').update(string_).digest('hex')
 
-  return (chk & 0xFF_FF_FF_FF).toString(16)
+  let sumOfNumbers = 0
+  for (const char of hash) {
+    const charCode = char.charCodeAt(0)
+    if (!Number.isNaN(charCode)) {
+      sumOfNumbers += charCode
+    }
+  }
+
+  return hash.slice(0, Math.max(6, sumOfNumbers % 12))
 }

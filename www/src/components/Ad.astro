@@ -1,0 +1,78 @@
+---
+---
+
+<a href="" class="ad">
+  <header>
+    <p>See also</p>
+  </header>
+  <div class="ad__content">
+    <h5 class="ad__title"></h5>
+    <p class="ad__description"></p>
+  </div>
+</a>
+
+<script type="module">
+  const ads = [
+    {
+      link: "https://diabolo.js.org",
+      title: "Diabolo",
+      description: "Dependency injection for JavaScript. Simple, cross-platform, type-safe.",
+      colors: {
+        background: "#F8B7B4",
+        foreground: "#4b0a07"
+      }
+    }
+  ]
+
+  const ad = ads[Math.floor(Math.random() * ads.length)]
+
+  const adElement = document.querySelector('.ad')
+  console.log(adElement)
+  adElement.style.setProperty('--ad-background', ad.colors.background)
+  adElement.style.setProperty('--ad-foreground', ad.colors.foreground)
+  adElement.href = ad.link
+  adElement.querySelector('.ad__title').textContent = ad.title
+  adElement.querySelector('.ad__description').textContent = ad.description
+</script>
+
+<style lang="scss">
+  .ad {
+    display: block;
+    border-radius: 0.5rem;
+    background-color: var(--ad-background);
+    color: var(--ad-foreground);
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+
+    header {
+      p {
+        margin: 0;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+      }
+    }
+
+    > header {
+      padding: 0.5rem;
+    }
+
+    &__content {
+      background-color: #ffffff3b;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+    }
+
+    &__title {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    &__description {
+      margin: 0;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      line-height: 1.5;
+    }
+  }
+</style>

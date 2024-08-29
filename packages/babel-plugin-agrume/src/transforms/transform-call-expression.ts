@@ -1,5 +1,6 @@
 import { createRequire } from 'node:module'
 
+import importSync from 'import-sync'
 import { createRoute } from '@agrume/core'
 import type { NodePath, PluginPass, types as babelTypes } from '@babel/core'
 import agrumePackageJson from 'agrume/package.json'
@@ -48,8 +49,7 @@ function transformCreateRoute(
   const secondArgument = callPath.get('arguments')[1]
 
   if (firstArgument === undefined
-    || (!firstArgument.isFunctionExpression()
-    && !firstArgument.isArrowFunctionExpression()
+    || (!firstArgument.isExpression()
     && !firstArgument.isIdentifier())
   ) {
     return
@@ -57,7 +57,7 @@ function transformCreateRoute(
 
   if (
     secondArgument !== undefined
-    && !secondArgument.isObjectExpression()
+    && !secondArgument.isExpression()
     && !secondArgument.isIdentifier()) {
     return
   }
@@ -104,8 +104,22 @@ function runLoader(loader: string) {
     ? createRequire(import.meta.url)
     : require
 
+  function _import(moduleName: string) {
+    const modulePath = _require.resolve(moduleName)
+    const module = importSync(modulePath)
+
+    if (module && module.__esModule) {
+      return module
+    }
+
+    return {
+      default: module,
+      ...(typeof module === 'object' ? module : {}),
+    }
+  }
+
   // eslint-disable-next-line no-new-func
-  return new Function('require', `return (${loader})`)(_require)()
+  return new Function('_import', `return (${loader})`)(_import)()
 }
 
 function TypesAreSame<T1, _T2 extends T1>(): true {

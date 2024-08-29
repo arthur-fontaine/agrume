@@ -1,9 +1,8 @@
-import { state } from '@agrume/internals'
 import type { UnpluginFactory, UnpluginOptions } from 'unplugin'
 import { createUnplugin } from 'unplugin'
 
 import packageJson from '../package.json'
-import { transform } from './utils/transform'
+import { createTransform } from './utils/create-transform'
 import { createConfigureServer } from './utils/vite/create-configure-server'
 import type { PluginOptions } from './types/plugin-options'
 import { createBuildEnd } from './utils/vite/create-build-end'
@@ -15,11 +14,6 @@ import { createBuildEnd } from './utils/vite/create-build-end'
  */
 export const unpluginFactory: UnpluginFactory<PluginOptions | undefined>
   = (pluginOptions = {}) => {
-    state.set((state) => {
-      state.options = pluginOptions
-      return state
-    })
-
     const basePlugin: UnpluginOptions = {
       buildEnd: createBuildEnd(pluginOptions),
       buildStart() {
@@ -31,7 +25,7 @@ export const unpluginFactory: UnpluginFactory<PluginOptions | undefined>
       },
       enforce: 'pre',
       name: packageJson.name,
-      transform,
+      transform: createTransform(pluginOptions),
     }
 
     return [

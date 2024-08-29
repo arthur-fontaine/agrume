@@ -1,0 +1,29 @@
+{
+  "name": "react-diabolo-example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "serve": "agrume"
+  },
+  "dependencies": {
+    "@agrume/server": "workspace:*",
+    "agrume": "workspace:*",
+    "connect": "^3.7.0",
+    "cors": "^2.8.5",
+    "diabolo": "npm:@jsr/arthur-fontaine__diabolo@^1.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@agrume/plugin": "workspace:*",
+    "@types/connect": "^3.4.35",
+    "@types/cors": "^2.8.13",
+    "@types/node": "^18.11.9",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.2.10"
+  }
+}

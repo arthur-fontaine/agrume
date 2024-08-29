@@ -7,7 +7,7 @@ import React from 'react'
 
 type HighlightedDocumentProps = {
   trim?: number
-  hit: SearchResultWithHighlight['hits'][0]
+  hit: SearchResultWithHighlight<any>['hits'][0]
 }
 
 export function HighlightedDocument({ hit, trim = 200 }: HighlightedDocumentProps) {

@@ -12,7 +12,6 @@ import esbuild from 'esbuild'
 import type { BabelArgumentPath } from '../types/babel-argument-path'
 import treeShakePlugin from './tree-shake.babel'
 
-import { areSameNodePath } from './are-same-node-path'
 import { getProgram } from './get-program'
 
 /**
@@ -25,7 +24,9 @@ export function createArgumentLoader(
   argument: BabelArgumentPath,
   filePath: string,
 ): Error | string | undefined {
-  const program = getProgram(argument)
+  const markedFunction = wrapInMarkedFunction(argument)
+
+  const program = getProgram(markedFunction)
 
   if (program === undefined) {
     return new Error('Could not find program.')
@@ -39,7 +40,7 @@ export function createArgumentLoader(
     const functionSource = getArgumentFunctionSource(
       bundledFileContents ?? fileContents,
       filePath,
-      argument,
+      markedFunction,
     )
 
     return functionSource
@@ -48,6 +49,16 @@ export function createArgumentLoader(
     console.error(error)
     return error as Error
   }
+}
+
+function wrapInMarkedFunction(argument: BabelArgumentPath) {
+  const randomFunctionName = `agrume_argument_${Math.random().toString(36).substring(7)}`
+  const randomFunction = babelTypes.callExpression(
+    babelTypes.identifier(randomFunctionName),
+    [argument.node],
+  )
+
+  return argument.replaceWith(randomFunction)[0]
 }
 
 function getBundledFileContents(
@@ -75,14 +86,14 @@ function getBundledFileContents(
 function getArgumentFunctionSource(
   fileContents: string,
   filePath: string,
-  argument: BabelArgumentPath,
+  markedFunction: NodePath<babel.types.CallExpression>,
 ) {
   let functionSource: string | undefined
 
   babel.transformSync(fileContents, {
     filename: filePath,
     plugins: [
-      exportOnlyBabelArgumentPathPlugin(argument),
+      exportOnlyBabelArgumentPathPlugin(markedFunction),
       removeUnusedVariablesPlugin(),
 
       // Process the file to isolate the function.
@@ -111,7 +122,9 @@ function getArgumentFunctionSource(
   return functionSource
 }
 
-function exportOnlyBabelArgumentPathPlugin(argument: BabelArgumentPath) {
+function exportOnlyBabelArgumentPathPlugin(
+  markedFunction: NodePath<babelTypes.CallExpression>,
+) {
   return {
     visitor: {
       Program: {
@@ -120,7 +133,7 @@ function exportOnlyBabelArgumentPathPlugin(argument: BabelArgumentPath) {
           removeExports(path)
 
           // We export the function to consider it as used.
-          wrapAndExportBabelArgumentPath(path, argument)
+          wrapAndExportBabelArgumentPath(path, markedFunction)
         },
       },
     },
@@ -160,23 +173,52 @@ function removeExports(path: NodePath, allowDefault = false) {
 
 function wrapAndExportBabelArgumentPath(
   programPath: NodePath<babelTypes.Program>,
-  argument: BabelArgumentPath,
+  markedFunction: NodePath<babelTypes.CallExpression>,
 ) {
   programPath.traverse({
-    [argument.node.type](path: NodePath) {
-      if (areSameNodePath(path, argument)) {
+    [markedFunction.node.type](path: NodePath) {
+      if (!markedFunction.isCallExpression() || !path.isCallExpression()) {
+        return
+      }
+
+      const pathCallee = path.get('callee')
+      const pathCalleeName = pathCallee.isIdentifier()
+        ? pathCallee.node.name
+        : undefined
+
+      if (pathCalleeName === undefined) {
+        return
+      }
+
+      const markedFunctionCallee = markedFunction.get('callee')
+      const markedFunctionCalleeName = markedFunctionCallee.isIdentifier()
+        ? markedFunctionCallee.node.name
+        : undefined
+
+      if (markedFunctionCalleeName === undefined) {
+        return
+      }
+
+      const argument = markedFunction.get('arguments')[0]!
+      const pathArgument = path.get('arguments')[0]
+
+      if (pathArgument === undefined) {
+        return
+      }
+
+      if (pathCalleeName === markedFunctionCalleeName) {
         if (
-          path.isIdentifier()
+          pathArgument.isIdentifier()
           && argument.isIdentifier()
-          && path.node.name !== argument.node.name
+          && pathArgument.node.name !== argument.node.name
         ) {
           return
         }
 
-        let pathToExport = path
+        let pathToExport = pathArgument
 
-        if (path.isIdentifier()) {
-          const binding = path.scope.getBinding(path.node.name)
+        if (pathArgument.isIdentifier()) {
+          const binding = pathArgument.scope.getBinding(pathArgument.node.name)
 
           if (binding === undefined) {
             throw new Error('Could not find binding.')
@@ -299,7 +341,7 @@ function transformImportToDynamicImport(
     return
   }
 
-  const requireIdentifier = babelTypes.identifier('require')
+  const importIdentifier = babelTypes.identifier('_import')
 
   const importSpecifiers = path.get('specifiers')
 
@@ -311,7 +353,7 @@ function transformImportToDynamicImport(
         babelTypes.variableDeclarator(
           specifier.node.local,
           babelTypes.callExpression(
-            requireIdentifier,
+            importIdentifier,
             [source.node],
           ),
         ),
@@ -341,7 +383,7 @@ function transformImportToDynamicImport(
         }),
       ),
       babelTypes.callExpression(
-        requireIdentifier,
+        importIdentifier,
         [source.node],
       ),
     ),

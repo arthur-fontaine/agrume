@@ -1,6 +1,6 @@
 {
   "name": "@agrume/plugin",
-  "version": "2.0.0-beta.4",
+  "version": "2.0.3",
   "exports": {
     "./unplugin": {
       "types": "./dist/unplugin.d.ts",
@@ -52,11 +52,12 @@
     "@agrume/types": "workspace:*",
     "@babel/core": "^7.22.10",
     "babel-preset-agrume": "workspace:*",
+    "defu": "^6.1.4",
     "unplugin": "1.10.1"
   },
   "devDependencies": {
     "@types/babel__core": "^7.20.1",
-    "@types/node": "^18.11.9",
+    "@types/node": "^20",
     "tsup": "^8.0.1",
     "vite": "^5.2.10"
   }

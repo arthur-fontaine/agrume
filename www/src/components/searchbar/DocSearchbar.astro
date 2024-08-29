@@ -103,6 +103,11 @@ import { defaultSchema } from '@orama/plugin-astro';
 
     cursor: pointer;
 
+    @media screen and (max-width: 768px) {
+      width: -webkit-fill-available;
+      padding-block: 1rem;
+    }
+
     &:global(::placeholder) {
       color: $foreground;
     }

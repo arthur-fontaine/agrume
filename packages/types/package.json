@@ -1,6 +1,6 @@
 {
   "name": "@agrume/types",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0",
   "types": "./dist/types.d.ts",
   "files": [
     "dist"
@@ -16,7 +16,7 @@
     "type-fest": "^4.2.0"
   },
   "devDependencies": {
-    "@types/node": "^18.11.9",
+    "@types/node": "^20",
     "tsup": "^8.0.1",
     "vitest": "^1.2.2"
   }

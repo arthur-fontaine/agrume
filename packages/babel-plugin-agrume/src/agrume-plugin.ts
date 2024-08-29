@@ -1,14 +1,17 @@
-import type { PluginObj } from '@babel/core'
-
+import { declare } from '@babel/helper-plugin-utils'
 import { state } from '@agrume/internals'
+import type { GlobalOptions } from '@agrume/types'
+import defu from 'defu'
+
 import packageJson from '../package.json'
 import { transformCallExpression } from './transforms/transform-call-expression'
 
-/**
- * The Agrume Babel plugin.
- * @returns {PluginObj} The Babel plugin.
- */
-export function agrumePlugin(): PluginObj {
+export const agrumePlugin = declare<GlobalOptions>((_api, options) => {
+  state.set((state) => {
+    state.options = defu(options, state.options) as GlobalOptions
+    return state
+  })
+
   return {
     name: packageJson.name,
     visitor: {
@@ -29,4 +32,4 @@ export function agrumePlugin(): PluginObj {
       },
     },
   }
-}
+})

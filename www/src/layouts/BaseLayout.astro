@@ -3,6 +3,7 @@ import 'normalize.css';
 import '@fontsource-variable/gluten';
 import '@fontsource-variable/manrope';
 
+// @ts-ignore
 import { Seo } from "astro-seo-meta";
 
 interface Props {
@@ -17,7 +18,7 @@ const { title, description, keywords } = Astro.props;
 // const url = "https://agrume.js.org";
 // const ogImage = `${url}${ogImagePath}`;
 
-const ogImage = "https://raw.githubusercontent.com/arthur-fontaine/agrume/9aa42e2474d4a36bfc62e43708d93399d6106f06/.github/assets/banner.png";
+const ogImage = "https://raw.githubusercontent.com/arthur-fontaine/agrume/main/.github/assets/banner.png";
 ---
 
 <!DOCTYPE html>
@@ -48,7 +49,11 @@ const ogImage = "https://raw.githubusercontent.com/arthur-fontaine/agrume/9aa42e
 </html>
 
 <style>
+	html {
+		scrollbar-gutter: stable;
+	}
+
   body {
     font-family: 'Manrope Variable', sans-serif;
   }
-</style>
+</>
