@@ -1,5 +1,6 @@
 import babel from '@babel/core'
 import agrumePreset from 'babel-preset-agrume'
+import type { TransformResult } from 'unplugin'
 import type { PluginOptions } from '../types/plugin-options'
 
 /**
@@ -30,8 +31,8 @@ export function createTransform(options?: PluginOptions) {
         : {
           code: transformedCode,
           // eslint-disable-next-line ts/no-explicit-any
-          map: result?.map as any,
-        }
+          ...(result?.map && { map: result?.map } as any),
+        } satisfies TransformResult
     }
     catch (error) {
       console.error(error)
