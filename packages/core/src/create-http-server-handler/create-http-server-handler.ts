@@ -109,6 +109,10 @@ function isGenerator(value: any): value is (
   | AsyncGenerator<unknown>
   | Generator<unknown>
 ) {
+  if (value === undefined || value === null) {
+    return false
+  }
+
   const generatorConstructor
     = function* () { yield undefined }.constructor
   const asyncGeneratorConstructor
