@@ -1,7 +1,8 @@
+import { Readable } from 'node:stream'
 import type Connect from 'connect'
 import type { JsonValue } from 'type-fest'
-
 import { state } from '@agrume/internals'
+
 import { options } from '../create-route/options'
 import { handleGeneratorResponse } from './handle-generator-response'
 import { handleJsonValueResponse } from './handle-json-value-response'
@@ -59,6 +60,26 @@ export function createHttpServerHandler() {
 
       if (route === undefined) {
         throwStatus(404)
+        return
+      }
+
+      const isBodyStream = request.headers['content-type'] === 'application/octet-stream'
+
+      if (isBodyStream) {
+        const stream = Readable
+          .toWeb(request)
+          .pipeThrough(new TextDecoderStream() as never);
+
+        (async () => {
+          const result = await route(stream as never)
+          if (isGenerator(result)) {
+            handleGeneratorResponse(response, result)
+          }
+          else {
+            handleJsonValueResponse(response, result)
+          }
+        })()
+
         return
       }
 

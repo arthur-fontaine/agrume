@@ -25,6 +25,7 @@
     "@types/tmp": "^0.2.6",
     "@vitejs/plugin-react": "^4.2.1",
     "connect": "^3.7.0",
+    "get-port": "^7.1.0",
     "jiti": "^1.21.6",
     "light-my-request": "^5.13.0",
     "react": "^18.2.0",

@@ -78,6 +78,9 @@ export function createRoute<
 function getDefaultClient<R extends AnyRoute>(
   requestOptions: RequestOptions,
 ): Client<R> {
+  // TODO: As majority of runtimes do not support full duplex communication with Fetch API (it seems only Deno does),
+  // we need to use XHR instead of Fetch API.
+
   return async function (parameters: Parameters<R>[0]) {
     const response = await fetch(requestOptions.url, {
       ...requestOptions,
