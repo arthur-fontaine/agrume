@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import getPort from 'get-port'
 import { loadAgrumeProject } from './utils/load-agrume-project'
+import { deferredStream } from './utils/deferred-stream'
+import { transformAgrume } from './utils/transform-agrume'
 
 describe('passing a stream as parameter to `createRoute`', () => {
   it('should work', async () => {
@@ -9,11 +11,10 @@ describe('passing a stream as parameter to `createRoute`', () => {
     const SENDING_INTERVAL = 200
     const PORT = await getPort()
 
-    const { close, server } = await loadAgrumeProject(/* tsx */`
-      import React from 'react'
+    const code = /* tsx */`
       import { createRoute } from 'agrume'
       
-      const r = createRoute(async function* (stream) {
+      export const r = createRoute(async function* (stream) {
         const reader = stream.getReader()
 
         while (true) {
@@ -26,49 +27,49 @@ describe('passing a stream as parameter to `createRoute`', () => {
           yield value
         }
       }, { path: '${API_PATH}' })
-      
+    `
+
+    const { close, server } = await loadAgrumeProject(/* tsx */`
+      ${code}
+
       export function App() {
         return null
       }
     `)
+    const { run } = await transformAgrume(code, {
+      baseUrl: `http://localhost:${PORT}/`,
+    })
+    const { r: client } = await run() as {
+      r: (stream: ReadableStream<Uint8Array>)
+      => Promise<AsyncGenerator<string, void, undefined>>
+    }
 
     server.listen(PORT)
 
-    const stream = new ReadableStream({
-      async start(controller) {
-        for (const chunk of EXPECTED_RETURNS) {
-          await wait(SENDING_INTERVAL)
-          controller.enqueue(chunk)
-        }
-        controller.close()
-      },
-    }).pipeThrough(new TextEncoderStream())
-    const response = await fetch(`http://localhost:${PORT}/api${API_PATH}`, {
-      body: stream,
-      // @ts-expect-error `duplex` is needed when passing a stream as body
-      duplex: 'half',
-      headers: {
-        'Content-Type': 'application/octet-stream',
-      },
-      method: 'POST',
-    })
-    await close()
-
-    expect(response.status).toBe(200)
+    const { closeStream, sendData, stream } = deferredStream()
     let lastValue: string | undefined
-    response.body
-      ?.pipeThrough(new TextDecoderStream())
-      .pipeTo(new WritableStream({
-        write: (chunk) => { lastValue = chunk.toString() },
-      }))
+    setTimeout(async () => {
+      for (const expectedReturn of EXPECTED_RETURNS) {
+        sendData(expectedReturn)
+        await wait(SENDING_INTERVAL)
+        expect(lastValue).toBe(expectedReturn)
+      }
 
-    const INTERVAL_MARGIN = 100
-    for (const expectedReturn of EXPECTED_RETURNS) {
-      await wait(SENDING_INTERVAL + INTERVAL_MARGIN)
-      expect(lastValue).toBe(expectedReturn)
-    }
+      closeStream()
+    }, SENDING_INTERVAL)
+
+    const response = await client(stream.pipeThrough(new TextEncoderStream()))
+    await close();
+
+    (async () => {
+      for await (const value of response) {
+        lastValue = value
+      }
+    })()
+
+    await wait(SENDING_INTERVAL * EXPECTED_RETURNS.length + 1000)
   })
-}, { timeout: 20000 })
+})
 
 function wait(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms))
