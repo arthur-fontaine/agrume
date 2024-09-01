@@ -9,6 +9,7 @@ describe('passing a stream as parameter to `createRoute`', () => {
     const API_PATH = '/hello-stream'
     const EXPECTED_RETURNS = ['Hello', 'World', 'Agrume']
     const SENDING_INTERVAL = 200
+    const PREFIX_FROM_SERVER = `${Math.random().toString(36).slice(2)}:`
     const PORT = await getPort()
 
     const code = /* tsx */`
@@ -24,7 +25,7 @@ describe('passing a stream as parameter to `createRoute`', () => {
             return
           }
 
-          yield value
+          yield "${PREFIX_FROM_SERVER}" + value
         }
       }, { path: '${API_PATH}' })
     `
@@ -52,7 +53,7 @@ describe('passing a stream as parameter to `createRoute`', () => {
       for (const expectedReturn of EXPECTED_RETURNS) {
         sendData(expectedReturn)
         await wait(SENDING_INTERVAL)
-        expect(lastValue).toBe(expectedReturn)
+        expect(lastValue).toBe(`${PREFIX_FROM_SERVER}${expectedReturn}`)
       }
 
       closeStream()

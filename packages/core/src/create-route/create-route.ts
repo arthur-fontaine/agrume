@@ -78,14 +78,35 @@ export function createRoute<
 function getDefaultClient<R extends AnyRoute>(
   requestOptions: RequestOptions,
 ): Client<R> {
-  // TODO: As majority of runtimes do not support full duplex communication with Fetch API (it seems only Deno does),
-  // we need to use XHR instead of Fetch API.
-
   return async function (parameters: Parameters<R>[0]) {
+    const agrumeRid = crypto.randomUUID()
+
     const response = await fetch(requestOptions.url, {
       ...requestOptions,
-      body: JSON.stringify(parameters),
+      ...(!(parameters instanceof ReadableStream) && {
+        body: JSON.stringify(parameters),
+      }),
+      headers: {
+        ...requestOptions.headers,
+        ...(parameters instanceof ReadableStream && {
+          'X-Agrume-Rid-Stream': agrumeRid,
+        }),
+      },
     })
+
+    if (parameters instanceof ReadableStream) {
+      fetch(`${requestOptions.url}/__agrume_send_stream`, {
+        body: parameters,
+        // @ts-expect-error `duplex` is correct
+        duplex: 'half',
+        headers: {
+          ...requestOptions.headers,
+          'Content-Type': 'application/octet-stream',
+          'X-Agrume-Rid-Stream': agrumeRid,
+        },
+        method: 'POST',
+      })
+    }
 
     if (response.headers.get('content-type')?.includes('application/json')) {
       return response.json()
