@@ -1,4 +1,5 @@
 import type { RequestOptions } from './request-options'
+
 import type { AnyRoute } from './route'
 
 // eslint-disable-next-line ts/no-explicit-any
@@ -24,8 +25,25 @@ export interface CreateRoute<
   (route: R, options?: O): RouteReturnValue<R, O>
 }
 
+const routeTypesSymbol = Symbol('routeTypes')
+
+export interface RouteTypes<R extends AnyRoute> {
+  [routeTypesSymbol]?: {
+    parameters: Parameters<R>
+    returnType: ReturnType<R>
+  }
+}
+
+export type InferRouteParameters<R extends RouteTypes<AnyRoute> | undefined>
+  = NonNullable<NonNullable<R>[typeof routeTypesSymbol]>['parameters']
+export type InferRouteReturnType<R extends RouteTypes<AnyRoute> | undefined>
+  = NonNullable<NonNullable<R>[typeof routeTypesSymbol]>['returnType']
+
 type GetClient<R extends AnyRoute, C>
-  = (requestOptions: RequestOptions) => C extends undefined
+  = (
+    requestOptions: RequestOptions,
+    _routeTypes?: RouteTypes<R>,
+  ) => C extends undefined
     ? ((...parameters: Parameters<R>) => unknown)
     : C
 

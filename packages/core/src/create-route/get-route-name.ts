@@ -9,7 +9,7 @@ import type { AnyRoute, Route, RouteOptions } from '@agrume/types'
  * @returns {string} The name of the route.
  */
 export function getRouteName(
-  route: Route,
+  route: AnyRoute,
   routeOptions?: RouteOptions<AnyRoute, unknown> | undefined,
 ): string {
   if (routeOptions?.path !== undefined) {

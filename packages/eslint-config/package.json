@@ -16,6 +16,6 @@
     "eslint-plugin-fp": "^2.3.0"
   },
   "devDependencies": {
-    "tsup": "^8.0.1"
+    "tsup": "^8.2.4"
   }
 }

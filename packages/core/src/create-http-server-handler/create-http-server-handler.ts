@@ -87,7 +87,7 @@ export function createHttpServerHandler() {
           // eslint-disable-next-line ts/no-explicit-any
           const result = await route(parameters as any)
 
-          if (isGenerator(result)) {
+          if (isGenerator<JsonValue, JsonValue | void, undefined>(result)) {
             handleGeneratorResponse(response, result)
           }
           else {
@@ -105,9 +105,9 @@ export function createHttpServerHandler() {
 }
 
 // eslint-disable-next-line ts/no-explicit-any
-function isGenerator(value: any): value is (
-  | AsyncGenerator<unknown>
-  | Generator<unknown>
+function isGenerator<T = unknown, R = any, N = unknown>(value: any): value is (
+  | AsyncGenerator<T, R, N>
+  | Generator<T, R, N>
 ) {
   const generatorConstructor
     = function* () { yield undefined }.constructor

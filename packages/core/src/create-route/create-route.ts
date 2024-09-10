@@ -1,10 +1,24 @@
 import { state, utils } from '@agrume/internals'
-import type { AnyRoute, Client, CreateRoute, RequestOptions, RouteOptions, RouteReturnValue } from '@agrume/types'
+import type { AnyRoute, Client, CreateRoute, RequestOptions, Route, RouteOptions, RouteParameters, RouteReturnValue } from '@agrume/types'
 import babelParser from '@babel/parser'
 
 import { options } from './options'
 import { getRouteName } from './get-route-name'
 import { getRequestOptions } from './get-request-options'
+
+const impossibleTypeSymbol = Symbol('Impossible type')
+type ImpossibleType<T> = T & {
+  [impossibleTypeSymbol]: typeof impossibleTypeSymbol
+}
+
+type ValidateRoute<R extends AnyRoute, _> =
+  (R extends Route<infer RP, infer RRV>
+    ? RP extends RouteParameters
+      ? RRV extends RouteReturnValue
+        ? _
+        : ImpossibleType<'The return value of the route is invalid. It must be a JSON value.'>
+      : ImpossibleType<'The parameters of the route are invalid. The parameters must be a JSON value.'>
+    : ImpossibleType<'The route is invalid. It must be a function. The parameters and the return value must be a JSON value.'>) & _
 
 /**
  * Creates a route.
@@ -13,12 +27,18 @@ import { getRequestOptions } from './get-request-options'
  * @returns {Function} A function that can be used to call the route.
  */
 export function createRoute<
-  RRV extends RouteReturnValue,
-  R extends AnyRoute<RRV>,
+  R extends AnyRoute,
   O extends RouteOptions<R, unknown> | undefined,
->(route: R, routeOptions?: O): ReturnType<
-  CreateRoute<R, undefined extends O ? undefined : O>
-> {
+>(
+  route: ValidateRoute<R, R>,
+  routeOptions?: ValidateRoute<R, O>,
+): R extends Route<infer RP, infer RRV>
+    ? RP extends RouteParameters
+      ? RRV extends RouteReturnValue
+        ? ReturnType<CreateRoute<R, undefined extends O ? undefined : O>>
+        : never
+      : never
+    : never {
   const routeName = getRouteName(route, routeOptions)
   const prefix = options.get().prefix
 
@@ -67,7 +87,7 @@ export function createRoute<
   // eslint-disable-next-line no-eval
   const makeRequest = eval(/* js */`
     (...args) => {
-      const client = (${stringifiedGetClient})(${JSON.stringify(requestOptions)})
+      const client = (${stringifiedGetClient})(${JSON.stringify(requestOptions)}, {})
       return client(...args)
     }
   `)
