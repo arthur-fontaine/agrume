@@ -1,5 +1,5 @@
 import { state, utils } from '@agrume/internals'
-import type { AnyRoute, Client, CreateRoute, RequestOptions, Route, RouteOptions, RouteParameters, RouteReturnValue } from '@agrume/types'
+import type { AnyRoute, CreateRoute, DefaultClient, RequestOptions, Route, RouteOptions, RouteParameters, RouteReturnValue } from '@agrume/types'
 import babelParser from '@babel/parser'
 
 import { options } from './options'
@@ -69,8 +69,13 @@ export function createRoute<
   }
 
   const requestOptions = getRequestOptions(`${host}${prefix}${routeName}`)
+  const globalConfiguredClient = options.get().getClient
 
-  const getClient = routeOptions?.getClient ?? getDefaultClient
+  const getClient = (
+    routeOptions?.getClient
+    ?? globalConfiguredClient
+    ?? getDefaultClient
+  )
   let stringifiedGetClient = getClient.toString()
 
   // If Babel cannot parse the function, it means that the function keyword may be
@@ -97,7 +102,7 @@ export function createRoute<
 
 function getDefaultClient<R extends AnyRoute>(
   requestOptions: RequestOptions,
-): Client<R> {
+): DefaultClient<R> {
   return async function (parameters: Parameters<R>[0]) {
     const response = await fetch(requestOptions.url, {
       ...requestOptions,
