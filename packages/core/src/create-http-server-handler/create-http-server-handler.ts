@@ -98,7 +98,7 @@ export function createHttpServerHandler() {
       const isBodyStream = request.headers['content-type'] === 'application/octet-stream'
 
       if (requestKey !== undefined || isBodyStream) {
-        let stream: ReadableStream<Uint8Array>
+        let stream: ReadableStream<string>
 
         if (requestKey !== undefined) {
           const bodyStream
@@ -113,8 +113,35 @@ export function createHttpServerHandler() {
             .pipeThrough(new TextDecoderStream() as never) as never
         }
 
+        const asyncGenerator = (async function* () {
+          const reader = stream.getReader()
+
+          while (true) {
+            const { done, value } = await reader.read()
+
+            if (value !== undefined) {
+              const YIELD_PREFIX = 'YIELD'
+              const RETURN_PREFIX = 'RETURN'
+
+              if (value.startsWith(YIELD_PREFIX)) {
+                yield JSON.parse(value.slice(YIELD_PREFIX.length))
+              }
+              else if (value.startsWith(RETURN_PREFIX)) {
+                return JSON.parse(value.slice(RETURN_PREFIX.length))
+              }
+              else {
+                console.error('Unexpected value:', value)
+              }
+            }
+
+            if (done) {
+              return
+            }
+          }
+        }());
+
         (async () => {
-          const result = await route(stream as never)
+          const result = await route(asyncGenerator as never)
           if (isGenerator(result)) {
             handleGeneratorResponse(response, result)
           }

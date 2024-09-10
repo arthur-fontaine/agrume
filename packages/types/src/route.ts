@@ -4,7 +4,7 @@ import type { JsonValue } from 'type-fest'
  * @internal
  */
 export type RouteParameters =
-  | ReadableStream<Readonly<JsonValue>>
+  | AsyncGenerator<Readonly<JsonValue>, Readonly<JsonValue> | void, undefined>
   | Readonly<JsonValue>
 
 /**

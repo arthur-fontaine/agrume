@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import getPort from 'get-port'
 import { loadAgrumeProject } from './utils/load-agrume-project'
-import { deferredStream } from './utils/deferred-stream'
 import { transformAgrume } from './utils/transform-agrume'
 
-describe('passing a stream as parameter to `createRoute`', () => {
+describe('passing a generator as parameter to `createRoute`', () => {
   it('should work', async () => {
     const API_PATH = '/hello-stream'
     const EXPECTED_RETURNS = ['Hello', 'World', 'Agrume']
@@ -15,16 +14,8 @@ describe('passing a stream as parameter to `createRoute`', () => {
     const code = /* tsx */`
       import { createRoute } from 'agrume'
       
-      export const r = createRoute(async function* (stream) {
-        const reader = stream.getReader()
-
-        while (true) {
-          const { done, value } = await reader.read()
-
-          if (done) {
-            return
-          }
-
+      export const r = createRoute(async function* (iterator) {
+        for await (const value of iterator) {
           yield "${PREFIX_FROM_SERVER}" + value
         }
       }, { path: '${API_PATH}' })
@@ -41,26 +32,21 @@ describe('passing a stream as parameter to `createRoute`', () => {
       baseUrl: `http://localhost:${PORT}/`,
     })
     const { r: client } = await run() as {
-      r: (stream: ReadableStream<Uint8Array>)
+      r: (iterator: AsyncGenerator<string>)
       => Promise<AsyncGenerator<string, void, undefined>>
     }
 
     server.listen(PORT)
 
-    const { closeStream, sendData, stream } = deferredStream()
     let lastValue: string | undefined
-    setTimeout(async () => {
+    const response = await client((async function* () {
+      await wait(SENDING_INTERVAL) // Initial delay
       for (const expectedReturn of EXPECTED_RETURNS) {
-        sendData(expectedReturn)
-        await wait(SENDING_INTERVAL)
+        yield expectedReturn
+        await wait(SENDING_INTERVAL) // Ensure the server has time to process the value
         expect(lastValue).toBe(`${PREFIX_FROM_SERVER}${expectedReturn}`)
       }
-
-      closeStream()
-    }, SENDING_INTERVAL)
-
-    const response = await client(stream.pipeThrough(new TextEncoderStream()))
-    await close();
+    }()));
 
     (async () => {
       for await (const value of response) {
@@ -69,6 +55,7 @@ describe('passing a stream as parameter to `createRoute`', () => {
     })()
 
     await wait(SENDING_INTERVAL * EXPECTED_RETURNS.length + 1000)
+    await close()
   })
 })
 
