@@ -13,6 +13,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@agrume/client": "workspace:*",
     "@agrume/internals": "workspace:*",
     "@agrume/types": "workspace:*",
     "@babel/parser": "^7.22.10",
