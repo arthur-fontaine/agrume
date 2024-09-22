@@ -6,6 +6,7 @@ export default defineBuildConfig({
   declaration: true,
   entries: [
     'src/agrume',
+    'src/errors',
   ],
   rollup: {
     emitCJS: true,

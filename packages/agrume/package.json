@@ -1,9 +1,19 @@
 {
   "name": "agrume",
   "version": "2.0.0",
-  "main": "./dist/agrume.cjs",
-  "module": "./dist/agrume.mjs",
-  "types": "./dist/agrume.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/agrume.d.ts",
+      "import": "./dist/agrume.mjs",
+      "require": "./dist/agrume.cjs"
+    },
+    "./errors": {
+      "types": "./dist/errors.d.ts",
+      "import": "./dist/errors.mjs",
+      "require": "./dist/errors.cjs"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist"
   ],
@@ -14,7 +24,9 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@agrume/core": "workspace:*"
+    "@agrume/core": "workspace:*",
+    "@types/http-errors": "^2.0.4",
+    "http-errors": "^2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
