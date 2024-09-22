@@ -8,16 +8,17 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/internals.ts --dts --format esm,cjs --minify",
+    "build": "tsup src/internals.ts --dts --format esm,cjs --minify --sourcemap inline",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@agrume/types": "workspace:*",
+    "c12": "^1.11.2",
     "node-machine-id": "^1.1.12"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "tsup": "^8.0.1"
+    "tsup": "^8.2.4"
   }
 }

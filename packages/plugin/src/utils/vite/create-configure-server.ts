@@ -2,7 +2,7 @@ import { state } from '@agrume/internals'
 import { createHttpServerHandler } from '@agrume/core'
 import type { ViteDevServer } from 'vite'
 
-import type { PluginOptions } from '../../types/plugin-options'
+import type { PluginOptions } from '@agrume/types'
 
 /**
  * Create the configure server function.

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Default",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noUnusedLocals": false
+  },
+  "include": ["tests-types"],
+  "exclude": ["node_modules", "dist"]
+}

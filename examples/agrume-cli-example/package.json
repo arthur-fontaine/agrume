@@ -7,7 +7,7 @@
     "serve:watch:tunnel": "agrume --watch --tunnel"
   },
   "dependencies": {
-    "@agrume/server": "workspace:*",
+    "@agrume/cli": "workspace:*",
     "agrume": "workspace:*",
     "react": "^18.2.0"
   },
