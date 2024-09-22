@@ -62,7 +62,8 @@ export async function loadAgrumeProject(appString: string, agrumeOptions?: Omit<
       ],
       resolve: {
         alias: {
-          agrume: path.join(dirname, '..', '..', 'src', 'agrume.ts'),
+          '@agrume/client/optimized/register': path.join(dirname, '..', '..', '..', 'client', 'src', 'optimized', 'register.ts'),
+          'agrume': path.join(dirname, '..', '..', 'src', 'agrume.ts'),
         },
       },
       root: tmpDir.path,
