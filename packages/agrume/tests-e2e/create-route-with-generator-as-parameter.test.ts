@@ -56,7 +56,7 @@ describe('passing a generator as parameter to `createRoute`', () => {
 
     await wait(SENDING_INTERVAL * EXPECTED_RETURNS.length + 1000)
     await close()
-  })
+  }, { timeout: 10000 })
 })
 
 function wait(ms: number) {

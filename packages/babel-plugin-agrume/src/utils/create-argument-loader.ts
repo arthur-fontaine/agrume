@@ -5,7 +5,6 @@ import path from 'node:path'
 import type { NodePath } from '@babel/core'
 import babel, { types as babelTypes } from '@babel/core'
 import generate from '@babel/generator'
-import agrumePackageJson from 'agrume/package.json'
 
 import esbuild from 'esbuild'
 
@@ -290,14 +289,6 @@ function assembleBabelArgumentPath(path: NodePath<babelTypes.Program>) {
   statements.forEach((statement) => {
     // If the statement is the function statement, we don't move it.
     if (statement === exportedBabelArgumentPath) {
-      return
-    }
-
-    // If the statement is the import of the agrume core package, we don't move it.
-    if (
-      statement.isImportDeclaration()
-      && statement.node.source.value === agrumePackageJson.name
-    ) {
       return
     }
 

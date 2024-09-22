@@ -3,6 +3,7 @@ import type { TransformStream } from 'node:stream/web'
 import type Connect from 'connect'
 import type { JsonValue } from 'type-fest'
 import { state } from '@agrume/internals'
+import HttpErrors from 'http-errors'
 
 import { options } from '../create-route/options'
 import { handleGeneratorResponse } from './handle-generator-response'
@@ -27,9 +28,13 @@ export function createHttpServerHandler() {
     = function (request, response, next?) {
       const routes = state.get()?.routes
 
-      const throwStatus = function (status: number) {
-        if (next === undefined || status.toString().startsWith('5')) {
-          response.writeHead(status)
+      const throwStatus = function (
+        status: number,
+        message?: string,
+        forceThrow = false,
+      ) {
+        if (forceThrow || next === undefined || status.toString().startsWith('5')) {
+          response.writeHead(status, message)
           response.end()
           return
         }
@@ -187,7 +192,12 @@ export function createHttpServerHandler() {
         }
         catch (error) {
           logger?.error?.(error)
-          throwStatus(500)
+
+          if (HttpErrors.isHttpError(error)) {
+            return throwStatus(error.statusCode, error.message, true)
+          }
+
+          return throwStatus(500, undefined, true)
         }
       })
     }
@@ -200,6 +210,10 @@ function isGenerator(value: any): value is (
   | AsyncGenerator<unknown>
   | Generator<unknown>
 ) {
+  if (value === undefined || value === null) {
+    return false
+  }
+
   const generatorConstructor
     = function* () { yield undefined }.constructor
   const asyncGeneratorConstructor
