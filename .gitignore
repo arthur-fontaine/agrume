@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/windows,linux,macos,node,turbo
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos,node,turbo
+# Created by https://www.toptal.com/developers/gitignore/api/windows,linux,macos,node,vercel,turbo
+# Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos,node,vercel,turbo
 
 ### Linux ###
 *~
@@ -189,6 +189,9 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
+### Vercel ###
+.vercel
+
 ### Turbo ###
 # Turborepo task cache
 .turbo
@@ -219,4 +222,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,node,turbo
+# End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,node,vercel,turbo
+
+**/tmp*
