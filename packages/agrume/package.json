@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@agrume/core": "workspace:*",
+    "@agrume/types": "workspace:*",
     "@types/http-errors": "^2.0.4",
     "http-errors": "^2.0.0"
   },

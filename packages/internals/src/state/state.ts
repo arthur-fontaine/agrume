@@ -1,9 +1,9 @@
-import type { GlobalOptions, Route } from '@agrume/types'
+import type { AnyRoute, GlobalOptions } from '@agrume/types'
 
 interface State {
   isRegistering: boolean
   options: GlobalOptions
-  routes: Map<string, Route>
+  routes: Map<string, AnyRoute>
 }
 
 export const state = {

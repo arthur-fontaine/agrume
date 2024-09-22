@@ -1,4 +1,8 @@
+import type { RequestOptions } from './request-options'
+
 export type GlobalOptions = {
+  getClient?:
+  (requestOptions: RequestOptions) => (...parameters: unknown[]) => unknown
   logger?: {
     error?: typeof console.error
     info?: typeof console.info

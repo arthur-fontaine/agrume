@@ -7,7 +7,7 @@ export type RouteParameters =
   | AsyncGenerator<Readonly<JsonValue>, Readonly<JsonValue> | void, undefined>
   | Readonly<JsonValue>
 
-type RouteValue = JsonValue | undefined | void
+export type RouteValue = JsonValue | undefined | void
 
 /**
  * @internal
@@ -29,5 +29,4 @@ export type Route<
  * @internal
  */
 // eslint-disable-next-line ts/no-explicit-any
-export type AnyRoute<RRV extends RouteReturnValue = any>
-  = Route<RouteParameters, RRV>
+export type AnyRoute = Route<any, any>

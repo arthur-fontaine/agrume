@@ -3,6 +3,7 @@ import type { TransformStream } from 'node:stream/web'
 import type Connect from 'connect'
 import type { JsonValue } from 'type-fest'
 import { state } from '@agrume/internals'
+import type { RouteValue } from '@agrume/types'
 import HttpErrors from 'http-errors'
 
 import { options } from '../create-route/options'
@@ -147,7 +148,7 @@ export function createHttpServerHandler() {
 
         (async () => {
           const result = await route(asyncGenerator as never)
-          if (isGenerator(result)) {
+          if (isGenerator<RouteValue, RouteValue, undefined>(result)) {
             handleGeneratorResponse(response, result)
           }
           else {
@@ -183,7 +184,7 @@ export function createHttpServerHandler() {
           // eslint-disable-next-line ts/no-explicit-any
           const result = await route(parameters as any)
 
-          if (isGenerator(result)) {
+          if (isGenerator<JsonValue, JsonValue | void, undefined>(result)) {
             handleGeneratorResponse(response, result)
           }
           else {
@@ -206,9 +207,9 @@ export function createHttpServerHandler() {
 }
 
 // eslint-disable-next-line ts/no-explicit-any
-function isGenerator(value: any): value is (
-  | AsyncGenerator<unknown>
-  | Generator<unknown>
+function isGenerator<T = unknown, R = any, N = unknown>(value: any): value is (
+  | AsyncGenerator<T, R, N>
+  | Generator<T, R, N>
 ) {
   if (value === undefined || value === null) {
     return false
