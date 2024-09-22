@@ -397,9 +397,40 @@ sayHello('Arthur').then(console.log) // Hello Arthur!
 
 ### Realtime routes
 
-You can use the `createRoute` function to create a realtime route. It can replace WebSockets in some cases. It works by using the server-sent events.
+You can use the `createRoute` function to create a realtime route. It can replace WebSockets.
 
-All you need to do is to pass a generator function to the `createRoute` function:
+#### `client` → `server`
+
+To send data from the client to the server in real time, you can require a generator function as a parameter of your route.
+
+```ts
+import { createRoute } from 'agrume'
+
+const realtime = createRoute(
+  async (clicks: AsyncGenerator<[number, number]>) => {
+    for await (const [x, y] of clicks) {
+      console.log(x, y)
+    }
+  },
+)
+```
+
+Then, you can use the `realtime` function as follows:
+
+```ts
+realtime(async function* () {
+  while (true) {
+    yield [Math.random(), Math.random()]
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+  }
+})
+```
+
+The code above will send random coordinates every second. The server will log the coordinates in real time.
+
+#### `server` → `client`
+
+To send data from the server to the client in real time, you can pass a generator function to the `createRoute` function.
 
 ```ts
 import { createRoute } from 'agrume'
@@ -419,10 +450,35 @@ The code above will send the current date of the server every second.
 You can then use your function like a normal generator function:
 
 ```ts
-for await (const date of realtime()) {
+for await (const date of await realtime()) {
   console.log(date)
 }
 ```
+
+#### Combining both (`client` ⇄ `server`)
+
+You can receive and send data in real time by combining both methods:
+
+```ts
+import { createRoute } from 'agrume'
+
+const chat = createRoute(
+  async function* (userMessages: AsyncGenerator<string>) {
+    (async () => {
+      // Receive messages in parallel with sending messages
+      for await (const message of userMessages) {
+        sendToAll(message)
+      }
+    })()
+
+    for await (const message of allMessagesIterator) {
+      yield message
+    }
+  },
+)
+```
+
+By passing a generator function (the messages from your user) to the `chat` function, you can receive messages from all other users in real time.
 
 ### Error throwing
 
