@@ -65,30 +65,40 @@ type ImpossibleType<T> = T & {
 type RouteReturnValue<R extends AnyRoute, O extends AnyRouteOptions | undefined>
   = (
     CustomClient<R> extends { getClient: unknown }
-      // If there is a client configured globally
+    // If there is a client configured globally
       ? O extends undefined
-        // If there is no options configured locally
+      // If there is no options configured locally
         ? CustomClient<R>['getClient'] extends GetClient<R, infer GlobalClient>
-          // If the client configured globally is valid
+        // If the client configured globally is valid
           ? GlobalClient // Return the client configured globally
-          // If the client configured globally is invalid
+        // If the client configured globally is invalid
           : ImpossibleType<'The client configured globally is invalid. Refer to the documentation for more information.'>
-        // If there are options configured locally
-        : NonNullable<O> extends { getClient: GetClient<R, infer LocalClient> }
+      // If there are options configured locally
+        : NonNullable<O> extends { getClient: unknown }
+          ? NonNullable<O> extends
+          { getClient: GetClient<R, infer LocalClient> }
           // If the client configured locally is valid
-          ? LocalClient // Return the client configured locally
+            ? LocalClient // Return the client configured locally
           // If the client configured locally is invalid
-          : ImpossibleType<'The client configured locally is invalid. Refer to the documentation for more information.'>
+            : ImpossibleType<'The client configured locally is invalid. Refer to the documentation for more information.'>
+          : CustomClient<R>['getClient'] extends GetClient<R, infer GlobalClient>
+            // If the client configured globally is valid
+            ? GlobalClient // Return the client configured globally
+            // If the client configured globally is invalid
+            : ImpossibleType<'The client configured globally is invalid. Refer to the documentation for more information.'>
       // If there is no client configured globally
       : O extends undefined
-        // If there is no options configured locally
+      // If there is no options configured locally
         ? DefaultClient<R> // Return the default client
-        // If there are options configured locally
-        : NonNullable<O> extends { getClient: GetClient<R, infer LocalClient> }
+      // If there are options configured locally
+        : NonNullable<O> extends { getClient: unknown }
+          ? NonNullable<O> extends
+          { getClient: GetClient<R, infer LocalClient> }
           // If the client configured locally is valid
-          ? LocalClient // Return the client configured locally
+            ? LocalClient // Return the client configured locally
           // If the client configured locally is invalid
-          : ImpossibleType<'The client configured locally is invalid. Refer to the documentation for more information.'>
+            : ImpossibleType<'The client configured locally is invalid. Refer to the documentation for more information.'>
+          : DefaultClient<R>
   )
 
 type FlattenPromise<T> = T extends Promise<infer U>

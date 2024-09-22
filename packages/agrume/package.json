@@ -21,7 +21,9 @@
     "build": "unbuild",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "vitest run --testTimeout 10000"
+    "test:e2e": "vitest run --testTimeout 10000",
+    "test:types": "tsc --noEmit -p tsconfig.test-types.json",
+    "test": "pnpm test:types && pnpm test:e2e"
   },
   "dependencies": {
     "@agrume/core": "workspace:*",

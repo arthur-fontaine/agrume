@@ -4,6 +4,7 @@ import defu from 'defu'
 
 const defaultOptions: Required<GlobalOptions> = {
   baseUrl: '/',
+  getClient: undefined,
   logger: undefined,
   prefix: '/api/',
   tunnel: undefined,

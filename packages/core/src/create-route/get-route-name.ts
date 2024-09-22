@@ -1,10 +1,10 @@
 import { utils } from '@agrume/internals'
 
-import type { AnyRoute, Route, RouteOptions } from '@agrume/types'
+import type { AnyRoute, RouteOptions } from '@agrume/types'
 
 /**
  * Get the name of a route.
- * @param {Route} route The route to get the name of.
+ * @param {AnyRoute} route The route to get the name of.
  * @param {RouteOptions} routeOptions The options of the route.
  * @returns {string} The name of the route.
  */
