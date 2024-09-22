@@ -439,6 +439,33 @@ The default `getClient` function can be found in the [source code](./packages/co
 
 Have a look at the [Recipes](#recipes) section to see what you can do with the `getClient` option.
 
+## Security
+
+Since parts of your server logic are exposed to the frontend, you may be concerned about security, particularly regarding the exposure of sensitive code to the client.
+
+As explained in the [Creating routes](#creating-routes) section, any function passed to `createRoute` is transformed into a request to the server. The request path will be determined by one of the following:
+
+- The route path (if specified in the options), or
+- The name of the function passed to `createRoute`, or
+- A hash of the function passed to `createRoute`.
+
+The first two options are under your control. While the last option might seem like a potential vulnerability, Agrume mitigates this risk by using the secure SHA-256 algorithm to hash the function. Unless someone has the exact same server code as you, they won't be able to guess the function you passed to `createRoute` (if you're concerned about this, you can use the `path` option to specify the route path explicitly).
+
+Another possible source of leakage is variables and imports outside the `createRoute` function. Since `createRoute` functions are transformed into requests, any variables and imports outside these functions become unused. Most build tools perform “tree-shaking” to remove unused code from the final bundle ***if your code is written in ESM*** (using `import` rather than `require` means it's ESM). Be sure that your build tool supports tree-shaking. In the future, Agrume may implement built-in tree-shaking ([an issue](https://github.com/arthur-fontaine/agrume/issues/97) has been opened for this feature).
+
+Below is a table of build tools and their tree-shaking capabilities:
+
+| Build tool | Tree-shaking | Documentation |
+| --- | --- | --- |
+| Vite | ✅ (by default in production) | |
+| Rollup | ✅ | <https://rollupjs.org/introduction/#tree-shaking> |
+| Webpack | ✅ (by default in production) | <https://webpack.js.org/guides/tree-shaking/> |
+| ESBuild | 🟨 (enabled with `--bundle` option, or `--format=iife`, or `--tree-shaking=true`) | <https://esbuild.github.io/api/#tree-shaking> |
+| Farm | ✅ (by default in production) | <https://www.farmfe.org/docs/advanced/tree-shake> |
+| Rspack | ✅ (by default in production) | <https://rspack.dev/guide/optimization/tree-shaking#tree-shaking> |
+| Rolldown | ❓ | |
+| Expo | ⚙️ (experimental, read the documentation) | <https://docs.expo.dev/guides/tree-shaking/#enabling-tree-shaking> |
+
 ## CLI
 
 To make it easier to use Agrume, we provide a CLI. For example, you can use the CLI to start the server separately from the frontend.
