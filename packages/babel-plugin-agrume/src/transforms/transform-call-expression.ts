@@ -88,10 +88,10 @@ function transformCreateRoute(
     return routeOptionsLoader
   }
 
-  const route = runLoader(routeFunctionLoader)
+  const route = runLoader(routeFunctionLoader, filePath)
   const routeOptions = routeOptionsLoader === undefined
     ? undefined
-    : runLoader(routeOptionsLoader)
+    : runLoader(routeOptionsLoader, filePath)
 
   const requestClient = createRoute(route, routeOptions)
   callPath.replaceWithSourceString(requestClient.toString())
@@ -99,10 +99,8 @@ function transformCreateRoute(
   return undefined
 }
 
-function runLoader(loader: string) {
-  const _require = typeof require === 'undefined'
-    ? createRequire(import.meta.url)
-    : require
+function runLoader(loader: string, filePath: string) {
+  const _require = createRequire(filePath.startsWith('file://') ? filePath : `file://${filePath}`)
 
   function _import(moduleName: string) {
     const modulePath = _require.resolve(moduleName)
