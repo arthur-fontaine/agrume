@@ -8,7 +8,8 @@ describe('`createRoute` that throws an HTTP error', () => {
 
     const { close, server } = await loadAgrumeProject(/* tsx */`
       import React from 'react'
-      import { createRoute, HTTPError } from 'agrume'
+      import { createRoute } from 'agrume'
+      import { HTTPError } from 'agrume/errors'
 
       const r = createRoute(async () => {
         throw HTTPError.ImATeapot('Hello Error')
