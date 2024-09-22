@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/core.ts --dts --format esm,cjs --minify",
+    "build": "tsup src/core.ts --dts --format esm,cjs --minify --sourcemap inline",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

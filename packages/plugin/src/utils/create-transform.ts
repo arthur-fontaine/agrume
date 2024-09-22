@@ -1,6 +1,6 @@
 import babel from '@babel/core'
 import agrumePreset from 'babel-preset-agrume'
-import type { PluginOptions } from '../types/plugin-options'
+import type { PluginOptions } from '@agrume/types'
 
 /**
  * Transform the code.

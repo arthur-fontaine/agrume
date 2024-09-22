@@ -6,14 +6,15 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/types.ts --dts-only",
+    "build": "tsup src/types.ts --dts-only --sourcemap inline",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@types/connect": "^3.4.35",
     "connect": "^3.7.0",
-    "type-fest": "^4.2.0"
+    "type-fest": "^4.2.0",
+    "vite": "^5.2.10"
   },
   "devDependencies": {
     "@types/node": "^20",

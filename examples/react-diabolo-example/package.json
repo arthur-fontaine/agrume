@@ -1,14 +1,14 @@
 {
   "name": "react-diabolo-example",
-  "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
     "dev": "vite",
     "serve": "agrume"
   },
   "dependencies": {
-    "@agrume/server": "workspace:*",
+    "@agrume/cli": "workspace:*",
     "agrume": "workspace:*",
     "connect": "^3.7.0",
     "cors": "^2.8.5",
