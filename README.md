@@ -366,6 +366,18 @@ You can then use the `sayHello` function to do a request to the route:
 sayHello().then(console.log) // Hello world!
 ```
 
+You don't have to necessarily return a value. Your function can have a signature like `(parameters: T) => Promise<void>`. In this case, the HTTP response will be `204 No Content`.
+
+```ts
+import { createRoute } from 'agrume'
+
+const sayHello = createRoute(
+  async (name: string) => {
+    console.log(`Hello ${name}!`)
+  },
+)
+```
+
 > [!WARNING]
 > At the moment you can only use the `createRoute` function in `.js`, `.jsx`, `.ts` and `.tsx` files. To use Agrume in other files, you need to export the `createRoute` function from one of the valid files and import it into the other files. (See [Vue example](./examples/vue-example))
 
