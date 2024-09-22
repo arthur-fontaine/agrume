@@ -1,5 +1,5 @@
 import type * as http from 'node:http'
-import type { JsonValue } from 'type-fest'
+import type { RouteReturnValue } from '@agrume/types'
 
 /**
  * Send the response to the client based on the generator's next value.
@@ -8,9 +8,7 @@ import type { JsonValue } from 'type-fest'
  */
 export async function handleGeneratorResponse(
   response: http.ServerResponse,
-  generator:
-    | AsyncGenerator<JsonValue, JsonValue | void, undefined>
-    | Generator<JsonValue, JsonValue | void, undefined>,
+  generator: Extract<RouteReturnValue, AsyncGenerator | Generator>,
 ): Promise<void> {
   response.setHeader('Cache-Control', 'no-cache')
   response.setHeader('Content-Type', 'text/event-stream')
