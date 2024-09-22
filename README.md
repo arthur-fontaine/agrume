@@ -278,6 +278,63 @@ Agrume supports the following tunnel types:
 > [!NOTE]
 > You may want to use the Agrume CLI to start the tunnel easily. See the [CLI](#cli) section.
 
+#### `getClient`
+
+By default, Agrume will use the client written at [`packages/client/src/get-client.ts`](https://github.com/arthur-fontaine/agrume/blob/main/packages/client/src/get-client.ts). However, you can pass your own client to the plugin:
+
+```ts
+export default defineConfig({
+  plugins: [
+    agrume({
+      getClient: (requestOptions) => {
+        // Your client
+      }
+    })
+    // ...
+  ]
+})
+```
+
+If you want to modify the type of the client compared to the default client, you can do as follows:
+
+```ts
+// ...
+import type { createRoute } from 'agrume'
+import type { AnyRoute, RequestOptions, RouteTypes } from '@agrume/types'
+
+function getClient<RT extends RouteTypes<AnyRoute>>(
+  requestOptions: RequestOptions,
+  _?: RT
+) {
+  type Parameters = createRoute.Helpers.InferRouteTypes.Parameters<RT> // you can modify the parameters your client will take (for example, add a token parameter)
+  // For example, if you want to add a token parameter:
+  // type Parameters = [...createRoute.Helpers.InferRouteTypes.Parameters<RT>, { token: string }]
+
+  type ReturnType = createRoute.Helpers.InferRouteTypes.ReturnType<RT> // you can modify the return type of your client
+  return async (...parameters: Parameters): Promise<ReturnType> => {
+    // Your client
+  }
+}
+
+export default defineConfig({
+  plugins: [
+    agrume({
+      getClient,
+    }),
+    // ...
+  ]
+})
+
+declare module '@agrume/types' {
+  export interface CustomClient<R> {
+    getClient: typeof getClient<RouteTypes<R>>
+  }
+}
+```
+
+> [!IMPORTANT]
+> Make sure that the `declare module` is in a file included in your `tsconfig.json`. If you don't want to include your build tool's configuration file, you can put the `getClient` and the `declare module` in a separate file that is included in your `tsconfig.json`.
+
 ## Creating routes
 
 The only thing you need to create a route is to wrap a function that you would write in the backend with the `createRoute` function. It will return a function with the same signature as the function you passed to it, except that it will do a request under the hood.
@@ -441,7 +498,7 @@ Have a look at the [Recipes](#recipes) section to see what you can do with the `
 
 ## Security
 
-Since parts of your server logic are exposed to the frontend, you may be concerned about security, particularly regarding the exposure of sensitive code to the client.
+Since parts of your server logic is in your frontend code, you may be concerned about security, particularly regarding the exposure of sensitive code to the client.
 
 As explained in the [Creating routes](#creating-routes) section, any function passed to `createRoute` is transformed into a request to the server. The request path will be determined by one of the following:
 
