@@ -3,7 +3,9 @@ import type { JsonValue } from 'type-fest'
 /**
  * @internal
  */
-export type RouteParameters = Readonly<JsonValue>
+export type RouteParameters =
+  | AsyncGenerator<Readonly<JsonValue>, Readonly<JsonValue> | void, undefined>
+  | Readonly<JsonValue>
 
 type RouteValue = JsonValue | undefined | void
 
@@ -27,4 +29,5 @@ export type Route<
  * @internal
  */
 // eslint-disable-next-line ts/no-explicit-any
-export type AnyRoute<RRV extends RouteReturnValue = any> = Route<any, RRV>
+export type AnyRoute<RRV extends RouteReturnValue = any>
+  = Route<RouteParameters, RRV>
