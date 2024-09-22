@@ -523,6 +523,32 @@ Below is a table of build tools and their tree-shaking capabilities:
 | Rolldown | ❓ | |
 | Expo | ⚙️ (experimental, read the documentation) | <https://docs.expo.dev/guides/tree-shaking/#enabling-tree-shaking> |
 
+## Optimizations
+
+Agrume will duplicate the same client for each route. This is because we want the `createRoute` function to be usable as such without any configuration. However, you can avoid this duplication by using the “optimized client”.
+
+To start, paste this side effect at the top of your entry file (for example, `main.ts`):
+
+```ts
+import '@agrume/client/optimized/register'
+```
+
+Then, in the plugin options, you can pass the optimized client:
+
+```ts
+// ...
+import { getOptimizedClient } from '@agrume/client/optimized'
+
+export default defineConfig({
+  plugins: [
+    agrume({
+      getClient: getOptimizedClient()
+    })
+    // ...
+  ]
+})
+```
+
 ## CLI
 
 To make it easier to use Agrume, we provide a CLI. For example, you can use the CLI to start the server separately from the frontend.
