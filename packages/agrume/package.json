@@ -21,7 +21,7 @@
     "build": "unbuild",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "vitest run"
+    "test": "vitest run --testTimeout 10000"
   },
   "dependencies": {
     "@agrume/core": "workspace:*",

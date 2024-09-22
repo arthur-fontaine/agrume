@@ -1,0 +1,41 @@
+{
+  "name": "@agrume/client",
+  "version": "2.0.3",
+  "exports": {
+    ".": {
+      "types": "./dist/get-client.d.ts",
+      "import": "./dist/get-client.mjs",
+      "require": "./dist/get-client.js"
+    },
+    "./optimized": {
+      "types": "./dist/optimized/get-optimized-client.d.ts",
+      "import": "./dist/optimized/get-optimized-client.mjs",
+      "require": "./dist/optimized/get-optimized-client.js"
+    },
+    "./optimized/register": {
+      "types": "./dist/optimized/register.d.ts",
+      "import": "./dist/optimized/register.mjs",
+      "require": "./dist/optimized/register.js"
+    }
+  },
+  "main": "./dist/get-client.js",
+  "module": "./dist/get-client.mjs",
+  "types": "./dist/get-client.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/get-client.ts src/optimized/register.ts src/optimized/get-optimized-client.ts --dts --format esm,cjs --minify",
+    "dev": "pnpm build --watch src",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@agrume/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "tsup": "^8.2.4",
+    "vite": "^5.2.10"
+  }
+}
