@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/preset.ts --dts --format esm,cjs --minify",
+    "build": "tsup src/preset.ts --dts --format esm,cjs --minify --sourcemap inline",
     "dev": "pnpm build --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"

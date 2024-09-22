@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { utils } from '@agrume/internals'
 import { program } from 'commander'
 import { createServer } from './create-server'
 import { findEntryFile } from './find-entry-file'
@@ -14,8 +15,11 @@ program
   .option('--tunnel [tunnel]', 'Register a tunnel')
   .option('--allow-unsafe', 'Allow loading routes from node_modules')
   .action(async (options) => {
+    const config = await utils.readConfig()
+
     await createServer({
       allowUnsafe: options.allowUnsafe,
+      config,
       entry: findEntryFile(options.entry.split(',')),
       host: options.host,
       port: Number.parseInt(options.port),

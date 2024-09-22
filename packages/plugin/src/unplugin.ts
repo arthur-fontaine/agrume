@@ -1,10 +1,10 @@
 import type { UnpluginFactory, UnpluginOptions } from 'unplugin'
 import { createUnplugin } from 'unplugin'
+import type { PluginOptions } from '@agrume/types'
 
 import packageJson from '../package.json'
 import { createTransform } from './utils/create-transform'
 import { createConfigureServer } from './utils/vite/create-configure-server'
-import type { PluginOptions } from './types/plugin-options'
 import { createBuildEnd } from './utils/vite/create-build-end'
 
 /**

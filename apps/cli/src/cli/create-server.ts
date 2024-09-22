@@ -1,6 +1,7 @@
 import process from 'node:process'
 import path from 'node:path'
 import { state } from '@agrume/internals'
+import type { CliOptions } from '@agrume/types'
 import fastifyExpress from '@fastify/express'
 import fastify, { type FastifyInstance } from 'fastify'
 import Watcher from 'watcher'
@@ -11,6 +12,7 @@ import { registerTunnel } from './register-tunnel'
 
 interface CreateServerParams {
   allowUnsafe?: boolean | undefined
+  config?: CliOptions | undefined
   entry: string
   host: string
   port: number
@@ -28,17 +30,16 @@ export async function createServer(
   params: CreateServerParams,
   isRestarting = false,
 ) {
-  if (params.watch !== undefined) {
+  if (params.watch !== undefined || params.config?.watch === true) {
     await watchAndCreateServer(params)
     return
   }
 
   const server = fastify()
   const agrumeMiddleware = await getAgrumeMiddleware({
+    allowUnsafe: params.allowUnsafe,
+    config: params.config,
     entry: params.entry,
-    ...(params.allowUnsafe !== undefined
-      ? { allowUnsafe: params.allowUnsafe }
-      : {}),
   })
 
   await server.register(fastifyExpress)
@@ -49,9 +50,9 @@ export async function createServer(
   const {
     url: tunnelUrl,
   } = await registerTunnel({
-    host: params.host,
-    port: params.port,
-    tunnel: params.tunnel,
+    host: params.host ?? params.config?.host,
+    port: params.port ?? params.config?.port,
+    tunnel: params.tunnel ?? params.config?.tunnel?.type,
   })
 
   const closeServer = async () => {
@@ -77,13 +78,13 @@ export async function createServer(
 }
 
 async function watchAndCreateServer(params: CreateServerParams) {
-  if (params.watch === undefined) {
+  if (params.watch === undefined && params.config?.watch !== true) {
     return
   }
 
-  let watchTarget = params.watch
-  if (watchTarget === true) {
-    watchTarget = path.dirname(params.entry)
+  let watchTarget = path.dirname(params.entry)
+  if (typeof params.watch === 'string') {
+    watchTarget = params.watch
   }
 
   const watcher = new Watcher(watchTarget)
@@ -91,6 +92,10 @@ async function watchAndCreateServer(params: CreateServerParams) {
 
   let closeServer = await createServer({
     ...params,
+    config: {
+      ...params.config,
+      watch: undefined,
+    },
     watch: undefined,
   })
 
