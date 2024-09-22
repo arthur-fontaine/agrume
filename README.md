@@ -491,7 +491,54 @@ agrume
 
 It will find the routes in your project and start the server.
 
-#### Options
+#### Configuration
+
+To configure the CLI, you can either use the options or the configuration file.
+
+##### Configuration file
+
+You can create a `agrume.config.ts` file at the root of your project:
+
+```ts
+import { defineConfig } from '@agrume/cli'
+
+export default defineConfig({
+  externalUrl: 'http://localhost:3000/',
+  host: 'localhost',
+  port: 8173,
+  prefix: '/__agrume__/',
+  watch: true,
+  // As plugin options, if you use `externalUrl`, you can't use `tunnel` (and vice versa)
+  // tunnel: {
+  //   type: 'localtunnel',
+  // },
+})
+```
+
+> [!NOTE]
+> You can also put the configuration file in a `.config` directory following the [config dir proposal](https://github.com/pi0/config-dir). In fact, the configuration is loaded using [c12](https://github.com/unjs/c12?tab=readme-ov-file), so you can even use `.js` or `.json` even if it has not been tested.
+
+The advantage of using a configuration file is that you can share the configuration with the plugin. For example, if you use the Vite plugin, you can write:
+
+```ts
+import { defineConfig } from 'vite'
+import agrume from '@agrume/plugin/vite'
+import agrumeConfig from './agrume.config'
+
+export default defineConfig({
+  plugins: [
+    agrume({
+      ...agrumeConfig,
+      // other options
+    }),
+    // ...
+  ]
+})
+```
+
+##### Options
+
+If you don't want to use a configuration file, you can still use the options:
 
 | Option | Argument | Description | Default |
 | --- | --- | --- | --- |
