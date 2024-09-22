@@ -3,15 +3,19 @@ import type { JsonValue } from 'type-fest'
 /**
  * @internal
  */
-export type RouteParameters = Readonly<JsonValue>
+export type RouteParameters =
+  | AsyncGenerator<Readonly<JsonValue>, Readonly<JsonValue> | void, undefined>
+  | Readonly<JsonValue>
+
+export type RouteValue = JsonValue | undefined | void
 
 /**
  * @internal
  */
 export type RouteReturnValue =
-  AsyncGenerator<JsonValue, JsonValue | void, undefined> |
-  Generator<JsonValue, JsonValue | void, undefined> |
-  Promise<JsonValue>
+  AsyncGenerator<RouteValue, RouteValue | void, undefined> |
+  Generator<RouteValue, RouteValue | void, undefined> |
+  Promise<RouteValue>
 
 /**
  * @internal

@@ -20,7 +20,10 @@ const jiti = createJiti(filename, {
  * @param {object} [agrumeOptions] The options for Agrume.
  * @returns {Promise<{ code: string, run: () => void }>} The transformed code.
  */
-export async function transformAgrume(code: string, agrumeOptions?: Omit<NonNullable<Parameters<typeof agrume>[0]>, 'tunnel' | 'useMiddleware'>) {
+export async function transformAgrume(
+  code: string,
+  agrumeOptions?: Omit<NonNullable<Parameters<typeof agrume>[0]>, 'tunnel' | 'useMiddleware'>,
+) {
   const result = babel.transformSync(code, {
     babelrc: false,
     configFile: false,
