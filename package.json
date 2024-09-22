@@ -1,8 +1,9 @@
 {
   "name": "whitebird",
+  "type": "module",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
+  "packageManager": "pnpm@9.0.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/arthur-fontaine/agrume"
@@ -11,6 +12,9 @@
     "apps/*",
     "packages/*"
   ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
@@ -19,8 +23,11 @@
     "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install",
-    "prerelease": "turbo run build test",
+    "prerelease": "pnpm test && pnpm build",
     "release": "changeset version && changeset publish"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.25.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.2.0",
@@ -31,12 +38,5 @@
     "turbo": "latest",
     "typescript": "^5.6.2",
     "vitest": "^1.2.2"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "packageManager": "pnpm@9.0.4",
-  "dependencies": {
-    "@changesets/cli": "^2.25.2"
   }
 }
