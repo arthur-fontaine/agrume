@@ -3,6 +3,7 @@ import path from 'node:path'
 import { state } from '@agrume/internals'
 import type { CliOptions } from '@agrume/types'
 import fastifyExpress from '@fastify/express'
+import cors from '@fastify/cors'
 import fastify, { type FastifyInstance } from 'fastify'
 import Watcher from 'watcher'
 
@@ -13,8 +14,10 @@ import { registerTunnel } from './register-tunnel'
 interface CreateServerParams {
   allowUnsafe?: boolean | undefined
   config?: CliOptions | undefined
+  corsRegex?: RegExp | undefined
   entry: string
   host: string
+  ngrokDomain?: string | undefined
   port: number
   tunnel?: string | undefined
   watch?: string | true | undefined
@@ -36,6 +39,13 @@ export async function createServer(
   }
 
   const server = fastify()
+
+  if (params.corsRegex !== undefined) {
+    await server.register(cors, {
+      origin: params.corsRegex,
+    })
+  }
+
   const agrumeMiddleware = await getAgrumeMiddleware({
     allowUnsafe: params.allowUnsafe,
     config: params.config,
@@ -47,12 +57,26 @@ export async function createServer(
 
   await server.listen({ host: params.host, port: params.port })
 
+  if (params.tunnel === 'ngrok' && process.env.NGROK_AUTHTOKEN === undefined) {
+    logger.error('The `ngrok` tunnel requires a `NGROK_AUTHTOKEN` environment variable. If you don\'t have yet an authtoken, go to https://dashboard.ngrok.com/tunnels/authtokens and create one.')
+    process.exit(1)
+  }
+
+  if (params.tunnel === 'ngrok' && params.ngrokDomain === undefined) {
+    logger.error('The `ngrok` tunnel requires a `ngrokDomain` option. If you don\'t have yet a static domain, go to https://dashboard.ngrok.com/cloud-edge/domains and create one.')
+    process.exit(1)
+  }
+
   const {
     url: tunnelUrl,
   } = await registerTunnel({
     host: params.host ?? params.config?.host,
     port: params.port ?? params.config?.port,
-    tunnel: params.tunnel ?? params.config?.tunnel?.type,
+    tunnel: params.tunnel ? {
+      type: params.tunnel,
+      ...(params.ngrokDomain && { domain: params.ngrokDomain }),
+    } as never
+    : params.config?.tunnel,
   })
 
   const closeServer = async () => {
@@ -90,7 +114,7 @@ async function watchAndCreateServer(params: CreateServerParams) {
   const watcher = new Watcher(watchTarget)
   logger.info(`Watching for changes in ${watchTarget}`)
 
-  let closeServer = await createServer({
+  const closeServer = await createServer({
     ...params,
     config: {
       ...params.config,
@@ -110,13 +134,27 @@ async function watchAndCreateServer(params: CreateServerParams) {
       return state
     })
 
-    logger.info('Detected changes, restarting server...')
+    logger.info('Detected changes, re-registering routes...')
+    logger.log('')
+
+    state.set((state) => {
+      state.routes.clear()
+      return state
+    })
+
+    await getAgrumeMiddleware({
+      allowUnsafe: params.allowUnsafe,
+      config: params.config,
+      entry: params.entry,
+    })
+
+    logRoutes()
+    logger.log('')
+  })
+
+  process.on('SIGINT', async () => {
     await closeServer?.()
-    closeServer = await createServer({
-      ...params,
-      tunnel: undefined,
-      watch: undefined,
-    }, true)
+    process.exit(0)
   })
 }
 
@@ -147,7 +185,7 @@ function logRoutes() {
       formattedRouteName += `/${routeName}`
     }
 
-    logger.info(`Registered route \`POST ${formattedRouteName}\``)
+    logger.success(`Registered route \`POST ${formattedRouteName}\``)
   }
 }
 

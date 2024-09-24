@@ -69,4 +69,7 @@ export const agrumeEslintConfig = antfu(
       'unicorn/switch-case-braces': ['error'],
     },
   },
+  {
+    ignores: ['packages/agrume/README.md'],
+  },
 )

@@ -1,11 +1,13 @@
 import { utils } from '@agrume/internals'
 import localtunnel from 'localtunnel'
+import ngrok from '@ngrok/ngrok'
+import type { GlobalOptions } from '@agrume/types'
 import { bore } from './lib/bore/bore'
 
 interface RegisterTunnelOptions {
   host: string
   port: number
-  tunnel?: string | undefined
+  tunnel?: GlobalOptions['tunnel']
 }
 
 /**
@@ -19,7 +21,11 @@ interface RegisterTunnelOptions {
 export async function registerTunnel(
   { host, port, tunnel }: RegisterTunnelOptions,
 ) {
-  if (!tunnel || (tunnel !== 'localtunnel' && tunnel !== 'bore')) {
+  if (!tunnel || (
+    tunnel.type !== 'localtunnel'
+    && tunnel.type !== 'bore'
+    && tunnel.type !== 'ngrok'
+  )) {
     return {}
   }
 
@@ -46,6 +52,19 @@ export async function registerTunnel(
     return {
       type: tunnelInfos.type,
       url: `http://${tunnelInfos.tunnelDomain}:${tunnelInfos.tunnelPort}`,
+    }
+  }
+  case 'ngrok': {
+    const tunnel = await ngrok.connect({
+      authtoken_from_env: true,
+      domain: tunnelInfos.tunnelDomain,
+      host,
+      port,
+    })
+
+    return {
+      type: tunnelInfos.type,
+      url: tunnel.url() ?? undefined,
     }
   }
   }

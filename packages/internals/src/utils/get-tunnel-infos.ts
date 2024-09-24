@@ -1,17 +1,19 @@
 import { machineIdSync } from 'node-machine-id'
+import type { GlobalOptions } from '@agrume/types'
 import { checksum } from './checksum'
 
 type TunnelInfos =
   | { tunnelDomain: 'bore.pub', tunnelPort: number, type: 'bore' }
   | { tunnelDomain: 'loca.lt', tunnelSubdomain: string, type: 'localtunnel' }
+  | { tunnelDomain: string, type: 'ngrok' }
 
 /**
  * Get the tunnel infos for the given tunnel type.
- * @param {string} [tunnelType] The tunnel type.
+ * @param {string} [tunnel] The tunnel type.
  * @returns {TunnelInfos} The tunnel URL.
  */
-export function getTunnelInfos(tunnelType: TunnelInfos['type']): TunnelInfos {
-  switch (tunnelType) {
+export function getTunnelInfos(tunnel: NonNullable<GlobalOptions['tunnel']>): TunnelInfos {
+  switch (tunnel.type) {
   case 'localtunnel': {
     const machineId = machineIdSync()
     return {
@@ -40,6 +42,12 @@ export function getTunnelInfos(tunnelType: TunnelInfos['type']): TunnelInfos {
       tunnelDomain: 'bore.pub',
       tunnelPort: Number.parseInt(determinedPort),
       type: 'bore',
+    }
+  }
+  case 'ngrok': {
+    return {
+      tunnelDomain: tunnel.domain,
+      type: 'ngrok',
     }
   }
   }
