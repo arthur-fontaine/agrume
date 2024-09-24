@@ -14,6 +14,7 @@ program
   .option('--watch [target]', 'Watch for changes in the target directory')
   .option('--tunnel [tunnel]', 'Register a tunnel')
   .option('--ngrok-domain <domain>', 'The domain for the ngrok tunnel')
+  .option('--cors-regex <regex>', 'The regex for the CORS origin')
   .option('--allow-unsafe', 'Allow loading routes from node_modules')
   .action(async (options) => {
     const config = await utils.readConfig()
@@ -21,6 +22,12 @@ program
     await createServer({
       allowUnsafe: options.allowUnsafe,
       config,
+      corsRegex:
+        options.corsRegex !== undefined ? new RegExp(options.corsRegex)
+        : config.corsRegex !== undefined
+          ? typeof config.corsRegex === 'string' ? new RegExp(config.corsRegex)
+          : config.corsRegex
+          : undefined,
       entry: findEntryFile(options.entry.split(',')),
       host: options.host,
       ngrokDomain: options.ngrokDomain,

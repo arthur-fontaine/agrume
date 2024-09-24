@@ -3,6 +3,7 @@ import path from 'node:path'
 import { state } from '@agrume/internals'
 import type { CliOptions } from '@agrume/types'
 import fastifyExpress from '@fastify/express'
+import cors from '@fastify/cors'
 import fastify, { type FastifyInstance } from 'fastify'
 import Watcher from 'watcher'
 
@@ -13,6 +14,7 @@ import { registerTunnel } from './register-tunnel'
 interface CreateServerParams {
   allowUnsafe?: boolean | undefined
   config?: CliOptions | undefined
+  corsRegex?: RegExp | undefined
   entry: string
   host: string
   ngrokDomain?: string | undefined
@@ -37,6 +39,13 @@ export async function createServer(
   }
 
   const server = fastify()
+
+  if (params.corsRegex !== undefined) {
+    await server.register(cors, {
+      origin: params.corsRegex,
+    })
+  }
+
   const agrumeMiddleware = await getAgrumeMiddleware({
     allowUnsafe: params.allowUnsafe,
     config: params.config,
