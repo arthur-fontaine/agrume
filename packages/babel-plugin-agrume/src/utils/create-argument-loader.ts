@@ -3,7 +3,7 @@
 import path from 'node:path'
 
 import type { NodePath } from '@babel/core'
-import babel, { types as babelTypes } from '@babel/core'
+import _babel, { types as babelTypes } from '@babel/core'
 import generate from '@babel/generator'
 
 import esbuild from 'esbuild'
@@ -12,6 +12,8 @@ import type { BabelArgumentPath } from '../types/babel-argument-path'
 import treeShakePlugin from './tree-shake.babel'
 
 import { getProgram } from './get-program'
+
+const babel = ('default' in _babel ? _babel.default : _babel) as typeof _babel
 
 /**
  * Create a new stringified function that removes all external variables from the given object.

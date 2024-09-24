@@ -7,6 +7,9 @@ import { closeServer, server } from './server'
 // https://vitejs.dev/config/
 // eslint-disable-next-line import/no-default-export
 export default defineConfig({
+  optimizeDeps: {
+    exclude: ['agrume'],
+  },
   plugins: [
     agrumePlugin({
       logger: {

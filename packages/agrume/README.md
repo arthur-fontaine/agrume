@@ -74,7 +74,11 @@ export default defineConfig({
   plugins: [
     agrume()
     // ...
-  ]
+  ],
+  // to prevent some errors
+  optimizeDeps: {
+    exclude: ['agrume']
+  },
 })
 ```
 

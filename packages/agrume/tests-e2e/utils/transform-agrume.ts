@@ -1,9 +1,11 @@
 import path from 'node:path'
 import { URL, fileURLToPath } from 'node:url'
-import babel from '@babel/core'
+import _babel from '@babel/core'
 import createJiti from 'jiti'
 import agrumePreset from '../../../babel-preset-agrume'
 import type agrume from '../../../plugin/src/vite'
+
+const babel = ('default' in _babel ? _babel.default : _babel) as typeof _babel
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
