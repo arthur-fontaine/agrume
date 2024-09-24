@@ -20,8 +20,9 @@ export type GlobalOptions = {
   | {
     baseUrl?: never | undefined
     tunnel?: (
-      | { type: 'bore' }
-      | { type: 'localtunnel' }
+      | { domain: string, type: 'ngrok' }
+      | { domain?: never, type: 'bore' }
+      | { domain?: never, type: 'localtunnel' }
     )
   }
-)
+  )

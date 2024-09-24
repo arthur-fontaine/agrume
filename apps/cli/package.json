@@ -23,6 +23,7 @@
     "@agrume/types": "workspace:*",
     "@commander-js/extra-typings": "^12.0.1",
     "@fastify/express": "^2.3.0",
+    "@ngrok/ngrok": "^1.4.1",
     "@types/connect": "^3.4.35",
     "@types/localtunnel": "^2.0.4",
     "commander": "^12.0.0",

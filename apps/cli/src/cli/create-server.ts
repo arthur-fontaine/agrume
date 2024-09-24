@@ -15,6 +15,7 @@ interface CreateServerParams {
   config?: CliOptions | undefined
   entry: string
   host: string
+  ngrokDomain?: string | undefined
   port: number
   tunnel?: string | undefined
   watch?: string | true | undefined
@@ -47,12 +48,26 @@ export async function createServer(
 
   await server.listen({ host: params.host, port: params.port })
 
+  if (params.tunnel === 'ngrok' && process.env.NGROK_AUTHTOKEN === undefined) {
+    logger.error('The `ngrok` tunnel requires a `NGROK_AUTHTOKEN` environment variable. If you don\'t have yet an authtoken, go to https://dashboard.ngrok.com/tunnels/authtokens and create one.')
+    process.exit(1)
+  }
+
+  if (params.tunnel === 'ngrok' && params.ngrokDomain === undefined) {
+    logger.error('The `ngrok` tunnel requires a `ngrokDomain` option. If you don\'t have yet a static domain, go to https://dashboard.ngrok.com/cloud-edge/domains and create one.')
+    process.exit(1)
+  }
+
   const {
     url: tunnelUrl,
   } = await registerTunnel({
     host: params.host ?? params.config?.host,
     port: params.port ?? params.config?.port,
-    tunnel: params.tunnel ?? params.config?.tunnel?.type,
+    tunnel: params.tunnel ? {
+      type: params.tunnel,
+      ...(params.ngrokDomain && { domain: params.ngrokDomain }),
+    } as never
+    : params.config?.tunnel,
   })
 
   const closeServer = async () => {
