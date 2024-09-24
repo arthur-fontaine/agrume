@@ -268,19 +268,55 @@ export default defineConfig({
 })
 ```
 
-Agrume supports the following tunnel types:
-
-- [`bore`](http://bore.pub)
-- [`localtunnel`](https://localtunnel.github.io/www/)
-
-> [!IMPORTANT]
-> For some tunnel types, you may need to install the tunnel CLI. For example, to use the `bore` tunnel, you need to install the `bore` CLI.
-
-> [!NOTE]
-> The tunnel URL is deterministic. This means that if you restart the tunnel, the URL will be the same.
-
 > [!NOTE]
 > You may want to use the Agrume CLI to start the tunnel easily. See the [CLI](#cli) section.
+
+##### [`ngrok`](https://ngrok.com)
+
+Ngrok is the most stable tunnel of the three. However, it requires some configuration.
+
+1. Create an account on [ngrok.com](https://dashboard.ngrok.com/signup).
+2. Go to the [auth token page](https://dashboard.ngrok.com/get-started/your-authtoken) and copy your auth token.
+3. Set the `NGROK_AUTHTOKEN` environment variable to your auth token.
+
+```bash
+echo "export NGROK_AUTHTOKEN=your-auth-token" >> ~/.zshrc # or ~/.bashrc or any other shell configuration file
+```
+
+4. Create a free static subdomain on [ngrok.com](https://dashboard.ngrok.com/cloud-edge/domains).
+5. Set the `ngrokDomain` option to your subdomain.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. with the CLI:
+
+```bash
+agrume --tunnel ngrok --ngrok-domain your-subdomain
+```
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. with the plugin:
+
+```ts
+// ...
+export default defineConfig({
+  // ...
+  tunnel: {
+    type: 'ngrok',
+    domain: 'your-subdomain',
+  }
+})
+```
+
+##### [`bore`](http://bore.pub)
+
+Bore is a free and open-source tunnel. However, it doesn't support HTTPS and works with ports (anybody can reserve a port, so the determined URL can be taken by someone else).
+
+1. Install the `bore` CLI (read the [installation instructions](https://github.com/ekzhang/bore#installation)).
+2. Use `bore` as the tunnel type.
+
+##### [`localtunnel`](https://localtunnel.github.io/www/)
+
+Localtunnel is a free and open-source tunnel. However, the service is not very stable. It doesn't need any installation.
+
+1. Use `localtunnel` as the tunnel type.
 
 #### `getClient`
 
