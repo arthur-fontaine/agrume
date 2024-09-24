@@ -90,7 +90,7 @@ async function watchAndCreateServer(params: CreateServerParams) {
   const watcher = new Watcher(watchTarget)
   logger.info(`Watching for changes in ${watchTarget}`)
 
-  let closeServer = await createServer({
+  const closeServer = await createServer({
     ...params,
     config: {
       ...params.config,
@@ -110,13 +110,27 @@ async function watchAndCreateServer(params: CreateServerParams) {
       return state
     })
 
-    logger.info('Detected changes, restarting server...')
+    logger.info('Detected changes, re-registering routes...')
+    logger.log('')
+
+    state.set((state) => {
+      state.routes.clear()
+      return state
+    })
+
+    await getAgrumeMiddleware({
+      allowUnsafe: params.allowUnsafe,
+      config: params.config,
+      entry: params.entry,
+    })
+
+    logRoutes()
+    logger.log('')
+  })
+
+  process.on('SIGINT', async () => {
     await closeServer?.()
-    closeServer = await createServer({
-      ...params,
-      tunnel: undefined,
-      watch: undefined,
-    }, true)
+    process.exit(0)
   })
 }
 
@@ -147,7 +161,7 @@ function logRoutes() {
       formattedRouteName += `/${routeName}`
     }
 
-    logger.info(`Registered route \`POST ${formattedRouteName}\``)
+    logger.success(`Registered route \`POST ${formattedRouteName}\``)
   }
 }
 
