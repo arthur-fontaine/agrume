@@ -1,6 +1,6 @@
 {
   "name": "@agrume/client",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "exports": {
     ".": {
       "types": "./dist/get-client.d.ts",

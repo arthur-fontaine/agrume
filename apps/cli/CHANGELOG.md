@@ -1,5 +1,19 @@
 # @agrume/server
 
+## 3.1.0
+
+### Minor Changes
+
+- c5d4d79: Add support for Ngrok and custom CORS in the CLI.
+
+### Patch Changes
+
+- Updated dependencies [c5d4d79]
+  - @agrume/core@3.1.0
+  - @agrume/internals@3.1.0
+  - @agrume/types@3.1.0
+  - @agrume/plugin@3.0.1
+
 ## 3.0.0
 
 ### Major Changes
