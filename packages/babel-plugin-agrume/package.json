@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-agrume",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "main": "./dist/agrume-plugin.cjs",
   "module": "./dist/agrume-plugin.mjs",
   "types": "./dist/agrume-plugin.d.ts",
