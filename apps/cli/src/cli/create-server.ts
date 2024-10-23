@@ -136,6 +136,7 @@ async function watchAndCreateServer(params: CreateServerParams) {
 
     state.set((state) => {
       state.routes.clear()
+      state.isServerPaused = true
       return state
     })
 
@@ -143,6 +144,11 @@ async function watchAndCreateServer(params: CreateServerParams) {
       allowUnsafe: params.allowUnsafe,
       config: params.config,
       entry: params.entry,
+    })
+
+    state.set((state) => {
+      state.isServerPaused = false
+      return state
     })
 
     logRoutes()
