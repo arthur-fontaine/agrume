@@ -111,7 +111,9 @@ async function watchAndCreateServer(params: CreateServerParams) {
     watchTarget = params.watch
   }
 
-  const watcher = new Watcher(watchTarget)
+  const watcher = new Watcher(watchTarget, {
+    recursive: true,
+  })
   logger.info(`Watching for changes in ${watchTarget}`)
 
   const closeServer = await createServer({
@@ -128,11 +130,6 @@ async function watchAndCreateServer(params: CreateServerParams) {
     if (Date.now() - watcherStartTime < 1000) {
       return // Ignore initial events (1s is arbitrary)
     }
-
-    state.set((state) => {
-      state.routes.clear()
-      return state
-    })
 
     logger.info('Detected changes, re-registering routes...')
     logger.log('')
