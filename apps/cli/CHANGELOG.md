@@ -1,5 +1,13 @@
 # @agrume/server
 
+## 3.1.1
+
+### Patch Changes
+
+- 89facb2: Fix watcher not watching recursively. Fix AsyncGenerators not correctly detected in React Native.
+  - @agrume/core@3.1.1
+  - @agrume/plugin@3.0.2
+
 ## 3.1.0
 
 ### Minor Changes
