@@ -16,10 +16,22 @@ export function getClient<R extends AnyRoute>(
       return false
     }
 
-    const asyncGenerator
-      = (async function* () { yield undefined }()).constructor
+    if (Symbol.asyncIterator !== undefined) {
+      const asyncGenerator
+        = (async function* () { yield undefined }()).constructor
 
-    return value.constructor.constructor === asyncGenerator.constructor
+      return value.constructor.constructor === asyncGenerator.constructor
+    }
+    else {
+      // This is a fallback. For example, the polyfill used in Expo does not
+      // have a "normal" behavior.
+      // `asyncGenerator` will be `AsyncGenerator` instead of `AsyncGeneratorFunction`.
+      // Then, the constructor of the constructor will be `Function` instead of `AsyncGenerator`.
+      // So, in environments where `Symbol.asyncIterator` is not defined (where
+      // async generators are not natively supported), we fallback to this less
+      // reliable method.
+      return value.constructor.name.startsWith('AsyncGenerator')
+    }
   }
 
   return async function (parameters: Parameters<R>[0]) {
