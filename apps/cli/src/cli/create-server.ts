@@ -18,6 +18,8 @@ interface CreateServerParams {
   entry: string
   host: string
   ngrokDomain?: string | undefined
+  pinggyDomain?: string | undefined
+  pinggyToken?: string | undefined
   port: number
   tunnel?: string | undefined
   watch?: string | true | undefined
@@ -63,7 +65,12 @@ export async function createServer(
   }
 
   if (params.tunnel === 'ngrok' && params.ngrokDomain === undefined) {
-    logger.error('The `ngrok` tunnel requires a `ngrokDomain` option. If you don\'t have yet a static domain, go to https://dashboard.ngrok.com/cloud-edge/domains and create one.')
+    logger.error('The `ngrok` tunnel requires a `ngrok-domain` option. If you don\'t have yet a static domain, go to https://dashboard.ngrok.com/cloud-edge/domains and create one.')
+    process.exit(1)
+  }
+
+  if (params.tunnel === 'pinggy' && (params.pinggyDomain === undefined || params.pinggyToken === undefined)) {
+    logger.error('The `pinggy` tunnel requires a `pinggy-domain` and a `pinggy-token` option. If you don\'t have yet a domain and a token, go to https://pinggy.io and create one.')
     process.exit(1)
   }
 
@@ -75,6 +82,10 @@ export async function createServer(
     tunnel: params.tunnel ? {
       type: params.tunnel,
       ...(params.ngrokDomain && { domain: params.ngrokDomain }),
+      ...(params.pinggyToken && {
+        accessToken: params.pinggyToken,
+        domain: params.pinggyDomain,
+      }),
     } as never
     : params.config?.tunnel,
   })
