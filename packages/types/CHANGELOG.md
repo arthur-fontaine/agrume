@@ -1,5 +1,11 @@
 # @agrume/types
 
+## 3.2.0
+
+### Minor Changes
+
+- 232bfa1: Removed the small amount of time when the server had no route registered and raised a 404 when watcher was rebuilding the project. Added support for Pinggy (https://pinggy.io) tunnels.
+
 ## 3.1.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@agrume/internals",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "main": "./dist/internals.js",
   "module": "./dist/internals.mjs",
   "types": "./dist/internals.d.ts",

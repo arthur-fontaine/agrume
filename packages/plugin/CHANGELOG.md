@@ -1,5 +1,19 @@
 # @agrume/plugin
 
+## 3.1.0
+
+### Minor Changes
+
+- 232bfa1: Removed the small amount of time when the server had no route registered and raised a 404 when watcher was rebuilding the project. Added support for Pinggy (https://pinggy.io) tunnels.
+
+### Patch Changes
+
+- Updated dependencies [232bfa1]
+  - @agrume/core@3.2.0
+  - @agrume/internals@3.2.0
+  - @agrume/types@3.2.0
+  - babel-preset-agrume@3.0.3
+
 ## 3.0.2
 
 ### Patch Changes
