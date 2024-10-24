@@ -1,5 +1,15 @@
 # @agrume/server
 
+## 3.2.2
+
+### Patch Changes
+
+- 166b5cd: Fix bad remote URL for Pinggy tunnel.
+- Updated dependencies [166b5cd]
+  - @agrume/internals@3.2.1
+  - @agrume/core@3.2.2
+  - @agrume/plugin@3.1.2
+
 ## 3.2.1
 
 ### Patch Changes

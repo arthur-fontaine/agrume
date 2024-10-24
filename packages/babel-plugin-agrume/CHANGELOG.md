@@ -1,5 +1,14 @@
 # babel-plugin-agrume
 
+## 3.1.2
+
+### Patch Changes
+
+- Updated dependencies [166b5cd]
+  - @agrume/internals@3.2.1
+  - @agrume/core@3.2.2
+  - agrume@3.1.4
+
 ## 3.1.1
 
 ### Patch Changes
