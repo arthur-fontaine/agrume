@@ -1,5 +1,11 @@
 # agrume
 
+## 3.1.4
+
+### Patch Changes
+
+- @agrume/core@3.2.2
+
 ## 3.1.3
 
 ### Patch Changes

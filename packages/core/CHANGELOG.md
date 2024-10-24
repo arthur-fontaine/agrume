@@ -1,5 +1,12 @@
 # @agrume/core
 
+## 3.2.2
+
+### Patch Changes
+
+- Updated dependencies [166b5cd]
+  - @agrume/internals@3.2.1
+
 ## 3.2.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @agrume/internals
 
+## 3.2.1
+
+### Patch Changes
+
+- 166b5cd: Fix bad remote URL for Pinggy tunnel.
+
 ## 3.2.0
 
 ### Minor Changes
