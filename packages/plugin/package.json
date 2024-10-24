@@ -1,6 +1,6 @@
 {
   "name": "@agrume/plugin",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "exports": {
     "./unplugin": {
       "types": "./dist/unplugin.d.ts",

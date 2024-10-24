@@ -1,5 +1,11 @@
 # @agrume/core
 
+## 3.2.1
+
+### Patch Changes
+
+- 01f937b: Fix bad arguments passed when tunnel type is Pinggy.
+
 ## 3.2.0
 
 ### Minor Changes
