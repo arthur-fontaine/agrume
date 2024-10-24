@@ -67,6 +67,9 @@ export function createRoute<
     else if (tunnelInfos.type === 'ngrok') {
       host = `https://${tunnel.domain}`
     }
+    else if (tunnelInfos.type === 'pinggy') {
+      host = `https://${tunnelInfos.tunnelSubdomain}.${tunnelInfos.tunnelDomain}`
+    }
     else {
       tunnelInfos satisfies never
     }

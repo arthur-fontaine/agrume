@@ -20,13 +20,32 @@ function createEmptyBodyStream() {
   }))
 }
 
+async function waitServerUnpause() {
+  return new Promise<void>((resolve) => {
+    const CHECK_INTERVAL = 50
+    let interval: NodeJS.Timer
+
+    const resolveIfNotPaused = () => {
+      if (state.get().isServerPaused === false) {
+        resolve()
+        clearInterval(interval)
+      }
+    }
+
+    interval = setInterval(() => resolveIfNotPaused(), CHECK_INTERVAL)
+    resolveIfNotPaused()
+  })
+}
+
 /**
  * Create the HTTP server handler with the routes.
  * @returns {Connect.NextHandleFunction} The HTTP server handler.
  */
 export function createHttpServerHandler() {
   const middleware: Connect.NextHandleFunction
-    = function (request, response, next?) {
+    = async function (request, response, next?) {
+      await waitServerUnpause()
+
       const routes = state.get()?.routes
 
       const throwStatus = function (

@@ -1,8 +1,6 @@
-import _babel from '@babel/core'
+import * as babel from '@babel/core'
 import agrumePreset from 'babel-preset-agrume'
 import type { PluginOptions } from '@agrume/types'
-
-const babel = ('default' in _babel ? _babel.default : _babel) as typeof _babel
 
 /**
  * Transform the code.

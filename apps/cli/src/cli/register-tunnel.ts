@@ -3,6 +3,7 @@ import localtunnel from 'localtunnel'
 import ngrok from '@ngrok/ngrok'
 import type { GlobalOptions } from '@agrume/types'
 import { bore } from './lib/bore/bore'
+import { pinggy } from './lib/pinggy/pinggy'
 
 interface RegisterTunnelOptions {
   host: string
@@ -25,7 +26,9 @@ export async function registerTunnel(
     tunnel.type !== 'localtunnel'
     && tunnel.type !== 'bore'
     && tunnel.type !== 'ngrok'
+    && tunnel.type !== 'pinggy'
   )) {
+    tunnel satisfies undefined
     return {}
   }
 
@@ -66,6 +69,23 @@ export async function registerTunnel(
       type: tunnelInfos.type,
       url: tunnel.url() ?? undefined,
     }
+  }
+  case 'pinggy': {
+    const _tunnel = pinggy({
+      accessToken: tunnelInfos.tunnelAccessToken,
+      localPort: port,
+      remoteHost: tunnelInfos.tunnelDomain,
+      subdomain: tunnelInfos.tunnelSubdomain,
+    })
+
+    return {
+      type: tunnelInfos.type,
+      url: `https://${tunnelInfos.tunnelSubdomain}.a.pinggy.link`,
+    }
+  }
+  default: {
+    tunnelInfos satisfies never
+    return null!
   }
   }
 }

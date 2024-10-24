@@ -2,6 +2,7 @@ import type { AnyRoute, GlobalOptions } from '@agrume/types'
 
 interface State {
   isRegistering: boolean
+  isServerPaused: boolean
   options: GlobalOptions
   routes: Map<string, AnyRoute>
 }
@@ -13,6 +14,7 @@ export const state = {
 
 const store: State = {
   isRegistering: false,
+  isServerPaused: false,
   options: {},
   routes: new Map(),
 }
