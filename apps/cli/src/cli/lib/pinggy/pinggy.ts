@@ -18,7 +18,7 @@ interface PinggyOptions {
 export function pinggy({
   accessToken,
   localPort,
-  remoteHost = 'a.pinggy.io',
+  remoteHost = 'a.pinggy.link',
 }: PinggyOptions) {
   const pinggyProcess = exec(`ssh -p 443 -R0:localhost:${localPort} ${accessToken}@${remoteHost}`)
 
