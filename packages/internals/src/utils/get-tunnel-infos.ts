@@ -3,7 +3,7 @@ import type { GlobalOptions } from '@agrume/types'
 import { checksum } from './checksum'
 
 type TunnelInfos =
-  | { tunnelAccessToken: string, tunnelDomain: 'a.pinggy.io', tunnelSubdomain: string, type: 'pinggy' }
+  | { tunnelAccessToken: string, tunnelDomain: 'a.pinggy.link', tunnelSubdomain: string, type: 'pinggy' }
   | { tunnelDomain: 'bore.pub', tunnelPort: number, type: 'bore' }
   | { tunnelDomain: 'loca.lt', tunnelSubdomain: string, type: 'localtunnel' }
   | { tunnelDomain: string, type: 'ngrok' }
@@ -54,7 +54,7 @@ export function getTunnelInfos(tunnel: NonNullable<GlobalOptions['tunnel']>): Tu
   case 'pinggy': {
     return {
       tunnelAccessToken: tunnel.accessToken,
-      tunnelDomain: 'a.pinggy.io',
+      tunnelDomain: 'a.pinggy.link',
       tunnelSubdomain: tunnel.domain,
       type: 'pinggy',
     }
