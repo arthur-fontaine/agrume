@@ -52,11 +52,7 @@ export function createRoute<
 
   const tunnel = options.get().tunnel ?? undefined
   if (tunnel !== undefined) {
-    const tunnelInfos = utils.getTunnelInfos(
-      tunnel.type === 'ngrok' ? { domain: tunnel.domain, type: 'ngrok' } as const
-      : tunnel.type === 'bore' ? { type: 'bore' } as const
-      : tunnel.type === 'localtunnel' ? { type: 'localtunnel' } as const : {} as never,
-    )
+    const tunnelInfos = utils.getTunnelInfos(tunnel as never)
 
     if (tunnelInfos.type === 'localtunnel') {
       host = `https://${tunnelInfos.tunnelSubdomain}.${tunnelInfos.tunnelDomain}`
