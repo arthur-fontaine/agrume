@@ -1,5 +1,11 @@
 # @agrume/server
 
+## 3.2.3
+
+### Patch Changes
+
+- e4e81f1: Fix SSH remote host for Pinggy.
+
 ## 3.2.2
 
 ### Patch Changes
