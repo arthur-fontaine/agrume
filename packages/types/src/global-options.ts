@@ -1,3 +1,4 @@
+import type { Tunnel } from '@agrume/tunnel'
 import type { RequestOptions } from './request-options'
 
 export type GlobalOptions = {
@@ -19,11 +20,8 @@ export type GlobalOptions = {
   }
   | {
     baseUrl?: never | undefined
-    tunnel?: (
-      | { accessToken: string, domain: string, type: 'pinggy' }
-      | { accessToken?: never, domain: string, type: 'ngrok' }
-      | { accessToken?: never, domain?: never, type: 'bore' }
-      | { accessToken?: never, domain?: never, type: 'localtunnel' }
-    )
+    tunnel?: {
+      [K in Tunnel.TunnelType]: Tunnel.TunnelFlattenOptions<K>
+    }[Tunnel.TunnelType]
   }
   )

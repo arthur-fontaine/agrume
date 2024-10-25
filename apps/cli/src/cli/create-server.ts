@@ -3,13 +3,13 @@ import path from 'node:path'
 import { state } from '@agrume/internals'
 import type { CliOptions } from '@agrume/types'
 import fastifyExpress from '@fastify/express'
+import { Bore, Localtunnel, Ngrok, Pinggy } from '@agrume/tunnel'
 import cors from '@fastify/cors'
 import fastify, { type FastifyInstance } from 'fastify'
 import Watcher from 'watcher'
 
 import { getAgrumeMiddleware } from './get-agrume-middleware'
 import { logger } from './logger'
-import { registerTunnel } from './register-tunnel'
 
 interface CreateServerParams {
   allowUnsafe?: boolean | undefined
@@ -18,7 +18,7 @@ interface CreateServerParams {
   entry: string
   host: string
   ngrokDomain?: string | undefined
-  pinggyDomain?: string | undefined
+  pinggySubdomain?: string | undefined
   pinggyToken?: string | undefined
   port: number
   tunnel?: string | undefined
@@ -59,36 +59,14 @@ export async function createServer(
 
   await server.listen({ host: params.host, port: params.port })
 
-  if (params.tunnel === 'ngrok' && process.env.NGROK_AUTHTOKEN === undefined) {
-    logger.error('The `ngrok` tunnel requires a `NGROK_AUTHTOKEN` environment variable. If you don\'t have yet an authtoken, go to https://dashboard.ngrok.com/tunnels/authtokens and create one.')
-    process.exit(1)
-  }
-
-  if (params.tunnel === 'ngrok' && params.ngrokDomain === undefined) {
-    logger.error('The `ngrok` tunnel requires a `ngrok-domain` option. If you don\'t have yet a static domain, go to https://dashboard.ngrok.com/cloud-edge/domains and create one.')
-    process.exit(1)
-  }
-
-  if (params.tunnel === 'pinggy' && (params.pinggyDomain === undefined || params.pinggyToken === undefined)) {
-    logger.error('The `pinggy` tunnel requires a `pinggy-domain` and a `pinggy-token` option. If you don\'t have yet a domain and a token, go to https://pinggy.io and create one.')
-    process.exit(1)
-  }
-
-  const {
-    url: tunnelUrl,
-  } = await registerTunnel({
-    host: params.host ?? params.config?.host,
-    port: params.port ?? params.config?.port,
-    tunnel: params.tunnel ? {
-      type: params.tunnel,
-      ...(params.ngrokDomain && { domain: params.ngrokDomain }),
-      ...(params.pinggyToken && {
-        accessToken: params.pinggyToken,
-        domain: params.pinggyDomain,
-      }),
-    } as never
-    : params.config?.tunnel,
-  })
+  const { connectOptions, tunnel }
+    = createNgrokTunnelInstance(params)
+    ?? createLocaltunnelTunnelInstance(params)
+    ?? createPinggyTunnelInstance(params)
+    ?? createBoreTunnelInstance(params)
+    ?? {}
+  tunnel?.connect(params.port ?? params.config?.port, connectOptions ?? {})
+  const tunnelUrl = tunnel?.getTunnelInfos().url
 
   const closeServer = async () => {
     server.server.closeAllConnections()
@@ -237,4 +215,71 @@ function getBestAddress(server: FastifyInstance) {
   }
 
   return addresses[0]
+}
+
+function createNgrokTunnelInstance(params: CreateServerParams) {
+  if (params.tunnel !== 'ngrok') {
+    return undefined
+  }
+
+  const ngrokAuthToken = process.env.NGROK_AUTHTOKEN
+  if (ngrokAuthToken === undefined) {
+    logger.error('The `ngrok` tunnel requires a `NGROK_AUTHTOKEN` environment variable. If you don\'t have yet an authtoken, go to https://dashboard.ngrok.com/tunnels/authtokens and create one.')
+    process.exit(1)
+  }
+
+  if (params.ngrokDomain === undefined) {
+    logger.error('The `ngrok` tunnel requires a `ngrok-domain` option. If you don\'t have yet a static domain, go to https://dashboard.ngrok.com/cloud-edge/domains and create one.')
+    process.exit(1)
+  }
+
+  return {
+    connectOptions: {
+      accessToken: ngrokAuthToken,
+    },
+    tunnel: new Ngrok({
+      tunnelDomain: params.ngrokDomain,
+    }),
+  }
+}
+
+function createPinggyTunnelInstance(params: CreateServerParams) {
+  if (params.tunnel !== 'pinggy') {
+    return undefined
+  }
+
+  if (params.pinggySubdomain === undefined) {
+    logger.error('The `pinggy` tunnel requires a `pinggy-subdomain` option. If you don\'t have yet a subdomain, go to https://pinggy.io and create one.')
+    process.exit(1)
+  }
+
+  if (params.pinggyToken === undefined) {
+    logger.error('The `pinggy` tunnel requires a `pinggy-token` option. If you don\'t have yet a token, go to https://pinggy.io and create one.')
+    process.exit(1)
+  }
+
+  return {
+    connectOptions: {
+      accessToken: params.pinggyToken,
+    },
+    tunnel: new Pinggy({
+      tunnelSubdomain: params.pinggySubdomain,
+    }),
+  }
+}
+
+function createLocaltunnelTunnelInstance(params: CreateServerParams) {
+  if (params.tunnel !== 'localtunnel') {
+    return undefined
+  }
+
+  return { connectOptions: {}, tunnel: new Localtunnel() }
+}
+
+function createBoreTunnelInstance(params: CreateServerParams) {
+  if (params.tunnel !== 'bore') {
+    return undefined
+  }
+
+  return { connectOptions: {}, tunnel: new Bore() }
 }

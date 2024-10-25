@@ -1,0 +1,25 @@
+{
+  "name": "@agrume/tunnel",
+  "version": "3.0.0",
+  "main": "./dist/tunnel.js",
+  "module": "./dist/tunnel.mjs",
+  "types": "./dist/tunnel.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/tunnel.ts --dts --format esm,cjs --minify --sourcemap inline",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@ngrok/ngrok": "^1.4.1",
+    "@types/localtunnel": "^2.0.4",
+    "localtunnel": "^2.0.2",
+    "node-machine-id": "^1.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "tsup": "^8.2.4"
+  }
+}
