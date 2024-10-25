@@ -253,7 +253,7 @@ export default defineConfig({
 
 #### `tunnel`
 
-By default, Agrume will not use a tunnel. However, sometimes you need to use a tunnel to access your backend due to network restrictions. You can use a tunnel by passing the `tunnel` option to the plugin:
+Agrume has built-in support for tunnels. You can opt-in to use a tunnel by passing the `tunnel` option to the plugin:
 
 ```ts
 // ...
@@ -261,7 +261,7 @@ By default, Agrume will not use a tunnel. However, sometimes you need to use a t
 export default defineConfig({
   plugins: [
     agrume({
-      tunnel: { type: 'bore' }
+      tunnel: { type: 'Bore', connectionArgs: {} }
     })
     // ...
   ]
@@ -273,7 +273,7 @@ export default defineConfig({
 
 ##### [`ngrok`](https://ngrok.com)
 
-Ngrok is the most stable tunnel of the three. However, it requires some configuration.
+Ngrok is the most popular of all the options. However, it have some prerequisites:
 
 1. Create an account on [ngrok.com](https://dashboard.ngrok.com/signup).
 2. Go to the [auth token page](https://dashboard.ngrok.com/get-started/your-authtoken) and copy your auth token.
@@ -299,9 +299,46 @@ agrume --tunnel ngrok --ngrok-domain your-subdomain
 export default defineConfig({
   // ...
   tunnel: {
-    type: 'ngrok',
-    domain: 'your-subdomain',
+    type: 'Ngrok',
+    connectionArgs: {
+      accessToken: process.env.NGROK_AUTHTOKEN, // This is optional, it will use the NGROK_AUTHTOKEN environment variable by default.
+    },
+    tunnelDomain: 'your-ngrok-domain',
   }
+})
+```
+
+##### [`pinggy`](https://pinggy.io)
+
+Pinggy is a stable and cheaper alternative to Ngrok.
+
+1. Create an account on [pinggy.io](https://pinggy.io).
+2. Go to the [subscriptions page](https://dashboard.pinggy.io/subscriptions) and upgrade to a paid plan (3$/month).
+3. Go to the [subdomains page](https://dashboard.pinggy.io/subdomains) and create a static subdomain.
+4. Set the `pinggySubdomain` and `pinggyToken` options to your subdomain and your token.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. with the CLI:
+
+```bash
+agrume --tunnel pinggy --pinggy-subdomain your-subdomain --pinggy-token your-token
+```
+
+> [!NOTE]
+> Ideally, you should set the `PINGGY_TOKEN` environment variable to your token and use this variable in the command.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. with the plugin:
+
+```ts
+// ...
+export default defineConfig({
+  // ...
+  tunnel: {
+    type: 'Pinggy',
+    connectionArgs: {
+      accessToken: process.env.PINGGY_TOKEN,
+    },
+    tunnelSubdomain: 'your-subdomain',
+  },
 })
 ```
 
@@ -701,7 +738,7 @@ export default defineConfig({
   watch: true,
   // As plugin options, if you use `externalUrl`, you can't use `tunnel` (and vice versa)
   // tunnel: {
-  //   type: 'localtunnel',
+  //   type: 'Localtunnel',
   // },
 })
 ```
@@ -739,6 +776,10 @@ If you don't want to use a configuration file, you can still use the options:
 | `--watch` | *Optional* The directory to watch for changes | Watch for changes in the target directory | *not provided*. If the option is present, defaults to the entry file found |
 | `--tunnel` | *Optional* The tunnel type (see the `tunnel` option in the [configuration](#configuration)) | Use a tunnel to access the server | *not provided*. If the option is present, defaults to the `localtunnel` tunnel |
 | `--allow-unsafe` | | Allow loading routes from `node_modules` | `false` |
+| `--cors-regexp` | A string | The regular expression to match the origin |  |
+| `--ngrok-domain` | A string | The domain to use with Ngrok |  |
+| `--pinggy-subdomain` | A string | The subdomain to use with Pinggy |  |
+| `--pinggy-token` | A string | The token to use with pinggy |  |
 
 ## Recipes
 
