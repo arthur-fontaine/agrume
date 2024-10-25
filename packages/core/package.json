@@ -17,6 +17,7 @@
     "@agrume/internals": "workspace:*",
     "@agrume/types": "workspace:*",
     "@babel/parser": "^7.22.10",
+    "@ngrok/ngrok": "^1.4.1",
     "@types/connect": "^3.4.35",
     "@types/http-errors": "^2.0.4",
     "connect": "^3.7.0",
@@ -25,6 +26,7 @@
     "type-fest": "^4.2.0"
   },
   "devDependencies": {
+    "@agrume/tunnel": "workspace:*",
     "@types/node": "^20",
     "tsup": "^8.2.4"
   }

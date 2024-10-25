@@ -6,7 +6,8 @@ export default defineConfig({
   port: 8173,
   prefix: '/__agrume__/',
   // tunnel: {
-  // type: 'localtunnel',
+  //   connectionArgs: {},
+  //   type: 'Localtunnel',
   // },
   watch: true,
 })

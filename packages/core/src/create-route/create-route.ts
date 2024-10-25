@@ -1,7 +1,8 @@
-import { state, utils } from '@agrume/internals'
+import { state } from '@agrume/internals'
 import type { AnyRoute, CreateRoute, Route, RouteOptions, RouteParameters, RouteReturnValue } from '@agrume/types'
 import { getClient as getDefaultClient } from '@agrume/client'
 import babelParser from '@babel/parser'
+import * as tunnels from '@agrume/tunnel'
 
 import { options } from './options'
 import { getRouteName } from './get-route-name'
@@ -52,23 +53,10 @@ export function createRoute<
 
   const tunnel = options.get().tunnel ?? undefined
   if (tunnel !== undefined) {
-    const tunnelInfos = utils.getTunnelInfos(tunnel as never)
-
-    if (tunnelInfos.type === 'localtunnel') {
-      host = `https://${tunnelInfos.tunnelSubdomain}.${tunnelInfos.tunnelDomain}`
-    }
-    else if (tunnelInfos.type === 'bore') {
-      host = `http://${tunnelInfos.tunnelDomain}:${tunnelInfos.tunnelPort}`
-    }
-    else if (tunnelInfos.type === 'ngrok') {
-      host = `https://${tunnel.domain}`
-    }
-    else if (tunnelInfos.type === 'pinggy') {
-      host = `https://${tunnelInfos.tunnelSubdomain}.${tunnelInfos.tunnelDomain}`
-    }
-    else {
-      tunnelInfos satisfies never
-    }
+    const Tunnel = tunnels[tunnel.type]
+    const tunnelInstance = new Tunnel(options.get().tunnel as never)
+    const tunnelInfos = tunnelInstance.getTunnelInfos()
+    host = tunnelInfos.url
   }
 
   if (state.get()?.isRegistering) {

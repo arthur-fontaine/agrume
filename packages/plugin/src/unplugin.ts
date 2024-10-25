@@ -25,6 +25,7 @@ export const unpluginFactory: UnpluginFactory<PluginOptions | undefined>
       },
       enforce: 'pre',
       name: packageJson.name,
+      resolveId: id => id.startsWith('@ngrok/ngrok') ? { external: true, id } : null,
       transform: createTransform(pluginOptions),
     }
 

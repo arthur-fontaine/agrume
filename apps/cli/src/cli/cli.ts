@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { utils } from '@agrume/internals'
+import { Tunnel } from '@agrume/tunnel'
 import { program } from 'commander'
 import { createServer } from './create-server'
 import { findEntryFile } from './find-entry-file'
@@ -15,7 +16,7 @@ program
   .option('--tunnel [tunnel]', 'Register a tunnel')
   .option('--ngrok-domain <domain>', 'The domain for the ngrok tunnel')
   .option('--pinggy-token <token>', 'The access token for your Pinggy persistent domain')
-  .option('--pinggy-domain <domain>', 'The domain for the Pinggy persistent domain')
+  .option('--pinggy-subdomain <subdomain>', 'The subdomain for the Pinggy persistent domain')
   .option('--cors-regex <regex>', 'The regex for the CORS origin')
   .option('--allow-unsafe', 'Allow loading routes from node_modules')
   .action(async (options) => {
@@ -32,11 +33,29 @@ program
           : undefined,
       entry: findEntryFile(options.entry.split(',')),
       host: options.host,
-      ngrokDomain: options.ngrokDomain ?? (config.tunnel?.type === 'ngrok' ? config.tunnel.domain : undefined),
-      pinggyDomain: options.pinggyDomain ?? (config.tunnel?.type === 'pinggy' ? config.tunnel.domain : undefined),
-      pinggyToken: options.pinggyToken ?? (config.tunnel?.type === 'pinggy' ? config.tunnel.accessToken : undefined),
+      ngrokDomain: (
+        options.ngrokDomain
+        ?? (
+          !(config.tunnel instanceof Tunnel) && config.tunnel?.type === 'Ngrok' ? config.tunnel.tunnelDomain
+          : undefined
+        )
+      ),
+      pinggySubdomain: (
+        options.pinggySubdomain
+        ?? (
+          !(config.tunnel instanceof Tunnel) && config.tunnel?.type === 'Pinggy' ? config.tunnel.tunnelSubdomain
+          : undefined
+        )
+      ),
+      pinggyToken: (
+        options.pinggyToken
+        ?? (
+          !(config.tunnel instanceof Tunnel) && config.tunnel?.type === 'Pinggy' ? config.tunnel.connectionArgs.accessToken
+          : undefined
+        )
+      ),
       port: Number.parseInt(options.port),
-      tunnel: options.tunnel === true ? 'localtunnel' : options.tunnel ?? config.tunnel?.type,
+      tunnel: options.tunnel === true ? 'localtunnel' : options.tunnel ?? config.tunnel?.type.toLowerCase(),
       watch: options.watch,
     })
   })

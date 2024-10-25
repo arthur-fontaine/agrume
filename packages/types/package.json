@@ -11,6 +11,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@agrume/tunnel": "workspace:*",
     "@types/connect": "^3.4.35",
     "connect": "^3.7.0",
     "type-fest": "^4.2.0",
