@@ -1,5 +1,19 @@
 # @agrume/plugin
 
+## 3.2.0
+
+### Minor Changes
+
+- 9007df8: Use polymorphism for tunnels to improve stability (create an `@agrume/tunnel` package at the same time).
+
+### Patch Changes
+
+- Updated dependencies [9007df8]
+  - @agrume/core@3.3.0
+  - @agrume/internals@3.3.0
+  - @agrume/types@3.3.0
+  - babel-preset-agrume@3.0.6
+
 ## 3.1.2
 
 ### Patch Changes

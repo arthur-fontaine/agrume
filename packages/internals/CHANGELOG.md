@@ -1,5 +1,16 @@
 # @agrume/internals
 
+## 3.3.0
+
+### Minor Changes
+
+- 9007df8: Use polymorphism for tunnels to improve stability (create an `@agrume/tunnel` package at the same time).
+
+### Patch Changes
+
+- Updated dependencies [9007df8]
+  - @agrume/types@3.3.0
+
 ## 3.2.1
 
 ### Patch Changes
