@@ -1,5 +1,13 @@
 # agrume
 
+## 3.1.5
+
+### Patch Changes
+
+- Updated dependencies [9007df8]
+  - @agrume/core@3.3.0
+  - @agrume/types@3.3.0
+
 ## 3.1.4
 
 ### Patch Changes

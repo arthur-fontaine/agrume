@@ -1,6 +1,6 @@
 {
   "name": "@agrume/tunnel",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "main": "./dist/tunnel.js",
   "module": "./dist/tunnel.mjs",
   "types": "./dist/tunnel.d.ts",
