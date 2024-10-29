@@ -9,9 +9,9 @@ import type { Middleware } from './middleware'
 const AGRUME_SEND_STREAM_PATH = '/__agrume_send_stream'
 
 /**
- * The middleware context.
+ * The logic to handle Agrume routes.
  */
-export class MiddlewareContext {
+export class RouteHandler {
   prefix = options.get().prefix
 
   /**

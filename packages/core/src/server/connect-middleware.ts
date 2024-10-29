@@ -1,5 +1,5 @@
 import type Connect from 'connect'
-import type { MiddlewareRequest } from './middleware-context'
+import type { MiddlewareRequest } from './route-handler'
 import { Middleware } from './middleware'
 
 /**

@@ -7,8 +7,8 @@ export { createRoute } from './client/create-route'
 
 export { ConnectMiddleware } from './server/connect-middleware'
 export { Middleware } from './server/middleware'
-export { MiddlewareContext } from './server/middleware-context'
-export type { MiddlewareRequest, MiddlewareResponse } from './server/middleware-context'
+export { RouteHandler } from './server/route-handler'
+export type { MiddlewareRequest, MiddlewareResponse } from './server/route-handler'
 
 /**
  * Create a Connect-compatible HTTP server handler with the routes.
