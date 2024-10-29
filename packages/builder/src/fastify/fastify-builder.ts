@@ -26,14 +26,16 @@ export const fastifyBuilder: Builder = function* (options) {
   yield {
     filename: 'index.ts',
     content: `
-    import fastify from 'fastify'
+    import fastify, { type FastifyInstance } from 'fastify'
     import { FastifyRouteHandler } from './agrume-route-handler'
 
-    const server = fastify(${createOptions(options)})
+    const registerServer = async (server: FastifyInstance) => {
+      ${routes}
+    }
 
-    ${routes}
+    ${options.listen !== undefined ? createListener(options.listen, 'server', options) : ''}
 
-    ${options.listen !== undefined ? createListener(options.listen, 'server') : ''}
+    export { registerServer }
     `,
   }
 }
@@ -92,8 +94,11 @@ function* createRoutes(serverName: string, singleFile: boolean) {
   return indexRegister
 }
 
-function createListener(port: number, serverName: string) {
+function createListener(port: number, serverName: string, options: BuilderOptions) {
   return `
+  const ${serverName} = fastify(${createOptions(options)})
+  await registerServer(server)
+
   ${serverName}.listen({ port: ${port} })
   `
 }

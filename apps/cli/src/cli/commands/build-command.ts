@@ -14,7 +14,8 @@ export const buildCommand = createCommand('build')
   .option('-o, --output <output>', 'The output directory', 'build')
   .option('--disable-logger', 'Disable the logger')
   .option('--single-file', 'Generate a single file', false)
-  .action(async (library, { disableLogger, entry, output, singleFile }) => {
+  .option('--listen <port>', 'The port to listen on. By default, it will try to read from the config file and listen on that port. Set to 0 to disable listening.', Number.parseInt)
+  .action(async (library, options) => {
     if (library !== 'fastify') {
       logger.error(`Library \`${library}\` is not supported`)
       process.exit(1)
@@ -24,7 +25,7 @@ export const buildCommand = createCommand('build')
 
     await getAgrumeMiddleware({
       config,
-      entry: findEntryFile(entry.split(',')),
+      entry: findEntryFile(options.entry.split(',')),
     })
 
     const builder = {
@@ -32,9 +33,10 @@ export const buildCommand = createCommand('build')
     }[library]
 
     await runBuilder(builder, {
-      destination: output,
-      enableLogger: !disableLogger,
-      listen: config.port,
-      singleFile,
+      destination: options.output,
+      enableLogger: !options.disableLogger,
+      listen: options.listen === 0 ? undefined
+      : (options.listen ?? config.port),
+      singleFile: options.singleFile,
     })
   })
