@@ -5,8 +5,7 @@ import type { JsonValue } from 'type-fest'
 import HttpErrors from 'http-errors'
 import { options } from '../client/options'
 import type { Middleware } from './middleware'
-
-const AGRUME_SEND_STREAM_PATH = '/__agrume_send_stream'
+import { constants } from './constants'
 
 /**
  * The logic to handle Agrume routes.
@@ -234,8 +233,8 @@ export class RouteHandler {
    * @returns {string} The route name without the send stream.
    */
   removeSendStreamFromPath(routeName: string): string {
-    return routeName.endsWith(AGRUME_SEND_STREAM_PATH)
-      ? routeName.slice(0, -AGRUME_SEND_STREAM_PATH.length)
+    return routeName.endsWith(constants.AGRUME_SEND_STREAM_PATH)
+      ? routeName.slice(0, -constants.AGRUME_SEND_STREAM_PATH.length)
       : routeName
   }
 

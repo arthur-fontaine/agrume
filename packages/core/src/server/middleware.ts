@@ -3,6 +3,7 @@ import type { TransformStream } from 'node:stream/web'
 import { state } from '@agrume/internals'
 import { options } from '../client/options'
 import { type MiddlewareRequest, type MiddlewareResponse, RouteHandler } from './route-handler'
+import { constants } from './constants'
 
 /**
  *
@@ -55,7 +56,10 @@ export class Middleware {
     const requestKey = ctx.getRequestKey()
     const routeName = ctx.getRouteName()
 
-    if (requestKey === undefined || !routeName.endsWith('/__agrume_send_stream')) {
+    if (
+      requestKey === undefined
+      || !routeName.endsWith(constants.AGRUME_SEND_STREAM_PATH)
+    ) {
       return false
     }
 
