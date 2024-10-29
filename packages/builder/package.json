@@ -5,11 +5,10 @@
   "module": "./dist/builder.mjs",
   "types": "./dist/builder.d.ts",
   "files": [
-    "dist",
-    "templates"
+    "dist"
   ],
   "scripts": {
-    "build": "tsup src/builder.ts --dts --format esm,cjs --minify --sourcemap inline",
+    "build": "tsup src/builder.ts --dts --format esm,cjs --minify --sourcemap inline && cp -rL templates dist",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

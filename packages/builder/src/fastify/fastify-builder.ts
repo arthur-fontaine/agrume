@@ -7,7 +7,7 @@ import { AGRUME_SEND_STREAM_PATH } from '@agrume/core'
 import type { Builder, BuilderOptions } from '../types/builder'
 
 export const fastifyBuilder: Builder = (options) => {
-  const templateDir = path.join(__dirname, '..', 'templates', 'fastify')
+  const templateDir = path.join(__dirname, 'templates', 'fastify')
   return {
     'index.ts': `
     import fastify from 'fastify'
