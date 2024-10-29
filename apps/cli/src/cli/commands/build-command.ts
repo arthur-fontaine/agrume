@@ -13,7 +13,8 @@ export const buildCommand = createCommand('build')
   .option(...entryOption)
   .option('-o, --output <output>', 'The output directory', 'build')
   .option('--disable-logger', 'Disable the logger')
-  .action(async (library, { disableLogger, entry, output }) => {
+  .option('--single-file', 'Generate a single file', false)
+  .action(async (library, { disableLogger, entry, output, singleFile }) => {
     if (library !== 'fastify') {
       logger.error(`Library \`${library}\` is not supported`)
       process.exit(1)
@@ -34,5 +35,6 @@ export const buildCommand = createCommand('build')
       destination: output,
       enableLogger: !disableLogger,
       listen: config.port,
+      singleFile,
     })
   })

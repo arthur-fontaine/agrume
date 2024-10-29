@@ -13,10 +13,10 @@ export async function runBuilder(builder: Builder, options: BuilderOptions & {
 }) {
   const results = builder(options)
 
-  for (const [fileName, content] of Object.entries(results)) {
-    const filePath = path.join(options.destination, fileName)
+  for (const { content, filename } of results) {
+    const filePath = path.join(options.destination, filename)
     fs.mkdirSync(path.dirname(filePath), { recursive: true })
-    fs.writeFileSync(filePath, await formatContent(fileName, content))
+    fs.writeFileSync(filePath, await formatContent(filename, content))
   }
 }
 
