@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import prettier from 'prettier'
 import type { Builder, BuilderOptions } from './types/builder'
 
 /**
@@ -7,7 +8,7 @@ import type { Builder, BuilderOptions } from './types/builder'
  * @param {Builder} builder The builder.
  * @param {BuilderOptions & { destination: string }} options The options.
  */
-export function runBuilder(builder: Builder, options: BuilderOptions & {
+export async function runBuilder(builder: Builder, options: BuilderOptions & {
   destination: string
 }) {
   const results = builder(options)
@@ -15,6 +16,16 @@ export function runBuilder(builder: Builder, options: BuilderOptions & {
   for (const [fileName, content] of Object.entries(results)) {
     const filePath = path.join(options.destination, fileName)
     fs.mkdirSync(path.dirname(filePath), { recursive: true })
-    fs.writeFileSync(filePath, content)
+    fs.writeFileSync(filePath, await formatContent(fileName, content))
   }
+}
+
+async function formatContent(fileName: string, content: string) {
+  const jsExtensions = ['.js', '.ts', '.tsx', '.jsx']
+  const isJs = jsExtensions.some(ext => fileName.endsWith(ext))
+  if (isJs) {
+    return await prettier.format(content, { filepath: fileName })
+  }
+
+  return content
 }

@@ -582,9 +582,15 @@ importers:
       '@agrume/types':
         specifier: workspace:^
         version: link:../types
+      '@types/prettier':
+        specifier: ^3.0.0
+        version: 3.0.0
       fastify:
         specifier: ^5.0.0
         version: 5.0.0
+      prettier:
+        specifier: ^3.3.3
+        version: 3.3.3
     devDependencies:
       '@types/node':
         specifier: ^20
@@ -4697,6 +4703,10 @@ packages:
 
   '@types/prettier@2.7.3':
     resolution: {integrity: sha512-+68kP9yzs4LMp7VNh8gdzMSPZFL44MLGqiHWvttYJe+6qnuVr4Ek9wSBQoveqY/r+LwjCcU29kNVkidwim+kYA==}
+
+  '@types/prettier@3.0.0':
+    resolution: {integrity: sha512-mFMBfMOz8QxhYVbuINtswBp9VL2b4Y0QqYHwqLz3YbgtfAcat2Dl6Y1o4e22S/OVE6Ebl9m7wWiMT2lSbAs1wA==}
+    deprecated: This is a stub types definition. prettier provides its own type definitions, so you do not need this installed.
 
   '@types/prop-types@15.7.5':
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
@@ -14904,6 +14914,8 @@ snapshots:
       putout: 35.16.0(eslint@8.57.0)(typescript@5.6.2)
       try-catch: 3.0.1
       try-to-catch: 3.0.1
+    transitivePeerDependencies:
+      - supports-color
 
   '@putout/engine-parser@10.8.0':
     dependencies:
@@ -14924,6 +14936,8 @@ snapshots:
       picomatch: 4.0.2
       putout: 35.16.0(eslint@8.57.0)(typescript@5.6.2)
       try-to-catch: 3.0.1
+    transitivePeerDependencies:
+      - supports-color
 
   '@putout/engine-reporter@1.1.0(putout@35.16.0(eslint@8.57.0)(typescript@5.6.2))':
     dependencies:
@@ -14934,6 +14948,8 @@ snapshots:
       putout: 35.16.0(eslint@8.57.0)(typescript@5.6.2)
       try-catch: 3.0.1
       try-to-catch: 3.0.1
+    transitivePeerDependencies:
+      - supports-color
 
   '@putout/engine-runner@21.2.0(putout@35.16.0(eslint@8.57.0)(typescript@5.6.2))':
     dependencies:
@@ -16282,6 +16298,10 @@ snapshots:
   '@types/parse5@6.0.3': {}
 
   '@types/prettier@2.7.3': {}
+
+  '@types/prettier@3.0.0':
+    dependencies:
+      prettier: 3.3.3
 
   '@types/prop-types@15.7.5': {}
 

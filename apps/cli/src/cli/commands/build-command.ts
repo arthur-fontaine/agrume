@@ -30,7 +30,7 @@ export const buildCommand = createCommand('build')
       fastify: fastifyBuilder,
     }[library]
 
-    runBuilder(builder, {
+    await runBuilder(builder, {
       destination: output,
       enableLogger: !disableLogger,
       listen: config.port,
