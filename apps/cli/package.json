@@ -17,6 +17,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@agrume/builder": "workspace:^",
     "@agrume/core": "workspace:*",
     "@agrume/internals": "workspace:*",
     "@agrume/plugin": "workspace:*",

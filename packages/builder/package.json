@@ -1,0 +1,26 @@
+{
+  "name": "@agrume/builder",
+  "version": "3.0.0",
+  "main": "./dist/builder.js",
+  "module": "./dist/builder.mjs",
+  "types": "./dist/builder.d.ts",
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "build": "tsup src/builder.ts --dts --format esm,cjs --minify --sourcemap inline",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@agrume/core": "workspace:*",
+    "@agrume/internals": "workspace:*",
+    "@agrume/types": "workspace:^",
+    "fastify": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "tsup": "^8.2.4"
+  }
+}

@@ -7,7 +7,7 @@ export { createRoute } from './client/create-route'
 
 export { ConnectMiddleware } from './server/connect-middleware'
 export { Middleware } from './server/middleware'
-export { RouteHandler } from './server/route-handler'
+export { AGRUME_SEND_STREAM_PATH, RouteHandler } from './server/route-handler'
 export type { MiddlewareRequest, MiddlewareResponse } from './server/route-handler'
 
 /**

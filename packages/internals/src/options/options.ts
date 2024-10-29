@@ -1,6 +1,9 @@
-import { state } from '@agrume/internals'
+// @ts-expect-error Tunnel import is required to prevent "Not portable" error
+// eslint-disable-next-line unused-imports/no-unused-imports
+import type { Tunnel } from '@agrume/tunnel'
 import type { GlobalOptions } from '@agrume/types'
 import defu from 'defu'
+import { state } from '../state/state'
 
 const defaultOptions: Required<GlobalOptions> = {
   baseUrl: '/',

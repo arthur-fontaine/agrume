@@ -1,9 +1,7 @@
-import { Readable, Transform } from 'node:stream'
+import { Transform } from 'node:stream'
 import type { TransformStream } from 'node:stream/web'
-import { state } from '@agrume/internals'
-import { options } from '../client/options'
+import { options, state } from '@agrume/internals'
 import { type MiddlewareRequest, type MiddlewareResponse, RouteHandler } from './route-handler'
-import { constants } from './constants'
 
 /**
  *
@@ -43,32 +41,7 @@ export class Middleware {
     const routeHandler
       = new RouteHandler(this, request, response, next)
 
-    await this.runSendStreamMiddleware(routeHandler)
-    || await routeHandler.run()
-  }
-
-  /**
-   * Run the send stream middleware.
-   * @param {RouteHandler} ctx The middleware context.
-   * @returns {Promise<boolean>} Whether the send stream middleware was run.
-   */
-  async runSendStreamMiddleware(ctx: RouteHandler): Promise<boolean> {
-    const requestKey = ctx.getRequestKey()
-    const routeName = ctx.getRouteName()
-
-    if (
-      requestKey === undefined
-      || !routeName.endsWith(constants.AGRUME_SEND_STREAM_PATH)
-    ) {
-      return false
-    }
-
-    const routeStream = await this.getRouteStream(requestKey)
-    this.bodyStreams.set(requestKey, routeStream)
-
-    Readable.toWeb(ctx.request.body.stream).pipeTo(routeStream.writable)
-
-    return true
+    await routeHandler.run()
   }
 
   /**

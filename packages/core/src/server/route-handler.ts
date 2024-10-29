@@ -1,27 +1,32 @@
 import { Readable } from 'node:stream'
-import { state } from '@agrume/internals'
-import type { AnyRoute, RouteReturnValue } from '@agrume/types'
-import type { JsonValue } from 'type-fest'
+import type { TransformStream } from 'node:stream/web'
+import { options, state } from '@agrume/internals'
 import HttpErrors from 'http-errors'
-import { options } from '../client/options'
-import type { Middleware } from './middleware'
-import { constants } from './constants'
+import type { JsonValue } from 'type-fest'
+import type { AnyRoute, RouteReturnValue } from '@agrume/types'
+
+export const AGRUME_SEND_STREAM_PATH = '/__agrume_send_stream'
 
 /**
  * The logic to handle Agrume routes.
  */
 export class RouteHandler {
+  logger = options.get().logger
   prefix = options.get().prefix
 
   /**
    * Create a new middleware context.
-   * @param {Middleware} middleware The middleware.
+   * @param {object} middleware Options for the middleware.
+   * @param {(requestKey: string) => Promise<TransformStream<Uint8Array>>} middleware.getRouteStream Get the stream.
    * @param {MiddlewareRequest} request The request.
    * @param {MiddlewareResponse} response The response.
    * @param {() => void} next The next middleware.
    */
   constructor(
-    public middleware: Middleware,
+    public middleware: {
+      getRouteStream:
+      (requestKey: string) => Promise<TransformStream<Uint8Array>>
+    },
     public request: MiddlewareRequest,
     public response: MiddlewareResponse,
     public next?: () => void,
@@ -233,8 +238,8 @@ export class RouteHandler {
    * @returns {string} The route name without the send stream.
    */
   removeSendStreamFromPath(routeName: string): string {
-    return routeName.endsWith(constants.AGRUME_SEND_STREAM_PATH)
-      ? routeName.slice(0, -constants.AGRUME_SEND_STREAM_PATH.length)
+    return routeName.endsWith(AGRUME_SEND_STREAM_PATH)
+      ? routeName.slice(0, -AGRUME_SEND_STREAM_PATH.length)
       : routeName
   }
 
@@ -243,6 +248,10 @@ export class RouteHandler {
    * @returns {Promise<void>} The promise.
    */
   async run(): Promise<void> {
+    if (await this.runSendStreamMiddleware()) {
+      return
+    }
+
     const route = await this.matchRoute()
     if (route === undefined) {
       return
@@ -263,7 +272,7 @@ export class RouteHandler {
       }
     }
     catch (error) {
-      this.middleware.logger?.error?.(error)
+      this.logger?.error?.(error)
 
       if (HttpErrors.isHttpError(error)) {
         return this.throwStatus(error.statusCode, error.message, true)
@@ -271,6 +280,27 @@ export class RouteHandler {
 
       return this.throwStatus(500, undefined, true)
     }
+  }
+
+  /**
+   * Run the send stream middleware.
+   * @returns {Promise<boolean>} Whether the send stream middleware was run.
+   */
+  async runSendStreamMiddleware(): Promise<boolean> {
+    const requestKey = this.getRequestKey()
+    const routeName = this.getRouteName()
+
+    if (
+      requestKey === undefined || !routeName.endsWith(AGRUME_SEND_STREAM_PATH)
+    ) {
+      return false
+    }
+
+    const routeStream = await this.middleware.getRouteStream(requestKey)
+
+    Readable.toWeb(this.request.body.stream).pipeTo(routeStream.writable)
+
+    return true
   }
 
   /**

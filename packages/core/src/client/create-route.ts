@@ -1,10 +1,9 @@
-import { state } from '@agrume/internals'
+import { options, state } from '@agrume/internals'
 import type { AnyRoute, CreateRoute, Route, RouteOptions, RouteParameters, RouteReturnValue } from '@agrume/types'
 import { getClient as getDefaultClient } from '@agrume/client'
 import babelParser from '@babel/parser'
 import * as tunnels from '@agrume/tunnel'
 
-import { options } from './options'
 import { getRouteName } from './get-route-name'
 import { getRequestOptions } from './get-request-options'
 

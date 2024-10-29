@@ -15,9 +15,11 @@
   "dependencies": {
     "@agrume/types": "workspace:*",
     "c12": "^1.11.2",
+    "defu": "^6.1.4",
     "node-machine-id": "^1.1.12"
   },
   "devDependencies": {
+    "@agrume/tunnel": "workspace:*",
     "@types/node": "^20",
     "tsup": "^8.2.4"
   }
