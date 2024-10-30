@@ -1,5 +1,19 @@
 # @agrume/server
 
+## 3.4.0
+
+### Minor Changes
+
+- 0b29353: Create build command in CLI
+
+### Patch Changes
+
+- Updated dependencies [0b29353]
+  - @agrume/builder@3.1.0
+  - @agrume/core@3.4.0
+  - @agrume/internals@3.4.0
+  - @agrume/plugin@3.2.1
+
 ## 3.3.0
 
 ### Minor Changes
