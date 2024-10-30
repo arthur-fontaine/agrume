@@ -1,7 +1,9 @@
+import path from 'node:path'
 import process from 'node:process'
 import { fastifyBuilder, runBuilder } from '@agrume/builder'
 import { createCommand } from 'commander'
-import { utils } from '@agrume/internals'
+import { state, utils } from '@agrume/internals'
+import Watcher from 'watcher'
 import { getAgrumeMiddleware } from '../get-agrume-middleware'
 import { entryOption } from '../options/entry-option'
 import { findEntryFile } from '../find-entry-file'
@@ -14,7 +16,8 @@ export const buildCommand = createCommand('build')
   .option('-o, --output <output>', 'The output directory', 'build')
   .option('--disable-logger', 'Disable the logger')
   .option('--single-file', 'Generate a single file', false)
-  .option('--listen <port>', 'The port to listen on. By default, it will try to read from the config file and listen on that port. Set to 0 to disable listening.', Number.parseInt)
+  .option('-p, --port <port>', 'The port the server will listen on. By default, it uses the port from the config file. Set to 0 to not generate listen code.', Number.parseInt)
+  .option('-w, --watch [target]', 'Watch for changes in the target directory')
   .action(async (library, options) => {
     if (library !== 'fastify') {
       logger.error(`Library \`${library}\` is not supported`)
@@ -23,20 +26,52 @@ export const buildCommand = createCommand('build')
 
     const config = await utils.readConfig()
 
-    await getAgrumeMiddleware({
-      config,
-      entry: findEntryFile(options.entry.split(',')),
-    })
-
     const builder = {
       fastify: fastifyBuilder,
     }[library]
 
-    await runBuilder(builder, {
-      destination: options.output,
-      enableLogger: !options.disableLogger,
-      listen: options.listen === 0 ? undefined
-      : (options.listen ?? config.port),
-      singleFile: options.singleFile,
-    })
+    const entryFile = findEntryFile(options.entry.split(','))
+
+    const build = async () => {
+      await getAgrumeMiddleware({
+        config,
+        entry: entryFile,
+      })
+
+      await runBuilder(builder, {
+        destination: options.output,
+        enableLogger: !options.disableLogger,
+        listen: options.port === 0 ? undefined
+        : (options.port ?? config.port),
+        singleFile: options.singleFile,
+      })
+    }
+
+    if (options.watch) {
+      let watchTarget = path.dirname(entryFile)
+      if (typeof options.watch === 'string') {
+        watchTarget = options.watch
+      }
+
+      const watcher = new Watcher(watchTarget, {
+        ignoreInitial: true,
+        recursive: true,
+      })
+
+      logger.info(`Watching for changes in ${watchTarget}`)
+
+      watcher.on('all', async () => {
+        logger.info('Detected changes, re-building...')
+        logger.log('')
+        state.set((state) => {
+          state.routes.clear()
+          return state
+        })
+        await build()
+      })
+      await build()
+    }
+    else {
+      await build()
+    }
   })

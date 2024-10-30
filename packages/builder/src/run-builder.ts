@@ -13,6 +13,8 @@ export async function runBuilder(builder: Builder, options: BuilderOptions & {
 }) {
   const results = builder(options)
 
+  fs.rmSync(options.destination, { force: true, recursive: true })
+
   for (const { content, filename } of results) {
     const filePath = path.join(options.destination, filename)
     fs.mkdirSync(path.dirname(filePath), { recursive: true })
