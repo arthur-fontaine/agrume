@@ -58,7 +58,9 @@
   "devDependencies": {
     "@types/babel__core": "^7.20.1",
     "@types/node": "^20",
+    "@types/prettier": "^3.0.0",
+    "prettier": "^3.3.3",
     "tsup": "^8.2.4",
-    "vite": "^5.2.10"
+    "vite": "^5.4.10"
   }
 }
