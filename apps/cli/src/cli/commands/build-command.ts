@@ -81,5 +81,6 @@ export const buildCommand = createCommand('build')
     }
     else {
       await build()
+      process.exit(0)
     }
   })
