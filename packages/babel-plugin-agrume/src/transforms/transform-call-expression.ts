@@ -89,6 +89,7 @@ function transformCreateRoute(
   }
 
   const route = runLoader(routeFunctionLoader, filePath)
+  Object.assign(route, { loader: routeFunctionLoader })
   const routeOptions = routeOptionsLoader === undefined
     ? undefined
     : runLoader(routeOptionsLoader, filePath)

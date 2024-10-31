@@ -59,12 +59,30 @@ function* createRoutes(serverName: string, singleFile: boolean) {
   let indexRegister = ''
 
   for (const [routeName, route] of routes.entries()) {
+    if (
+      !('loader' in route)
+      || typeof route.loader !== 'string'
+    ) {
+      continue
+    }
+
     const routePath = prefix + routeName
     const streamRoutePath = routePath + AGRUME_SEND_STREAM_PATH
 
+    let routeFunctionName = routeName
+    if (routeFunctionName[0] === '/') {
+      routeFunctionName = routeFunctionName.slice(1)
+    }
+    routeFunctionName = routeFunctionName.replace(/[^a-zA-Z0-9_$]/g, '_')
+    if (routeFunctionName[0]?.match(/[0-9]/)) {
+      routeFunctionName = '_' + routeFunctionName
+    }
+
     const routeHandler = `
+    const ${routeFunctionName} = await (async ${route.loader.replace('_import', 'await import')})()
+
     ${serverName}.post(${JSON.stringify(routePath)}, async (request, reply) =>
-      new FastifyRouteHandler(${route.toString()}, request, reply).run()
+      new FastifyRouteHandler(${routeFunctionName}, request, reply).run()
     )
 
     ${serverName}.post(${JSON.stringify(streamRoutePath)}, async (request, reply) =>
@@ -80,7 +98,7 @@ function* createRoutes(serverName: string, singleFile: boolean) {
         filename: routeFilepath,
         content: `
         import type { FastifyInstance } from 'fastify'
-        import { FastifyRouteHandler } from '../agrume-route-handler'
+        import { FastifyRouteHandler } from '${'../'.repeat(routeFilepath.split('/').length - 1)}agrume-route-handler'
 
         export default async function (${serverName}: FastifyInstance) {
           ${routeHandler}

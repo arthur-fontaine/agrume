@@ -13,7 +13,7 @@ program
   .description('Start a server with all Agrume routes found in the project.')
   .option('-p, --port <port>', 'Port to listen on', '3000')
   .option('-h, --host <host>', 'Host to listen on', 'localhost')
-  .option(...entryOption)
+  .addOption(entryOption)
   .option('--watch [target]', 'Watch for changes in the target directory')
   .option('--tunnel [tunnel]', 'Register a tunnel')
   .option('--ngrok-domain <domain>', 'The domain for the ngrok tunnel')
