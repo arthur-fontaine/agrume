@@ -1,5 +1,11 @@
 # babel-plugin-agrume
 
+## 3.1.5
+
+### Patch Changes
+
+- 2a14be9: Use the routeLoader instead of the stringified route in builder
+
 ## 3.1.4
 
 ### Patch Changes

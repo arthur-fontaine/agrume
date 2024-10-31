@@ -1,5 +1,14 @@
 # @agrume/server
 
+## 3.4.1
+
+### Patch Changes
+
+- 2a14be9: Use the routeLoader instead of the stringified route in builder
+- Updated dependencies [2a14be9]
+  - @agrume/builder@3.1.1
+  - @agrume/plugin@3.2.2
+
 ## 3.4.0
 
 ### Minor Changes
