@@ -23,7 +23,7 @@ export async function runBuilder(builder: Builder, options: BuilderOptions & {
 }
 
 async function formatContent(fileName: string, content: string) {
-  const jsExtensions = ['.js', '.ts', '.tsx', '.jsx']
+  const jsExtensions = ['.js', '.ts', '.tsx', '.jsx', '.mjs', '.cjs', '.mts', '.cts']
   const isJs = jsExtensions.some(ext => fileName.endsWith(ext))
   if (isJs) {
     return await prettier.format(content, { filepath: fileName })

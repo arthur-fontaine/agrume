@@ -24,7 +24,7 @@ export const fastifyBuilder: Builder = function* (options) {
   const routes = yield* createRoutes('server', options.singleFile ?? false)
 
   yield {
-    filename: 'index.ts',
+    filename: 'index.mts',
     content: `
     import fastify, { type FastifyInstance } from 'fastify'
     import { FastifyRouteHandler } from './agrume-route-handler'
@@ -79,7 +79,7 @@ function* createRoutes(serverName: string, singleFile: boolean) {
     }
 
     const routeHandler = `
-    const ${routeFunctionName} = await (async ${route.loader.replace('_import', 'await import')})()
+    const ${routeFunctionName} = await (async ${route.loader.replaceAll('_import', 'await import')})()
 
     ${serverName}.post(${JSON.stringify(routePath)}, async (request, reply) =>
       new FastifyRouteHandler(${routeFunctionName}, request, reply).run()
@@ -112,11 +112,13 @@ function* createRoutes(serverName: string, singleFile: boolean) {
   return indexRegister
 }
 
-function createListener(port: number, serverName: string, options: BuilderOptions) {
+function createListener(port: string, serverName: string, options: BuilderOptions) {
+  const portCode = port.match(/^\d+$/) ? port : `process.env[${JSON.stringify(port)}]`
+  
   return `
   const ${serverName} = fastify(${createOptions(options)})
   await registerServer(server)
 
-  ${serverName}.listen({ port: ${port} })
+  ${serverName}.listen({ port: ${portCode} })
   `
 }

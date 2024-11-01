@@ -16,7 +16,7 @@ export const buildCommand = createCommand('build')
   .option('-o, --output <output>', 'The output directory', 'build')
   .option('--disable-logger', 'Disable the logger')
   .option('--single-file', 'Generate a single file', false)
-  .option('-p, --port <port>', 'The port the server will listen on. By default, it uses the port from the config file. Set to 0 to not generate listen code.', Number.parseInt)
+  .option('-p, --port <port>', 'The port the server will listen on. By default, it uses the port from the config file. Set a string to select an environment variable. Set to an empty string to not generate listen code.')
   .option('-w, --watch [target]', 'Watch for changes in the target directory')
   .action(async (library, options) => {
     // This is a workaround to still get the options even if they are parsed in the parent command
@@ -49,8 +49,8 @@ export const buildCommand = createCommand('build')
       await runBuilder(builder, {
         destination: options.output,
         enableLogger: !options.disableLogger,
-        listen: options.port === 0 ? undefined
-        : (options.port ?? config.port),
+        listen: options.port === '' ? undefined
+        : (options.port ?? (config.port ? config.port.toString() : undefined)),
         singleFile: options.singleFile,
       })
     }
@@ -81,5 +81,6 @@ export const buildCommand = createCommand('build')
     }
     else {
       await build()
+      process.exit(0)
     }
   })
