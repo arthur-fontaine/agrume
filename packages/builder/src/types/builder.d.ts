@@ -11,6 +11,6 @@ export interface Builder {
 
 export interface BuilderOptions {
   enableLogger?: boolean | undefined
-  listen?: number | undefined
+  listen?: string | undefined
   singleFile?: boolean | undefined
 }

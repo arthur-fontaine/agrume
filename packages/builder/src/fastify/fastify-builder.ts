@@ -112,11 +112,13 @@ function* createRoutes(serverName: string, singleFile: boolean) {
   return indexRegister
 }
 
-function createListener(port: number, serverName: string, options: BuilderOptions) {
+function createListener(port: string, serverName: string, options: BuilderOptions) {
+  const portCode = port.match(/^\d+$/) ? port : `process.env[${JSON.stringify(port)}]`
+  
   return `
   const ${serverName} = fastify(${createOptions(options)})
   await registerServer(server)
 
-  ${serverName}.listen({ port: ${port} })
+  ${serverName}.listen({ port: ${portCode} })
   `
 }
