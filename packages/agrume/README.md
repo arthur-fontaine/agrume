@@ -696,10 +696,6 @@ export default defineConfig({
 
 ## CLI
 
-To make it easier to use Agrume, we provide a CLI. For example, you can use the CLI to start the server separately from the frontend.
-
-If you use Vite, you don't need to use the CLI necessarily because the Agrume plugin for Vite registers the routes on the Vite server. However, some tools don't allow registering custom routes, so you can use the CLI to start the server separately.
-
 ### Installation
 
 ```bash
@@ -709,23 +705,12 @@ pnpm add -D @agrume/cli
 > [!NOTE]
 > You can also install the CLI globally by using the `-g` flag.
 
-### Usage
 
-You can use the CLI to start the server:
+### Configuration
 
-```bash
-agrume
-```
+To configure the CLI, you can either use the command options or create a configuration file.
 
-It will find the routes in your project and start the server.
-
-#### Configuration
-
-To configure the CLI, you can either use the options or the configuration file.
-
-##### Configuration file
-
-You can create a `agrume.config.ts` file at the root of your project:
+At the root of your project, create a `agrume.config.ts` file:
 
 ```ts
 import { defineConfig } from '@agrume/cli'
@@ -764,9 +749,21 @@ export default defineConfig({
 })
 ```
 
-##### Options
+### `agrume`
 
-If you don't want to use a configuration file, you can still use the options:
+You can use the CLI to start the server:
+
+```bash
+agrume
+```
+
+It will find the routes in your project and start a [Fastify](https://github.com/fastify/fastify/) server.
+
+> [!NOTE]
+> For development purposes, you can just use the `agrume` Vite plugin that will
+use the Vite server.
+
+#### Options
 
 | Option | Argument | Description | Default |
 | --- | --- | --- | --- |
@@ -780,6 +777,62 @@ If you don't want to use a configuration file, you can still use the options:
 | `--ngrok-domain` | A string | The domain to use with Ngrok |  |
 | `--pinggy-subdomain` | A string | The subdomain to use with Pinggy |  |
 | `--pinggy-token` | A string | The token to use with pinggy |  |
+
+### `agrume build`
+
+You can use the CLI to build the routes:
+
+```bash
+agrume build
+```
+
+It allows you not being dependent on Agrume to run your backend.
+
+By default, `agrume build` will write in TypeScript a Fastify server in the
+`build` directory.
+If a port is specified either in the configuration or in the command, you
+will be able to run the server with `npx tsx build/index.mts`. Otherwise, you
+will be able to import a `registerServer` function from the generated file and
+use it in your own Fastify server.
+
+#### Options
+
+| Option              | Argument     | Description                                                                                                           | Default                                          |
+| ------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `library`           |              | The library to compile for. Choices: `fastify`                                                                       | `"fastify"`                                      |
+| `-e`, `--entry`     | A list of strings separated by a comma    | The entry files to search for routes                                                                                 | `"index.js,index.ts,index.jsx,index.tsx,main.js,main.ts,main.jsx,main.tsx,app.js,app.ts,app.jsx,app.tsx,src/index.js,src/index.ts,src/index.jsx,src/index.tsx,src/main.js,src/main.ts,src/main.jsx,src/main.tsx,src/app.js,src/app.ts,src/app.jsx,src/app.tsx"`        |
+| `-o`, `--output`    | A directory were to write   | The output directory                                                                                                 | `"build"`                                        |
+| `--disable-logger`  |              | Disable the logger of the server                                                                                                   | `false`                                          |
+| `--single-file`     |              | Generate a single file                                                                                               | `false`                                          |
+| `-p`, `--port`      | A string for an environment variable, or a number     | The port the server will listen on. By default, it uses the port from the config file. Set a string to select an environment variable, or leave empty to avoid generating listen code. | *not provided* |
+| `-w`, `--watch`     | *Optional* The directory to watch for changes   | Watch for changes in the target directory                                                                            | *not provided*                                   |
+
+For example, if you want to build a Fastify server in the `dist` directory that listens on the port `1234`, you can run:
+
+```bash
+agrume build fastify --output dist --port 1234
+```
+
+#### Use as a Fastify plugin
+
+You can generate a function that will register the routes in a Fastify server:
+
+```bash
+agrume build fastify --output agrume-server --port ""
+```
+
+Then, you can use the generated function in your Fastify server:
+
+```ts
+import fastify from 'fastify'
+import { registerServer } from './agrume-server'
+
+const app = fastify()
+
+registerServer(app)
+
+// Do something with the app, like listening on a port
+```
 
 ## Recipes
 
