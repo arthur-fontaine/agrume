@@ -1,6 +1,6 @@
 {
   "name": "@agrume/builder",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "main": "./dist/builder.js",
   "module": "./dist/builder.mjs",
   "types": "./dist/builder.d.ts",
