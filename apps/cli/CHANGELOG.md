@@ -1,5 +1,14 @@
 # @agrume/server
 
+## 3.4.2
+
+### Patch Changes
+
+- 5ec3ce6: Basically improve agrume build command
+- Updated dependencies [5ec3ce6]
+  - @agrume/builder@3.1.2
+  - @agrume/plugin@3.2.3
+
 ## 3.4.1
 
 ### Patch Changes

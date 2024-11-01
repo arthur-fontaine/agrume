@@ -1,5 +1,11 @@
 # babel-preset-agrume
 
+## 3.0.9
+
+### Patch Changes
+
+- babel-plugin-agrume@3.1.6
+
 ## 3.0.8
 
 ### Patch Changes

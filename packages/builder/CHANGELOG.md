@@ -1,5 +1,11 @@
 # @agrume/builder
 
+## 3.1.2
+
+### Patch Changes
+
+- 5ec3ce6: Basically improve agrume build command
+
 ## 3.1.1
 
 ### Patch Changes

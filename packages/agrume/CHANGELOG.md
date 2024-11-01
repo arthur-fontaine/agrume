@@ -1,5 +1,11 @@
 # agrume
 
+## 3.1.7
+
+### Patch Changes
+
+- 5ec3ce6: Basically improve agrume build command
+
 ## 3.1.6
 
 ### Patch Changes
